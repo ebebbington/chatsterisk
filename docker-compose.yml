@@ -1,0 +1,20 @@
+version: '3'
+
+services:
+  server:
+    container_name: drash_server
+    build:
+      context: .
+      dockerfile: .docker/deno.dockerfile
+    volumes:
+      - ./src/server:/var/www/server
+    working_dir: /var/www/server
+    ports:
+      - "1667:1667"
+    command: bash -c "deno run --allow-net --allow-env --allow-read app.ts"
+    networks:
+      - chatsterisk-app-network
+
+networks:
+  chatsterisk-app-network:
+    driver: bridge
