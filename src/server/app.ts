@@ -1,6 +1,4 @@
-import { Drash } from "https://deno.land/x/drash@v1.2.2/mod.ts"
-import { Paladin } from "https://deno.land/x/drash_middleware@v0.4.0/paladin/mod.ts";
-import { config } from "https://deno.land/x/dotenv@v0.5.0/mod.ts";
+import { Drash, Paladin, config } from "./deps.ts"
 
 config();
 const paladin = Paladin();
