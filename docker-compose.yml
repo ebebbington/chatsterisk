@@ -11,7 +11,7 @@ services:
     working_dir: /var/www/server
     ports:
       - "1667:1667"
-    command: bash -c "deno run --allow-net --allow-env --allow-read app.ts"
+    command: bash -c "/root/.deno/bin/denon start"
     networks:
       - chatsterisk-app-network
 
