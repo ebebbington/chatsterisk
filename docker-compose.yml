@@ -35,6 +35,20 @@ services:
 #      default:
 #        ipv4_address: 10.1.2.10
 
+  ami:
+    container_name: sip_ami
+    build:
+      context: .
+      dockerfile: .docker/deno.dockerfile
+    volumes:
+      - ./src/ami:/var/www/ami
+    working_dir: /var/www/ami
+    command: bash -c "deno run --allow-net app.ts"
+    networks:
+      - chatsterisk-app-network
+    ports:
+      - "1668:1668"
+
 networks:
   chatsterisk-app-network:
     driver: bridge

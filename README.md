@@ -6,11 +6,23 @@
 
 VoIP application ran using: Drash and Asterisk, to make and demonstrate voice calls using asterisk. Also acts as a training project for Deno and Drash
 
+## Project Flow
+
+1. Docker environment is started
+
+2. `server` starts, handling any web requests
+
+3. Asterisk starts, listening for any call requests
+
+4. `ami` starts, listening on any requests to the socket
+
 ## Directory Structure
 
 * `.docker` - Holds docker-related files, such as  dockerfiles, and  asterisk configuration files
 
 * `.github` - Holds our workflows
+
+* `src/ami` - Our AMI socket server
 
 * `src/server` - Our drash application that acts as the server for this project, to serve a client on the web
 
