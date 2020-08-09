@@ -12,4 +12,4 @@ RUN yum update -y && yum install -y asterisk
 VOLUME /etc/asterisk
 
 # And when the container is started, run asterisk
-ENTRYPOINT [ "/usr/sbin/asterisk", "-f" ]
+ENTRYPOINT [ "/usr/sbin/asterisk", "-fcvvvv" ]

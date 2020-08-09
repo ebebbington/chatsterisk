@@ -55,8 +55,83 @@ See [here](https://deno.land/std/manual.md#built-in-deno-utilities--commands)
 
 ## Help
 
-# Help
-
 * Resolving `.ts` extensions
 
     * As Typescript doesn't have a native way to resolve these due to how Deno is built, a different fix has been implemented. See [here](https://medium.com/@kitsonk/develop-with-deno-and-visual-studio-code-225ce7c5b1ba) for some more information and the related commit [here](https://github.com/ebebbington/todo/commit/9fba0d8fb66c00198a65b68b5177ee3d1d6eb63b)
+
+# The Set Up
+
+Most of the steps were following using asterisks main documentation: https://wiki.asterisk.org/wiki/display/AST/Hello+World
+
+## Public Server
+
+1. Install asterisk
+
+    apt install asterisk
+    
+2. Setup the conf files and the step using the link above. It includes the sip/pjsip/extensions config files
+
+3. Restart asterisk
+
+    asterisk -rx "core restart now"
+    
+4. Start asterisk
+
+    asterisk -cvvvvv
+    
+5. Connect using a softphone, where the domain is the IP of the server
+
+6. Make a call to 100
+
+## Docker
+
+1. Docker compose file content:
+```
+asterisk:
+    container_name: asterisk_pbx
+    image: hibou/asterisk:14
+    ports:
+      - "5060:5060/udp"
+      - "5060:5060/tcp"
+      - "16384-16394:16384-16394/udp"
+      - "8088:8088"
+      - "8089:8089"
+    volumes:
+      - "./.docker/config/asterisk/sip.conf:/etc/asterisk/sip.conf"
+      - "./.docker/config/asterisk/extensions.conf:/etc/asterisk/extensions.conf"
+      - "./.docker/config/asterisk/pjsip.conf:/etc/asterisk/pjsip.conf"
+      - "./.docker/config/asterisk/rtp.conf:/etc/asterisk/rtp.conf"
+    labels:
+      - "traefik.enable=false"
+```
+
+2.  Dockerfile content:
+```
+FROM centos:6
+
+# Set up EPEL
+RUN curl -L http://download.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm -o /tmp/epel-release-6-8.noarch.rpm && \
+ rpm -ivh /tmp/epel-release-6-8.noarch.rpm && \
+ rm -f /tmp/epel-release-6-8.noarch.rpm
+
+# Update and install asterisk
+RUN yum update -y && yum install -y asterisk
+
+# Set config as a volume
+VOLUME /etc/asterisk
+
+# And when the container is started, run asterisk
+ENTRYPOINT [ "/usr/sbin/asterisk", "-fcvvvv" ]
+```
+
+3. Setup the config files: sip/pjsip/extnesions/rtp. Follow the link above on the content needed, and for `rtp.conf`, use:
+```
+rtpstart=16384
+rtpend=16394
+```
+
+4 Start docker
+
+      docker-compose up
+      
+5. Connect using a softphone, where the domain is 0.0.0.0 for the container
