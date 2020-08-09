@@ -32,7 +32,7 @@ jobs:
         uses: denolib/setup-deno@master
 
       - name: Formatter
-        run: cd src/server && deno fmt --check
+        run: cd src/server && deno fmt --check && cd ../ami && deno fmt --check
 
       - name: linter
-        run: cd src/server && deno lint --unstable
+        run: cd src/server && deno lint --unstable && cd ../ami && deno lint --unstable
