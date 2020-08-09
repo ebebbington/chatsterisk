@@ -6,6 +6,8 @@ services:
     build:
       context: .
       dockerfile: .docker/deno.dockerfile
+      args:
+        DENO_VERSION: 1.2.3
     volumes:
       - ./src/server:/var/www/server
     working_dir: /var/www/server
@@ -40,10 +42,12 @@ services:
     build:
       context: .
       dockerfile: .docker/deno.dockerfile
+      args:
+        DENO_VERSION: 1.0.0
     volumes:
       - ./src/ami:/var/www/ami
     working_dir: /var/www/ami
-    command: bash -c "deno run --allow-net app.ts"
+    command: bash -c "deno --version; deno run --allow-net app.ts"
     networks:
       - chatsterisk-app-network
     ports:

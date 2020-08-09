@@ -19,3 +19,5 @@ socketServer.on("connection", () => {
 socketServer.on("disconnect", () => {
   console.log("A client disconnected.");
 });
+
+// LISTEN ON MESSAGES, THEN SEND SSH MESSAGE TO CONTAINER TO MAKE CALL. CREATE SSH CLIENT
