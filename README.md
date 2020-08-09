@@ -64,6 +64,8 @@ See [here](https://deno.land/std/manual.md#built-in-deno-utilities--commands)
 * [Deno's Website](https://deno.land/)
 * [Deno's GitHub](https://github.com/denoland/deno)
 * [Drash's Docs](https://drash.land)
+* [Asterisk Hello World](https://www.informit.com/articles/article.aspx?p=1439183&seqNum=2)
+* [Asterisk Docs](https://wiki.asterisk.org/wiki/display/AST/Asterisk+Configuration+Files)
 
 ## Help
 
