@@ -9,6 +9,9 @@
         "read",
         "run"
       ]
+    },
+    "build": {
+      "cmd": "deno bundle public/ts/app.ts public/js/app.js"
     }
   },
   "watcher": {

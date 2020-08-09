@@ -11,9 +11,23 @@ services:
     working_dir: /var/www/server
     ports:
       - "1667:1667"
-    command: bash -c "/root/.deno/bin/denon start"
+    command: bash -c "deno run --allow-net --allow-read --allow-env app.ts"
     networks:
       - chatsterisk-app-network
+
+  asterisk:
+    container_name: copytube_asterisk
+    image: hibou/asterisk:14
+    ports:
+      - "5060:5060/udp"
+      - "5060:5060/tcp"
+      - "10000-10099:10000-10099/udp"
+      - "8088:8088"
+      - "8089:8089"
+    volumes:
+      - "./.docker/config/asterisk:/etc/asterisk"
+    labels:
+      - "traefik.enable=false"
 
 networks:
   chatsterisk-app-network:
