@@ -47,7 +47,7 @@ services:
     volumes:
       - ./src/ami:/var/www/ami
     working_dir: /var/www/ami
-    command: bash -c "deno --version; deno run --allow-net app.ts"
+    command: bash -c "deno run --allow-net app.ts"
     networks:
       - chatsterisk-app-network
     ports:
