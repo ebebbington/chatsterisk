@@ -38,6 +38,9 @@ code {
     margin: auto;
     width: 98vw;
 }
+.hide {
+    display: none;
+}
 .flex {
     display: flex;
 }
@@ -104,16 +107,4 @@ ul {
 #navbar {
     text-align: center;
     margin-bottom: 5em;
-}
-#show-new-todo {
-    margin-bottom: 1em;
-}
-#new-todo-holder {
-    display: none;
-}
-#submit-new-todo {
-    color: green;
-}
-#submit-new-todo:hover {
-    color: white;
 }

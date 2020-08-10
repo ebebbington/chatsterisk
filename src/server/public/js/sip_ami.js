@@ -21,6 +21,8 @@ const socket = new SocketClient({
   port: 1668
 })
 
+let extensions = []
+
 window.addEventListener("DOMContentLoaded", function () {
 
   socket.on("test", () => {
@@ -35,7 +37,7 @@ window.addEventListener("DOMContentLoaded", function () {
   socket.on('get-extensions', (data) => {
     console.log('got extensions')
     const json = JSON.parse(data.text)
-    const extensions = json.data
+    extensions = json.data
     const $extensionToCallFrom = document.getElementById('extension-to-call-from')
     const $extensionToCallTo = document.getElementById('extension-to-call-to')
     extensions.forEach(extension => {
@@ -58,11 +60,27 @@ window.addEventListener("DOMContentLoaded", function () {
 
   document.getElementById('extension-to-call-from').addEventListener('change', function () {
     console.log('changed ext to call from')
-    // todo hide the value from the to list but show all others
+    const chosenExtension = document.getElementById('extension-to-call-from').value
+    const $options = document.querySelectorAll('select#extension-to-call-to option')
+    $options.forEach($option => {
+      if ($option.value === chosenExtension) {
+        $option.classList.add('hide')
+      } else {
+        $option.classList.remove('hide')
+      }
+    })
   })
   document.getElementById('extension-to-call-to').addEventListener('change', function (event) {
     console.log('changed ext to  call to')
-    // todo hide the value from the from list but show all others
+    const chosenExtension = document.getElementById('extension-to-call-to').value
+    const $options = document.querySelectorAll('select#extension-to-call-from option')
+    $options.forEach($option => {
+      if ($option.value === chosenExtension) {
+        $option.classList.add('hide')
+      } else {
+        $option.classList.remove('hide')
+      }
+    })
   })
   document.getElementById('initiate-call').addEventListener('click', function (event) {
     const from = document.getElementById('extension-to-call-from').innerText
