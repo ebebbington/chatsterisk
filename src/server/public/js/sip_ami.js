@@ -22,13 +22,20 @@ const socket = new SocketClient({
 })
 
 window.addEventListener("DOMContentLoaded", function () {
-  socket.on('made-call', function (data) {
-    console.log('made call msg recieved')
-    console.log(data)
+
+  document.getElementById('extension-to-call-from').addEventListener('onchange', function () {
+    // todo hide the value from the to list but show all others
   })
-  socket.to("make-call", {
-    channel: "make-call",
-    to_extension: 6002,
-    from_extension: 6001
+  document.getElementById('extension-to-call-to').addEventListener('onchange', function (event) {
+    // todo hide the value from the from list but show all others
+  })
+  document.getElementById('initiate-call').addEventListener('click', function (event) {
+    const from = document.getElementById('extension-to-call-from').innerText
+    const to = document.getElementById('extension-to-call-to').innerText
+    socket.to("make-call", {
+      channel: "make-call",
+      to_extension: Number(to),
+      from_extension: Number(from)
+    })
   })
 })
