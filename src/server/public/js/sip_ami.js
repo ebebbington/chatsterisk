@@ -23,17 +23,45 @@ const socket = new SocketClient({
 
 window.addEventListener("DOMContentLoaded", function () {
 
-  // socket.on('get-extensions', function (data) {
-  //   console.log('got extensions')
-  //   console.log(data)
-  //   // todo populate select fields with the options
-  // })
-  //socket.to('get-extensions')
+  socket.on("test", () => {
+    console.log('tets got message')
+  })
+  setInterval(() => {
+    socket.to("test", {
+      channel: "test"
+    })
+  }, 5000)
 
-  document.getElementById('extension-to-call-from').addEventListener('onchange', function () {
+  socket.on('get-extensions', (data) => {
+    console.log('got extensions')
+    const json = JSON.parse(data.text)
+    const extensions = json.data
+    const $extensionToCallFrom = document.getElementById('extension-to-call-from')
+    const $extensionToCallTo = document.getElementById('extension-to-call-to')
+    extensions.forEach(extension => {
+      let $option
+
+      $option = document.createElement('option')
+      $option.value = extension
+      $option.innerText = extension
+      $extensionToCallFrom.appendChild($option)
+
+      $option = document.createElement('option')
+      $option.value = extension
+      $option.innerText = extension
+      $extensionToCallTo.appendChild($option)
+    })
+  })
+  socket.to("get-extensions", {
+    channel: "get-extensions"
+  })
+
+  document.getElementById('extension-to-call-from').addEventListener('change', function () {
+    console.log('changed ext to call from')
     // todo hide the value from the to list but show all others
   })
-  document.getElementById('extension-to-call-to').addEventListener('onchange', function (event) {
+  document.getElementById('extension-to-call-to').addEventListener('change', function (event) {
+    console.log('changed ext to  call to')
     // todo hide the value from the from list but show all others
   })
   document.getElementById('initiate-call').addEventListener('click', function (event) {

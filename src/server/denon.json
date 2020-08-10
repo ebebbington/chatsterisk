@@ -17,7 +17,8 @@
     "interval": 350,
     "exts": ["js", "ts", "json"],
     "match": ["*.*"],
-    "legacy": false
+    "legacy": false,
+    "ignore": ["./public"]
   },
   "logger": {
     "fullscreen": false,
