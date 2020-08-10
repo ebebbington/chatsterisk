@@ -3,6 +3,9 @@
     --sub-colour: slategrey;
     --ter-colour: goldenrod;
 }
+body {
+    text-align: center;
+}
 button {
     color: var(--main-colour);
     background-color: var(--sub-colour);
@@ -37,6 +40,12 @@ code {
     height: 97vh;
     margin: auto;
     width: 98vw;
+}
+.row {
+    margin: 1em;
+}
+.col-6 {
+    width: 50%;
 }
 .hide {
     display: none;

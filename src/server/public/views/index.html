@@ -8,15 +8,37 @@
 </head>
 <body>
     <h1><% title %></h1>
-    <select id="extension-to-call-from">
-        <option value="" selected>Select...</option>
-    </select>
-    <select id="extension-to-call-to">
-        <option value="" selected>Select...</option>
-    </select>
-    <button type="button" id="initiate-call">Initiate Call</button>
-    <audio id="audio-remote" controls>
-        <p>Your browser doesn't support HTML5 audio.</p>
-    </audio>
+
+    <div class="container">
+
+        <div class="row flex">
+
+            <div class="col-6 text-align-c">
+                <p>Select an extension to call from</p>
+                <select id="extension-to-call-from">
+                    <option value="" selected>Select...</option>
+                </select>
+            </div>
+
+            <div class="col-6 text-align-c">
+                <p>Select an extension to call to</p>
+                <select id="extension-to-call-to">
+                    <option value="" selected>Select...</option>
+                </select>
+            </div>
+
+        </div>
+
+        <div class="row">
+            <button type="button" id="initiate-call">Initiate Call</button>
+        </div>
+
+        <div class="row">
+            <audio id="audio-remote" controls>
+                <p>Your browser doesn't support HTML5 audio.</p>
+            </audio>
+        </div>
+
+    </div>
 </body>
 </html>
