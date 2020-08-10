@@ -38,7 +38,7 @@ export class SSHClient {
       cmd: cmd.join(" ")
     });
     console.log(cmd);
-    const p = await Deno.run({ cmd: cmd, stdout: "piped", stderr: "piped" }) // FIXME(edward) No such file or directory... unsure why as the command works fine when ran on host
+    const p = await Deno.run({ cmd: cmd, stdout: "piped", stderr: "piped" }) // FIXME(edward) Doesnt work because its ran inside the ami container
     const status = await p.status()
     console.log('Ssh status:')
     console.log(status)

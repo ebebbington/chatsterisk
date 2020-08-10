@@ -3,6 +3,13 @@ import { Drash, Paladin, config } from "./deps.ts"
 config();
 const paladin = Paladin();
 
+class Extensions extends Drash.Http.Resource {
+  static paths = ["/extensions"]
+  public GET () {
+
+  }
+}
+
 class HomeResource extends Drash.Http.Resource {
   static paths = ["/", "/home"];
   public GET () {

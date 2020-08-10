@@ -23,6 +23,13 @@ const socket = new SocketClient({
 
 window.addEventListener("DOMContentLoaded", function () {
 
+  // socket.on('get-extensions', function (data) {
+  //   console.log('got extensions')
+  //   console.log(data)
+  //   // todo populate select fields with the options
+  // })
+  //socket.to('get-extensions')
+
   document.getElementById('extension-to-call-from').addEventListener('onchange', function () {
     // todo hide the value from the to list but show all others
   })

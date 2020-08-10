@@ -17,10 +17,20 @@ console.log(
     `Socket server started on ws://${socketServer.hostname}:${socketServer.port}`,
 );
 
+async function getExtensions () {
+  const cmd = `asterisk -rx 'sip show peers' | awk -F'/' '{print $1}' | awk 'NR>2 {print last} {last=$0}'`
+  const res = await sshClient.execute(cmd)
+  console.log(res)
+  return res
+}
+
 socketServer.createChannel("make-call")
 socketServer.createChannel("made-call")
+socketServer.createChannel("get-extensions");
+
 socketServer.on("connection", () => {
   console.log("A client connected.");
+
   socketServer.on("make-call", async (data: any) => {
     console.log('data was recieved')
     console.log(data)
@@ -30,6 +40,13 @@ socketServer.on("connection", () => {
     socketServer.to("made-call", "hello")
     socketServer.broadcast("made-call", 'done')
   });
+
+  socketServer.on("get-extensions", async (data: any) => {
+    console.log("get-extensions called")
+    const extensions = await getExtensions()
+    socketServer.to('get-extensions', JSON.stringify(extensions))
+  })
+
 });
 
 socketServer.on("disconnect", () => {
