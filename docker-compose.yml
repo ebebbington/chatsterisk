@@ -20,40 +20,47 @@ services:
 
   asterisk:
     container_name: asterisk_pbx
-    image: hibou/asterisk:14
+    build:
+      context: .
+      dockerfile: .docker/asterisk.dockerfile
+    working_dir: /var/www/ami
     ports:
       - "5060:5060/udp"
       - "5060:5060/tcp"
       - "16384-16394:16384-16394/udp"
       - "8088:8088"
       - "8089:8089"
+      - "1668:1668"
     volumes:
       - "./.docker/config/asterisk/sip.conf:/etc/asterisk/sip.conf"
       - "./.docker/config/asterisk/extensions.conf:/etc/asterisk/extensions.conf"
      # - "./.docker/config/asterisk/pjsip.conf:/etc/asterisk/pjsip.conf"
       - "./.docker/config/asterisk/rtp.conf:/etc/asterisk/rtp.conf"
+      - "./src/ami:/var/www/ami"
     labels:
       - "traefik.enable=false"
 #    networks:
 #      default:
 #        ipv4_address: 10.1.2.10
-
-  ami:
-    container_name: sip_ami
-    build:
-      context: .
-      dockerfile: .docker/deno.dockerfile
-      args:
-        DENO_VERSION: 1.0.0
-    environment:
-      USE_DENON: "false"
-    volumes:
-      - ./src/ami:/var/www/ami
-    working_dir: /var/www/ami
     networks:
       - chatsterisk-app-network
-    ports:
-      - "1668:1668"
+
+#  ami:
+#    container_name: sip_ami
+#    build:
+#      context: .
+#      dockerfile: .docker/deno.dockerfile
+#      args:
+#        DENO_VERSION: 1.0.0
+#    environment:
+#      USE_DENON: "false"
+#    volumes:
+#      - ./src/ami:/var/www/ami
+#    working_dir: /var/www/ami
+#    networks:
+#      - chatsterisk-app-network
+#    ports:
+#      - "1668:1668"
 
 networks:
   chatsterisk-app-network:
