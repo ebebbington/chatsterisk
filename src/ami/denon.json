@@ -4,13 +4,8 @@
       "cmd": "deno run app.ts",
       "desc": "Run the server.",
       "allow": [
-        "env",
-        "net",
-        "read"
+        "net"
       ]
-    },
-    "build": {
-      "cmd": "deno bundle public/ts/app.ts public/js/app.js"
     }
   },
   "watcher": {

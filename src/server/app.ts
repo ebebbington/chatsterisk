@@ -13,6 +13,7 @@ class HomeResource extends Drash.Http.Resource {
   }
 }
 
+
 const server = new Drash.Http.Server({
   directory: ".",
   resources: [

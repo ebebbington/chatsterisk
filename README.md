@@ -4,7 +4,9 @@
 
 ---
 
-VoIP application ran using: Drash and Asterisk, to make and demonstrate voice calls using asterisk. Also acts as a training project for Deno and Drash
+VoIP application ran using: Drash and Asterisk, to make and demonstrate voice calls using asterisk. Also acts as a training project for Drash, Sockets and Asterisk
+
+I've decided to skip the IVR menu because I ddon't think we have a keypad for softphones int eh Telephone app? See [here](https://wiki.asterisk.org/wiki/display/AST/Creating+a+Simple+IVR+Menu)
 
 ## Project Flow
 
