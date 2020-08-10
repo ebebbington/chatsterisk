@@ -5,5 +5,5 @@ then
   export PATH="/root/.deno/bin:$PATH"
   denon start
 else
-  deno run --allow-net app.ts
+  deno run --allow-net --allow-run app.ts
 fi

@@ -16,7 +16,7 @@ export class SSHClient {
     let cmd = []
     // Exec into the local docker container and run command
     if (this.config.is_docker_container) {
-      cmd = ["docker", "exec", `${this.config.host}`, `'${command}'`]
+      cmd = ["docker", "exec", `${this.config.host}`, `${command}`]
     } else { // Ssh
       const address = this.config.user ?
           `${this.config.user}@${this.config.host}`
@@ -37,11 +37,14 @@ export class SSHClient {
       is_docker_container: this.config.is_docker_container,
       cmd: cmd.join(" ")
     });
-    const p = await Deno.run({ cmd: cmd, stdout: "piped", stderr: "piped" })
+    console.log(cmd);
+    const p = await Deno.run({ cmd: cmd, stdout: "piped", stderr: "piped" }) // FIXME(edward) No such file or directory... unsure why as the command works fine when ran on host
     const status = await p.status()
     console.log('Ssh status:')
     console.log(status)
     const stdout = new TextDecoder().decode(await p.output())
     const stderr = new TextDecoder().decode(await p.stderrOutput())
+    console.log(stdout)
+    console.log(stderr)
   }
 }

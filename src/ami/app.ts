@@ -1,5 +1,5 @@
 import { SocketServer } from "./deps.ts"
-import { SSHClient, SSHClientConfig } from "./ssh_client.ts";
+import { SSHClient } from "./ssh_client.ts";
 
 const socketServer = new SocketServer();
 const sshClient = new SSHClient({
@@ -26,7 +26,7 @@ socketServer.on("connection", () => {
     console.log(data)
     const callTo = data.call_to
     // TODO(edward) Make the call. Current we run into the error when doing `console dial 100@outgoing` (or 6002) in the asterisk cli. Also doing the below, the phone gets a call from caller id "anonymous", how do we change that?
-    //await sshClient.execute('asterisk -rx "originate local/6002@from-internal extension 6001@from-internal"') // FIXME(edward) The cmd gets all wierd with "... \"...\""
+    await sshClient.execute("asterisk -rx 'originate local/6002@from-internal extension 6001@from-internal'") // FIXME(edward) The cmd gets all wierd with "... \"...\""
     socketServer.to("made-call", "hello")
     socketServer.broadcast("made-call", 'done')
   });
