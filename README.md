@@ -16,6 +16,11 @@ VoIP application ran using: Drash and Asterisk, to make and demonstrate voice ca
 
 4. `ami` starts, listening on any requests to the socket
 
+## Setup Phones
+
+1. Register 2 phones, for demo-alice (pass = verysecretpassword as seen in sip.conf) and demo-bob (pass = anothersecretpassword). Domain is 0.0.0.0 (because docker). Username is also demo-alice (see  sip.conf)
+2. Make a call! We can see the dialplans in extensions.conf (note the context for our 2 phones are from-internal), so make a call to 6001 (to alice) or 6002 (to bob)
+
 ## Directory Structure
 
 * `.docker` - Holds docker-related files, such as  dockerfiles, and  asterisk configuration files

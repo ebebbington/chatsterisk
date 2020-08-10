@@ -29,7 +29,7 @@ services:
     volumes:
       - "./.docker/config/asterisk/sip.conf:/etc/asterisk/sip.conf"
       - "./.docker/config/asterisk/extensions.conf:/etc/asterisk/extensions.conf"
-      - "./.docker/config/asterisk/pjsip.conf:/etc/asterisk/pjsip.conf"
+     # - "./.docker/config/asterisk/pjsip.conf:/etc/asterisk/pjsip.conf"
       - "./.docker/config/asterisk/rtp.conf:/etc/asterisk/rtp.conf"
     labels:
       - "traefik.enable=false"
