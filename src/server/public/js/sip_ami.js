@@ -70,6 +70,7 @@ window.addEventListener("DOMContentLoaded", function () {
       }
     })
   })
+
   document.getElementById('extension-to-call-to').addEventListener('change', function (event) {
     console.log('changed ext to  call to')
     const chosenExtension = document.getElementById('extension-to-call-to').value
@@ -82,9 +83,10 @@ window.addEventListener("DOMContentLoaded", function () {
       }
     })
   })
+
   document.getElementById('initiate-call').addEventListener('click', function (event) {
-    const from = document.getElementById('extension-to-call-from').innerText
-    const to = document.getElementById('extension-to-call-to').innerText
+    const from = document.getElementById('extension-to-call-from').value
+    const to = document.getElementById('extension-to-call-to').value
     socket.to("make-call", {
       channel: "make-call",
       to_extension: Number(to),

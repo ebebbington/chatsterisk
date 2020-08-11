@@ -31,6 +31,7 @@ async function getExtensionsFromAsterisk (): Promise<string[]> {
       extensions.push(extension)
     }
   });
+  const status = await p.status()
   await p.close()
   return extensions
 }
@@ -43,7 +44,9 @@ async function makeCallToAsterisk (extensionToCall: number, extensionCalledFrom:
     stdout: "piped",
     stdin: "piped"
   })
-  // const status = await p.status()
+  console.log(await p.status())
+  const stdout = new TextDecoder().decode(await p.output())
+  p.close()
 }
 
 socketServer.createChannel("test").onMessage((data: any) => {
@@ -54,8 +57,8 @@ socketServer.createChannel("test").onMessage((data: any) => {
 socketServer.createChannel("make-call").onMessage(async (data: any) => {
   console.log('data was recieved for make call')
   console.log(data)
-  //await makeCallToAsterisk(1, 2)
-  socketServer.to("made-call", JSON.stringify({ success: true, message: "done", data: null}))
+  await makeCallToAsterisk(data.message.to_extension, data.message.from_extension)
+  //socketServer.to("made-call", JSON.stringify({ success: true, message: "done", data: null}))
 });
 
 socketServer.createChannel("get-extensions").onMessage(async (data: any) => {
