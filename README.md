@@ -18,6 +18,8 @@ I've decided to skip the IVR menu because I ddon't think we have a keypad for so
 
 4. `ami` starts, listening on any requests to the socket
 
+5. Asterisks AMI is configured to run (see manager.conf), on port 5038. An AMI is a part of Asterisk, and we can connect to it using `telnet localhost 5038` to issue commands, then when connected, do  `Action: Login ^SHIFT ...` (or `telnet 0.0.0.0 5038` when inside the container)
+
 ## Setup Phones
 
 1. Register 2 phones, for demo-alice (pass = verysecretpassword as seen in sip.conf) and demo-bob (pass = anothersecretpassword). Domain is 0.0.0.0 (because docker). Username is also demo-alice (see  sip.conf)

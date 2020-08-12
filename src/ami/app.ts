@@ -12,6 +12,8 @@ console.log(
     `Socket server started on ws://${socketServer.hostname}:${socketServer.port}`,
 );
 
+const AMI = new SocketServer();
+
 async function getExtensionsFromAsterisk (): Promise<string[]> {
   //const cmd = `/usr/sbin/asterisk -rx 'sip show peers' | awk -F'/' '{print $1}' | awk 'NR>2 {print last} {last=$0}'`
   const cmd = ["asterisk", "-rx", `sip show peers`]

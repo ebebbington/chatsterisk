@@ -9,6 +9,7 @@ RUN curl -L http://download.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8
 
 # Update and install asterisk
 RUN yum update -y && yum install -y asterisk
+RUN yum install -y telnet
 
 # Set config as a volume
 VOLUME /etc/asterisk

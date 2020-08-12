@@ -31,11 +31,13 @@ services:
       - "8088:8088"
       - "8089:8089"
       - "1668:1668"
+      - "5038:5038" # asterisk ami (manager.conf)
     volumes:
       - "./.docker/config/asterisk/sip.conf:/etc/asterisk/sip.conf"
       - "./.docker/config/asterisk/extensions.conf:/etc/asterisk/extensions.conf"
      # - "./.docker/config/asterisk/pjsip.conf:/etc/asterisk/pjsip.conf"
       - "./.docker/config/asterisk/rtp.conf:/etc/asterisk/rtp.conf"
+      - "./.docker/config/asterisk/manager.conf:/etc/asterisk/manager.conf"
       - "./src/ami:/var/www/ami"
     labels:
       - "traefik.enable=false"
