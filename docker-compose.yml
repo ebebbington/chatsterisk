@@ -18,19 +18,34 @@ services:
     networks:
       - chatsterisk-app-network
 
-  asterisk:
-    container_name: asterisk_pbx
+  ami:
+    container_name: ami_socket
+    depends_on:
+      - asterisk
     build:
       context: .
-      dockerfile: .docker/asterisk.dockerfile
+      dockerfile: .docker/deno.dockerfile
+      args:
+        DENO_VERSION: 1.0.0
+    environment:
+      USE_DENON: "false"
+    ports:
+      - "1668:1668"
+    volumes:
+    - "./src/ami:/var/www/ami"
     working_dir: /var/www/ami
+    networks:
+      - chatsterisk-app-network
+
+  asterisk:
+    container_name: aaa
+    image: hibou/asterisk:14
     ports:
       - "5060:5060/udp"
       - "5060:5060/tcp"
       - "16384-16394:16384-16394/udp"
       - "8088:8088"
       - "8089:8089"
-      - "1668:1668"
       - "5038:5038" # asterisk ami (manager.conf)
     volumes:
       - "./.docker/config/asterisk/sip.conf:/etc/asterisk/sip.conf"
@@ -38,7 +53,6 @@ services:
      # - "./.docker/config/asterisk/pjsip.conf:/etc/asterisk/pjsip.conf"
       - "./.docker/config/asterisk/rtp.conf:/etc/asterisk/rtp.conf"
       - "./.docker/config/asterisk/manager.conf:/etc/asterisk/manager.conf"
-      - "./src/ami:/var/www/ami"
     labels:
       - "traefik.enable=false"
 #    networks:
@@ -46,23 +60,6 @@ services:
 #        ipv4_address: 10.1.2.10
     networks:
       - chatsterisk-app-network
-
-#  ami:
-#    container_name: sip_ami
-#    build:
-#      context: .
-#      dockerfile: .docker/deno.dockerfile
-#      args:
-#        DENO_VERSION: 1.0.0
-#    environment:
-#      USE_DENON: "false"
-#    volumes:
-#      - ./src/ami:/var/www/ami
-#    working_dir: /var/www/ami
-#    networks:
-#      - chatsterisk-app-network
-#    ports:
-#      - "1668:1668"
 
 networks:
   chatsterisk-app-network:

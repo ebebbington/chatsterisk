@@ -21,4 +21,4 @@ RUN yum install -y unzip curl
 
 COPY ./.docker/asterisk-entrypoint.sh /asterisk-entrypoint.sh
 RUN chmod +x /asterisk-entrypoint.sh
-ENTRYPOINT ["/asterisk-entrypoint.sh"]
+#ENTRYPOINT ["/asterisk-entrypoint.sh"]
