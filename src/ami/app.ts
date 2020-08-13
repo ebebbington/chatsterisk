@@ -1,19 +1,16 @@
-import { SocketServer } from "./deps.ts"
+import { initSocketServer } from "./socket_server.ts";
+import { DAMI } from "./deps.ts"
 
-const socketServer = new SocketServer();
+initSocketServer()
+const Dami = new DAMI({ hostname: "asterisk_pbx", port: 5038 });
+await Dami.connectAndLogin({ username: "admin", secret: "mysecret" });
+await Dami.listen();
 
-socketServer.run({
-  hostname: "asterisk_pbx",
-  port: 1668,
-}, {
-  reconnect: false,
-});
-console.log(
-    `Socket server started on ws://${socketServer.hostname}:${socketServer.port}`,
-);
-
-const amiSocket = await Deno.connect({ hostname: "0.0.0.0", port: 5038 });
-console.log(amiSocket)
+// const socketClient = new SocketClient({
+//   hostname: "asterisk_pbx",
+//   port: 5038
+// })
+// socketClient.on()
 
 // async function getExtensionsFromAsterisk (): Promise<string[]> {
 //   //const cmd = `/usr/sbin/asterisk -rx 'sip show peers' | awk -F'/' '{print $1}' | awk 'NR>2 {print last} {last=$0}'`
@@ -51,29 +48,3 @@ console.log(amiSocket)
 //   const stdout = new TextDecoder().decode(await p.output())
 //   p.close()
 // }
-
-socketServer.createChannel("test").onMessage((data: any) => {
-  console.log('test got message')
-  socketServer.to("test", "hello")
-})
-
-socketServer.createChannel("make-call").onMessage(async (data: any) => {
-  console.log('data was recieved for make call')
-  console.log(data)
-  //await makeCallToAsterisk(data.message.to_extension, data.message.from_extension)
-  //socketServer.to("made-call", JSON.stringify({ success: true, message: "done", data: null}))
-});
-
-socketServer.createChannel("get-extensions").onMessage(async (data: any) => {
-  console.log("get-extensions called")
-  //const extensions = await getExtensionsFromAsterisk()
-  //socketServer.to("get-extensions", JSON.stringify({ success: true, message: "done", data: extensions }))
-})
-
-socketServer.on("connection", () => {
-  console.log("A client connected.");
-});
-
-socketServer.on("disconnect", () => {
-  console.log("A client disconnected.");
-});

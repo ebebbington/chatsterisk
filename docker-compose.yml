@@ -38,7 +38,7 @@ services:
       - chatsterisk-app-network
 
   asterisk:
-    container_name: aaa
+    container_name: asterisk_pbx
     image: hibou/asterisk:14
     ports:
       - "5060:5060/udp"
