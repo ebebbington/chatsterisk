@@ -1,10 +1,17 @@
-import { SocketServer } from "./deps.ts"
+import {DAMI, DAMIData, SocketServer} from "./deps.ts"
 
-export function initSocketServer () {
+const peerEntries: Array<DAMIData> = []
+
+export async function initSocketServer (Dami: DAMI) {
+
+  Dami.on("PeerEntry", (data: DAMIData) => {
+    peerEntries.push(data)
+  })
+  Dami.to("Sippeers", {})
 
   const socketServer = new SocketServer();
 
-  socketServer.run({
+  await socketServer.run({
     hostname: "ami_socket",
     port: 1668,
   }, {
@@ -24,12 +31,22 @@ export function initSocketServer () {
     console.log(data)
     //await makeCallToAsterisk(data.message.to_extension, data.message.from_extension)
     //socketServer.to("made-call", JSON.stringify({ success: true, message: "done", data: null}))
+    await Dami.to("Originate", {
+      Channel: "sip/" + data.message.to_extension,
+      Exten: data.message.from_extension,
+      Context: "from-internal"
+    })
+
   });
 
   socketServer.createChannel("get-extensions").onMessage(async (data: any) => {
     console.log("get-extensions called")
     //const extensions = await getExtensionsFromAsterisk()
-    //socketServer.to("get-extensions", JSON.stringify({ success: true, message: "done", data: extensions }))
+    const extensions = peerEntries.map(peerEntry => {
+      return peerEntry.ObjectName
+    })
+    console.log(extensions)
+    socketServer.to("get-extensions", JSON.stringify({ success: true, message: "done", data: 'extens' }))
   })
 
   socketServer.on("connection", () => {

@@ -1,10 +1,10 @@
 import { initSocketServer } from "./socket_server.ts";
-import { DAMI } from "./deps.ts"
+import {DAMI, DAMIData} from "./deps.ts"
 
-initSocketServer()
-const Dami = new DAMI({ hostname: "asterisk_pbx", port: 5038 });
+const Dami = new DAMI({ hostname: "asterisk_pbx", port: 5038, logger: true });
 await Dami.connectAndLogin({ username: "admin", secret: "mysecret" });
 await Dami.listen();
+await initSocketServer(Dami)
 
 // const socketClient = new SocketClient({
 //   hostname: "asterisk_pbx",
