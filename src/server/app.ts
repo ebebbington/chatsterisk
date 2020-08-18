@@ -1,30 +1,28 @@
-import { Drash, Paladin, config } from "./deps.ts"
+import { Drash, Paladin, config } from "./deps.ts";
 
 config();
 const paladin = Paladin();
 
 class Extensions extends Drash.Http.Resource {
-  static paths = ["/extensions"]
-  public GET () {
-
+  static paths = ["/extensions"];
+  public GET() {
   }
 }
 
 class HomeResource extends Drash.Http.Resource {
   static paths = ["/", "/home"];
-  public GET () {
+  public GET() {
     this.response.body = this.response.render("/index.html", {
-      title: "Chatsterisk - Home"
+      title: "Chatsterisk - Home",
     });
-    return this.response
+    return this.response;
   }
 }
-
 
 const server = new Drash.Http.Server({
   directory: ".",
   resources: [
-      HomeResource
+    HomeResource,
   ],
   static_paths: ["/public"],
   views_path: "./public/views",
@@ -37,19 +35,19 @@ const server = new Drash.Http.Server({
     tag_string_fns: {
       datetime() {
         return new Date().toISOString().replace("T", " ");
-      }
-    }
+      },
+    },
   }),
   middleware: {
     before_request: [
-        paladin
-    ]
-  }
+      paladin,
+    ],
+  },
 });
 
 await server.run({
   hostname: config().SERVER_HOSTNAME,
-  port: Number(config().SERVER_PORT)
+  port: Number(config().SERVER_PORT),
 });
 
 console.log(`Server running on ${server.hostname}:${server.port}`);

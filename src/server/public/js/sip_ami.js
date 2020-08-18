@@ -18,75 +18,91 @@ import SocketClient from "https://cdn.jsdelivr.net/gh/drashland/sockets-client@l
 
 const socket = new SocketClient({
   hostname: "0.0.0.0",
-  port: 1668
-})
+  port: 1668,
+});
 
-const extensions = []
+const extensions = [];
 
 window.addEventListener("DOMContentLoaded", function () {
-
-  socket.on('get-extensions', (data) => {
-    console.log('got extensions')
-    const json = JSON.parse(data.text)
+  socket.on("get-extensions", (data) => {
+    console.log("got extensions");
+    const json = JSON.parse(data.text);
     //extensions = json.data
-    const $extensionToCallFrom = document.getElementById('extension-to-call-from')
-    const $extensionToCallTo = document.getElementById('extension-to-call-to')
-    extensions.forEach(extension => {
-      let $option
+    const $extensionToCallFrom = document.getElementById(
+      "extension-to-call-from",
+    );
+    const $extensionToCallTo = document.getElementById("extension-to-call-to");
+    extensions.forEach((extension) => {
+      let $option;
 
-      $option = document.createElement('option')
-      $option.value = extension
-      $option.innerText = extension
-      $extensionToCallFrom.appendChild($option)
+      $option = document.createElement("option");
+      $option.value = extension;
+      $option.innerText = extension;
+      $extensionToCallFrom.appendChild($option);
 
-      $option = document.createElement('option')
-      $option.value = extension
-      $option.innerText = extension
-      $extensionToCallTo.appendChild($option)
-    })
-  })
+      $option = document.createElement("option");
+      $option.value = extension;
+      $option.innerText = extension;
+      $extensionToCallTo.appendChild($option);
+    });
+  });
   socket.to("get-extensions", {
-    channel: "get-extensions"
-  })
+    channel: "get-extensions",
+  });
 
   // data = { EXTEN: "STATE", ... }
   socket.on("extension-states", (data) => {
-    console.log('got extension states')
-  })
+    console.log("got extension states");
+  });
 
-  document.getElementById('extension-to-call-from').addEventListener('change', function () {
-    console.log('changed ext to call from')
-    const chosenExtension = document.getElementById('extension-to-call-from').value
-    const $options = document.querySelectorAll('select#extension-to-call-to option')
-    $options.forEach($option => {
-      if ($option.value === chosenExtension) {
-        $option.classList.add('hide')
-      } else {
-        $option.classList.remove('hide')
-      }
-    })
-  })
+  document.getElementById("extension-to-call-from").addEventListener(
+    "change",
+    function () {
+      console.log("changed ext to call from");
+      const chosenExtension =
+        document.getElementById("extension-to-call-from").value;
+      const $options = document.querySelectorAll(
+        "select#extension-to-call-to option",
+      );
+      $options.forEach(($option) => {
+        if ($option.value === chosenExtension) {
+          $option.classList.add("hide");
+        } else {
+          $option.classList.remove("hide");
+        }
+      });
+    },
+  );
 
-  document.getElementById('extension-to-call-to').addEventListener('change', function (event) {
-    console.log('changed ext to  call to')
-    const chosenExtension = document.getElementById('extension-to-call-to').value
-    const $options = document.querySelectorAll('select#extension-to-call-from option')
-    $options.forEach($option => {
-      if ($option.value === chosenExtension) {
-        $option.classList.add('hide')
-      } else {
-        $option.classList.remove('hide')
-      }
-    })
-  })
+  document.getElementById("extension-to-call-to").addEventListener(
+    "change",
+    function (event) {
+      console.log("changed ext to  call to");
+      const chosenExtension =
+        document.getElementById("extension-to-call-to").value;
+      const $options = document.querySelectorAll(
+        "select#extension-to-call-from option",
+      );
+      $options.forEach(($option) => {
+        if ($option.value === chosenExtension) {
+          $option.classList.add("hide");
+        } else {
+          $option.classList.remove("hide");
+        }
+      });
+    },
+  );
 
-  document.getElementById('initiate-call').addEventListener('click', function (event) {
-    const from = document.getElementById('extension-to-call-from').value
-    const to = document.getElementById('extension-to-call-to').value
-    socket.to("make-call", {
-      channel: "make-call",
-      to_extension: Number(to),
-      from_extension: Number(from)
-    })
-  })
-})
+  document.getElementById("initiate-call").addEventListener(
+    "click",
+    function (event) {
+      const from = document.getElementById("extension-to-call-from").value;
+      const to = document.getElementById("extension-to-call-to").value;
+      socket.to("make-call", {
+        channel: "make-call",
+        to_extension: Number(to),
+        from_extension: Number(from),
+      });
+    },
+  );
+});

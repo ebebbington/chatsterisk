@@ -5,13 +5,13 @@ export default class Response extends Drash.Http.Response {
     let acceptHeaders = this.request.headers.get("accept")!.split(";")[0];
     const wantsJson = acceptHeaders.indexOf("application/json") > -1;
     const wantsXml = acceptHeaders.indexOf("application/xml") > -1 ||
-        acceptHeaders.indexOf("text/xml") > -1;
+      acceptHeaders.indexOf("text/xml") > -1;
     const wantsPlain = acceptHeaders.indexOf("text/plain") > -1;
     const wantsHtml = acceptHeaders.indexOf("text/html") > -1;
     const wantsAny = acceptHeaders.indexOf("*/*") > -1;
     const wantsCss = acceptHeaders.indexOf("text/css") > -1;
     const wantsJs = acceptHeaders.indexOf("text/javascript") > -1 ||
-        acceptHeaders.indexOf("application/javascript") > -1;
+      acceptHeaders.indexOf("application/javascript") > -1;
     if (wantsJson) {
       if (typeof this.body !== "string") {
         throw new Error("The body isn't a string, what are you doing?");
@@ -46,13 +46,13 @@ export default class Response extends Drash.Http.Response {
       if (pattern.test(this.status_code.toString())) {
         const decoder = new TextDecoder();
         const view = decoder.decode(
-            Deno.readFileSync("./public/views/error.html"),
+          Deno.readFileSync("./public/views/error.html"),
         );
         const errorMessage = "URI " + this.request.url + " doesn't exist";
         this.body = view
-            .replace(/\{\{ statusCode \}\}/g, this.status_code.toString())
-            .replace(/\{\{ uri \}\}/g, this.request.url)
-            .replace(/\{\{ title \}\}/g, this.status_code.toString());
+          .replace(/\{\{ statusCode \}\}/g, this.status_code.toString())
+          .replace(/\{\{ uri \}\}/g, this.request.url)
+          .replace(/\{\{ title \}\}/g, this.status_code.toString());
       }
       if (typeof this.body !== "string") {
         this.body = "";
