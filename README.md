@@ -1,6 +1,11 @@
 <p align="center">
   <h1 align="center">Chatsterisk</h1>
 </p>
+<p align="center">
+  <a href="https://github.com/ebebbington/chatsterisk/actions">
+    <img src="https://img.shields.io/github/workflow/status/ebebbington/chatsterisk/master?label=ci">
+  </a>
+</p>
 
 ---
 
