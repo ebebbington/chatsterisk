@@ -40,7 +40,6 @@ const server = new Drash.Http.Server({
   },
 });
 
-
 await server.run({
   hostname: config().SERVER_HOSTNAME,
   port: Number(config().SERVER_PORT),
