@@ -21,23 +21,14 @@ const socket = new SocketClient({
   port: 1668
 })
 
-let extensions = []
+const extensions = []
 
 window.addEventListener("DOMContentLoaded", function () {
-
-  socket.on("test", () => {
-    console.log('tets got message')
-  })
-  setInterval(() => {
-    socket.to("test", {
-      channel: "test"
-    })
-  }, 5000)
 
   socket.on('get-extensions', (data) => {
     console.log('got extensions')
     const json = JSON.parse(data.text)
-    extensions = json.data
+    //extensions = json.data
     const $extensionToCallFrom = document.getElementById('extension-to-call-from')
     const $extensionToCallTo = document.getElementById('extension-to-call-to')
     extensions.forEach(extension => {
@@ -56,6 +47,11 @@ window.addEventListener("DOMContentLoaded", function () {
   })
   socket.to("get-extensions", {
     channel: "get-extensions"
+  })
+
+  // data = { EXTEN: "STATE", ... }
+  socket.on("extension-states", (data) => {
+    console.log('got extension states')
   })
 
   document.getElementById('extension-to-call-from').addEventListener('change', function () {
