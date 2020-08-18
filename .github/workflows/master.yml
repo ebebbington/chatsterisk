@@ -21,13 +21,13 @@ jobs:
       - name: Run Server Tests
         run: |
           docker-compose up -d
-          cd src/server
+          sleep 20
           docker exec drash_server deno test -A
 
       - name: Run AMI Tests
         run: |
           docker-compose up -d
-          cd src/ami
+          sleep 20
           docker exec ami_socket deno test -A
 
   linter:

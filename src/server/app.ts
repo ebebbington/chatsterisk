@@ -1,13 +1,8 @@
 import { Drash, Paladin, config } from "./deps.ts";
 
 config();
-const paladin = Paladin();
 
-class Extensions extends Drash.Http.Resource {
-  static paths = ["/extensions"];
-  public GET() {
-  }
-}
+const paladin = Paladin();
 
 class HomeResource extends Drash.Http.Resource {
   static paths = ["/", "/home"];
@@ -44,6 +39,7 @@ const server = new Drash.Http.Server({
     ],
   },
 });
+
 
 await server.run({
   hostname: config().SERVER_HOSTNAME,
