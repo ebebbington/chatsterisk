@@ -22,13 +22,13 @@ jobs:
         run: |
           docker-compose up -d
           cd src/server
-          deno test -A
+          docker exec drash_server deno test -A
 
       - name: Run AMI Tests
         run: |
           docker-compose up -d
           cd src/ami
-          deno test -A
+          docker exec ami_socket deno test -A
 
   linter:
     # Only one OS is required since fmt is cross platform
