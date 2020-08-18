@@ -52,7 +52,6 @@ await server.run({
 
 console.log(`Server running on ${server.hostname}:${server.port}`);
 
-// @ts-ignore
 // const require = createRequire(import.meta.url);
 // const AmiClient = require('asterisk-ami-client');
 //

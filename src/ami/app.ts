@@ -123,6 +123,7 @@ class Server {
    * Creates the listeners for the socket server
    */
   private async initialiseSocketChannels() {
+    // deno-lint-ignore no-explicit-any TODO(edward) Remove any when sockets repo is  updated
     this.Socket.createChannel("make-call").onMessage(async (data: any) => {
       console.log("data was recieved for make call");
       console.log(data);
@@ -132,6 +133,7 @@ class Server {
         Context: "from-internal",
       });
     });
+    // deno-lint-ignore no-explicit-any TODO(edward) Remove any when sockets repo is  updated
     this.Socket.createChannel("get-extensions").onMessage(async (data: any) => {
       console.log("get-extensions called");
       //const extensions = await getExtensionsFromAsterisk()
