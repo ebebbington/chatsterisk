@@ -54,7 +54,7 @@ class Server {
   /**
    * Starts our socket server, connects and logs in to the AMI
    */
-  public async start() {
+  public async start(): Promise<void> {
     // Connect and listen to the AMI
     await this.Dami.connectAndLogin(this.ami_auth);
     await this.Dami.listen();
@@ -72,15 +72,8 @@ class Server {
     });
 
     // Set peer entries immediantly so  we have access to all extensions
-    this.Dami.on("PeerEntry", (data: DAMIData) => {
-      const entryAlreadyExists = this.peer_entries.filter((entry) =>
-        entry.ObjectName === data.ObjectName
-      ).length >= 1;
-      if (entryAlreadyExists === false) {
-        this.peer_entries.push(data);
-      }
-    });
-    this.Dami.to("Sippeers", {}); // triggers `PeerEntry` events and a `PeerlistComplete` event
+    const peerEntries = await this.Dami.to("SIPPeers", {ActionID: 12});
+    this.peer_entries = peerEntries.filter(entry => entry["Event"] === "PeerEntry");
 
     // Keep our entry statuses updated
     this.listenForExtensionStates();
