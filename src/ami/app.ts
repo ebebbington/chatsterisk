@@ -72,8 +72,10 @@ class Server {
     });
 
     // Set peer entries immediantly so  we have access to all extensions
-    const peerEntries = await this.Dami.to("SIPPeers", {ActionID: 12});
-    this.peer_entries = peerEntries.filter(entry => entry["Event"] === "PeerEntry");
+    const peerEntries = await this.Dami.to("SIPPeers", { ActionID: 12 });
+    this.peer_entries = peerEntries.filter((entry) =>
+      entry["Event"] === "PeerEntry"
+    );
 
     // Keep our entry statuses updated
     this.listenForExtensionStates();
