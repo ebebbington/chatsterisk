@@ -34,7 +34,7 @@ const server = new Drash.Http.Server({
     },
   }),
   middleware: {
-    before_request: [
+    after_request: [
       paladin,
     ],
   },
