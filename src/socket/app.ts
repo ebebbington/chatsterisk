@@ -1,4 +1,4 @@
-import {SocketServer} from "./src/socket.ts";
+import { SocketServer } from "./src/socket.ts";
 
 const server = new SocketServer();
 await server.start();

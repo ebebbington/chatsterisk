@@ -1,4 +1,4 @@
-import { Action, DAMI, Event, Packet, DrashSocketServer } from "../deps.ts";
+import { Action, DAMI, DrashSocketServer, Event, Packet } from "../deps.ts";
 
 export class SocketServer {
   /**
@@ -62,7 +62,7 @@ export class SocketServer {
     // Start the socket server
     await this.Socket.run(this.socket_configs);
     console.log(
-        `Socket server started on ws://${this.socket_configs.hostname}:${this.socket_configs.port}`,
+      `Socket server started on ws://${this.socket_configs.hostname}:${this.socket_configs.port}`,
     );
     this.Socket.on("connection", () => {
       console.log("A socket client connected.");
@@ -95,8 +95,8 @@ export class SocketServer {
       if (!Array.isArray(exten) && !Array.isArray(state)) {
         this.peer_entry_states[exten] = state;
         this.Socket.to(
-            "extension-states",
-            JSON.stringify(this.peer_entry_states),
+          "extension-states",
+          JSON.stringify(this.peer_entry_states),
         );
       }
     });
@@ -107,8 +107,8 @@ export class SocketServer {
       if (!Array.isArray(exten) && !Array.isArray(state)) {
         this.peer_entry_states[exten] = state;
         this.Socket.to(
-            "extension-states",
-            JSON.stringify(this.peer_entry_states),
+          "extension-states",
+          JSON.stringify(this.peer_entry_states),
         );
       }
     });
@@ -124,10 +124,10 @@ export class SocketServer {
       console.log(data);
       await this.Dami.to("Originate", {
         Channel: "sip/" +
-            (data.message as { to_extension: string; from_extension: string })
-                .to_extension,
+          (data.message as { to_extension: string; from_extension: string })
+            .to_extension,
         Exten:
-        (data.message as { to_extension: string; from_extension: string })
+          (data.message as { to_extension: string; from_extension: string })
             .from_extension,
         Context: "from-internal",
       });

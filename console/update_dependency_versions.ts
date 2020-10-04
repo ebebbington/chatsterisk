@@ -7,6 +7,14 @@ const versions: {
 } = await fetchRes.json(); // eg { latest: "v1.3.3", versions: ["v1.3.2", ...] }
 const latestDenoVersion = versions.latest.replace("v", "");
 
-let dockerComposeContent = decoder.decode(Deno.readFileSync("./console/docker-compose.yml"));
-dockerComposeContent = dockerComposeContent.replace(/DENO VERSION: [0-9.]+[0-9.]+[0-9]/g, `DENO VERSION: ${latestDenoVersion}`)
-Deno.writeFileSync("./console/docker-compose.yml", encoder.encode(dockerComposeContent))
+let dockerComposeContent = decoder.decode(
+  Deno.readFileSync("./console/docker-compose.yml"),
+);
+dockerComposeContent = dockerComposeContent.replace(
+  /DENO VERSION: [0-9.]+[0-9.]+[0-9]/g,
+  `DENO VERSION: ${latestDenoVersion}`,
+);
+Deno.writeFileSync(
+  "./console/docker-compose.yml",
+  encoder.encode(dockerComposeContent),
+);

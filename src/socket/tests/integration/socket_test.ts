@@ -1,4 +1,4 @@
-import {deferred, Rhum} from "../deps.ts";
+import { deferred, Rhum } from "../deps.ts";
 
 Rhum.testPlan("tests/integration/socket_test.ts", () => {
   Rhum.testSuite("Connecting", () => {
@@ -17,12 +17,11 @@ Rhum.testPlan("tests/integration/socket_test.ts", () => {
     //   }
     //   await promise;
     // })
-  })
+  });
   Rhum.testSuite("Events", async () => {
     Rhum.testCase("Client gets all peer entries when connected", async () => {
+    });
+  });
+});
 
-    })
-  })
-})
-
-Rhum.run()
+Rhum.run();
