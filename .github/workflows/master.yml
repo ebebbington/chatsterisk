@@ -44,4 +44,4 @@ jobs:
         run: cd src/server && deno fmt --check && cd ../ami && deno fmt --check
 
       - name: linter
-        run: cd src/server && deno lint --unstable && cd ../ami && deno lint --unstable
+        run: deno lint --unstable --ignore='src/server/public'

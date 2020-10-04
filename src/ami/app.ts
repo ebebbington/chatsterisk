@@ -1,4 +1,4 @@
-import { DAMI, DAMIData, SocketServer } from "./deps.ts";
+import { Action, DAMI, Event, Packet, SocketServer } from "./deps.ts";
 
 class Server {
   /**
@@ -36,7 +36,7 @@ class Server {
   /**
    * Holds all registered extensions
    */
-  public peer_entries: Array<DAMIData> = [];
+  public peer_entries: Event[] = [];
 
   /**
    * Extensions and their states
@@ -72,10 +72,10 @@ class Server {
     });
 
     // Set peer entries immediantly so  we have access to all extensions
-    const peerEntries = await this.Dami.to("SIPPeers", { ActionID: 12 });
-    this.peer_entries = peerEntries.filter((entry) =>
-      entry["Event"] === "PeerEntry"
-    );
+    this.Dami.to("SIPPeers", {}, (data: Event[]) => {
+      data = data.filter(((d) => d["Event"] === "PeerEntry"));
+      this.peer_entries = data;
+    });
 
     // Keep our entry statuses updated
     this.listenForExtensionStates();
@@ -89,9 +89,9 @@ class Server {
    */
   private listenForExtensionStates(): void {
     // on calls hung up, set status to available
-    this.Dami.on("Hangup", (data: DAMIData) => {
-      const exten: string = data["CallerIDNum"].toString();
-      const state: string = data["ChannelStateDesc"].toString();
+    this.Dami.on("Hangup", (data: Event[]) => {
+      const exten: string = data[0]["CallerIDNum"].toString();
+      const state: string = data[0]["ChannelStateDesc"].toString();
       if (!Array.isArray(exten) && !Array.isArray(state)) {
         this.peer_entry_states[exten] = state;
         this.Socket.to(
@@ -101,9 +101,9 @@ class Server {
       }
     });
     // When a channel is created, set the status, handles declining calls (sets to busy) and when an exten is called, sets it to ringing
-    this.Dami.on("Newstate", (data: DAMIData) => {
-      const exten: string = data["CallerIDNum"].toString();
-      const state: string = data["ChannelStateDesc"].toString();
+    this.Dami.on("Newstate", (data: Event[]) => {
+      const exten: string = data[0]["CallerIDNum"].toString();
+      const state: string = data[0]["ChannelStateDesc"].toString();
       if (!Array.isArray(exten) && !Array.isArray(state)) {
         this.peer_entry_states[exten] = state;
         this.Socket.to(
@@ -118,18 +118,23 @@ class Server {
    * Creates the listeners for the socket server
    */
   private async initialiseSocketChannels() {
-    // deno-lint-ignore no-explicit-any TODO(edward) Remove any when sockets repo is  updated
-    this.Socket.createChannel("make-call").onMessage(async (data: any) => {
-      console.log("data was recieved for make call");
+    this.Socket.openChannel("make-call");
+    this.Socket.on("make-call", async (data: Packet) => {
+      console.log("data was received for make call");
       console.log(data);
       await this.Dami.to("Originate", {
-        Channel: "sip/" + data.message.to_extension,
-        Exten: data.message.from_extension,
+        Channel: "sip/" +
+          (data.message as { to_extension: string; from_extension: string })
+            .to_extension,
+        Exten:
+          (data.message as { to_extension: string; from_extension: string })
+            .from_extension,
         Context: "from-internal",
       });
     });
-    // deno-lint-ignore no-explicit-any TODO(edward) Remove any when sockets repo is  updated
-    this.Socket.createChannel("get-extensions").onMessage(async (data: any) => {
+
+    this.Socket.openChannel("get-extensions");
+    this.Socket.on("get-extensions", async (data: Packet) => {
       console.log("get-extensions called");
       //const extensions = await getExtensionsFromAsterisk()
       const extensions = this.peer_entries.map((peerEntry) => {

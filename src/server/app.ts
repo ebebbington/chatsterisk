@@ -1,4 +1,4 @@
-import { Drash, Paladin, config } from "./deps.ts";
+import { config, Drash, Paladin } from "./deps.ts";
 
 config();
 
@@ -7,7 +7,7 @@ const paladin = Paladin();
 class HomeResource extends Drash.Http.Resource {
   static paths = ["/", "/home"];
   public GET() {
-    this.response.body = this.response.render("/index.html", {
+    this.response.body = this.response.render("/index.dml", {
       title: "Chatsterisk - Home",
     });
     return this.response;
@@ -34,7 +34,7 @@ const server = new Drash.Http.Server({
     },
   }),
   middleware: {
-    before_request: [
+    after_request: [
       paladin,
     ],
   },
