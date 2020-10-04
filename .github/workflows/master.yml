@@ -41,7 +41,7 @@ jobs:
         uses: denolib/setup-deno@master
 
       - name: Formatter
-        run: cd src/server && deno fmt --check && cd ../ami && deno fmt --check
+        run: cd src/server && deno fmt --check && cd ../socket && deno fmt --check
 
       - name: linter
         run: deno lint --unstable --ignore='src/server/public'

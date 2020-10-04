@@ -36,12 +36,12 @@ class Server {
   /**
    * Holds all registered extensions
    */
-  public peer_entries: Event[] = [];
+  private peer_entries: Event[] = [];
 
   /**
    * Extensions and their states
    */
-  public peer_entry_states: { [exten: string]: string } = {};
+  private peer_entry_states: { [exten: string]: string } = {};
 
   /**
    * Creates instances of the socket server and DAMI
