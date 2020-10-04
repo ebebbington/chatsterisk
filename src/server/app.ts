@@ -1,4 +1,4 @@
-import { Drash, Paladin, config } from "./deps.ts";
+import { config, Drash, Paladin } from "./deps.ts";
 
 config();
 

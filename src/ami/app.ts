@@ -1,4 +1,4 @@
-import { DAMI, Action, Packet, Event, SocketServer } from "./deps.ts";
+import { Action, DAMI, Event, Packet, SocketServer } from "./deps.ts";
 
 class Server {
   /**
@@ -73,7 +73,7 @@ class Server {
 
     // Set peer entries immediantly so  we have access to all extensions
     this.Dami.to("SIPPeers", {}, (data: Event[]) => {
-      data = data.filter((d => d["Event"] === "PeerEntry"))
+      data = data.filter(((d) => d["Event"] === "PeerEntry"));
       this.peer_entries = data;
     });
 
@@ -118,18 +118,22 @@ class Server {
    * Creates the listeners for the socket server
    */
   private async initialiseSocketChannels() {
-    this.Socket.openChannel("make-call")
+    this.Socket.openChannel("make-call");
     this.Socket.on("make-call", async (data: Packet) => {
       console.log("data was received for make call");
       console.log(data);
       await this.Dami.to("Originate", {
-        Channel: "sip/" + (data.message as { to_extension: string, from_extension: string }).to_extension,
-        Exten: (data.message as { to_extension: string, from_extension: string }).from_extension,
+        Channel: "sip/" +
+          (data.message as { to_extension: string; from_extension: string })
+            .to_extension,
+        Exten:
+          (data.message as { to_extension: string; from_extension: string })
+            .from_extension,
         Context: "from-internal",
       });
     });
 
-    this.Socket.openChannel("get-extensions")
+    this.Socket.openChannel("get-extensions");
     this.Socket.on("get-extensions", async (data: Packet) => {
       console.log("get-extensions called");
       //const extensions = await getExtensionsFromAsterisk()

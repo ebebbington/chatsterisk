@@ -22,63 +22,62 @@ import SocketClient from "https://cdn.jsdelivr.net/gh/drashland/sockets-client@l
 // });
 
 const socketListeners = {
-  'get-extensions': function (data) {
-    console.log(data)
-    const extensions = data.message
+  "get-extensions": function (data) {
+    console.log(data);
+    const extensions = data.message;
     const $extensionToCallFrom = document.getElementById(
-        "extension-to-call-from",
-      );
-      const $extensionToCallTo = document.getElementById("extension-to-call-to");
-      extensions.forEach((extension) => {
-        let $option;
+      "extension-to-call-from",
+    );
+    const $extensionToCallTo = document.getElementById("extension-to-call-to");
+    extensions.forEach((extension) => {
+      let $option;
 
-        $option = document.createElement("option");
-        $option.value = extension;
-        $option.innerText = extension;
-        $extensionToCallFrom.appendChild($option);
+      $option = document.createElement("option");
+      $option.value = extension;
+      $option.innerText = extension;
+      $extensionToCallFrom.appendChild($option);
 
-        $option = document.createElement("option");
-        $option.value = extension;
-        $option.innerText = extension;
-        $extensionToCallTo.appendChild($option);
-      });
-  }
-}
+      $option = document.createElement("option");
+      $option.value = extension;
+      $option.innerText = extension;
+      $extensionToCallTo.appendChild($option);
+    });
+  },
+};
 
-const client = new WebSocket("ws://0.0.0.0:1668")
+const client = new WebSocket("ws://0.0.0.0:1668");
 client.onclose = function () {
-  console.log('clint ws conn closed')
-}
+  console.log("clint ws conn closed");
+};
 client.onopen = function () {
-  console.log('client ws conn opened')
+  console.log("client ws conn opened");
   client.send(JSON.stringify({
-    connect_to: ["get-extensions", "make-call"]
-  }))
+    connect_to: ["get-extensions", "make-call"],
+  }));
   client.send(JSON.stringify({
     send_packet: {
       to: "get-extensions",
       message: "",
     },
-  }))
-}
+  }));
+};
 client.onmessage = function (event) {
-  console.log('client ws conn got  msg')
+  console.log("client ws conn got  msg");
   if (event.data.indexOf("Connected to") > -1) {
     // connected
-    console.log(event.data)
+    console.log(event.data);
   } else {
     // msg event
-    const data = JSON.parse(event.data) // { from, to, message }
-    data.message = JSON.parse(data.message)
-    socketListeners[data.to](data)
+    const data = JSON.parse(event.data); // { from, to, message }
+    data.message = JSON.parse(data.message);
+    socketListeners[data.to](data);
   }
-}
+};
 client.onerror = function () {
-  console.log('client ws conn errored')
-}
+  console.log("client ws conn errored");
+};
 
 window.addEventListener("DOMContentLoaded", function () {
-
   document.getElementById("extension-to-call-from").addEventListener(
     "change",
     function () {
@@ -127,10 +126,10 @@ window.addEventListener("DOMContentLoaded", function () {
           to: "make-call",
           message: {
             to_extension: Number(to),
-            from_extension: Number(from)
-          }
-        }
-      }))
+            from_extension: Number(from),
+          },
+        },
+      }));
     },
   );
 });
