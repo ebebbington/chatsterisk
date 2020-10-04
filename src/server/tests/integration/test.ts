@@ -1,4 +1,4 @@
-import { Rhum } from "./deps.ts";
+import { Rhum } from "../deps.ts";
 
 Rhum.testPlan("server/tests/test.ts", () => {
   Rhum.testSuite("GET /", () => {
