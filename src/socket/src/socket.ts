@@ -1,4 +1,4 @@
-import { Action, DAMI, Event, Packet, SocketServer } from "./deps.ts";
+import { Action, DAMI, Event, Packet, DrashSocketServer } from "../deps.ts";
 
 export class SocketServer {
   /**
@@ -31,7 +31,7 @@ export class SocketServer {
   /**
    * To create our socket server
    */
-  private readonly Socket: SocketServer;
+  private readonly Socket: DrashSocketServer;
 
   /**
    * Holds all registered extensions
@@ -48,7 +48,7 @@ export class SocketServer {
    */
   constructor() {
     this.Dami = new DAMI(this.ami_configs);
-    this.Socket = new SocketServer();
+    this.Socket = new DrashSocketServer();
   }
 
   /**
