@@ -120,7 +120,7 @@ class Server {
   private async initialiseSocketChannels() {
     this.Socket.openChannel("make-call")
     this.Socket.on("make-call", async (data: Packet) => {
-      console.log("data was recieved for make call");
+      console.log("data was received for make call");
       console.log(data);
       await this.Dami.to("Originate", {
         Channel: "sip/" + (data.message as { to_extension: string, from_extension: string }).to_extension,
