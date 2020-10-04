@@ -123,13 +123,15 @@ export class SocketServer {
       console.log("data was received for make call");
       console.log(data);
       await this.Dami.to("Originate", {
-        Channel: "sip/" +
+        Channel: "SIP/" +
           (data.message as { to_extension: string; from_extension: string })
             .to_extension,
         Exten:
           (data.message as { to_extension: string; from_extension: string })
             .from_extension,
         Context: "from-internal",
+        Priority: 1,
+        Callerid: (data.message as { to_extension: string, from_extension: string}).from_extension
       });
     });
 

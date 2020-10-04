@@ -11,6 +11,8 @@
 
     <div class="container">
 
+        <p>Remember to refresh the extensions to make a call!</p>
+
         <div class="row flex">
 
             <div class="col-6 text-align-c">
