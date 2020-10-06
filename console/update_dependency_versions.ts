@@ -8,13 +8,13 @@ const versions: {
 const latestDenoVersion = versions.latest.replace("v", "");
 
 let dockerComposeContent = decoder.decode(
-  Deno.readFileSync("./console/docker-compose.yml"),
+  Deno.readFileSync("./docker-compose.yml"),
 );
 dockerComposeContent = dockerComposeContent.replace(
-  /DENO VERSION: [0-9.]+[0-9.]+[0-9]/g,
-  `DENO VERSION: ${latestDenoVersion}`,
+  /DENO_VERSION: [0-9.]+[0-9.]+[0-9]/g,
+  `DENO_VERSION: ${latestDenoVersion}`,
 );
 Deno.writeFileSync(
-  "./console/docker-compose.yml",
+  "./docker-compose.yml",
   encoder.encode(dockerComposeContent),
 );
