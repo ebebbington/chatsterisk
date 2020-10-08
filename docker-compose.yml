@@ -7,7 +7,7 @@ services:
       context: .
       dockerfile: .docker/deno.dockerfile
       args:
-        DENO_VERSION: 1.2.3
+        DENO_VERSION: 1.4.4
     environment:
       USE_DENON: "true"
     volumes:
@@ -26,7 +26,7 @@ services:
       context: .
       dockerfile: .docker/deno.dockerfile
       args:
-        DENO_VERSION: 1.2.3
+        DENO_VERSION: 1.4.4
     environment:
       USE_DENON: "true"
     ports:
