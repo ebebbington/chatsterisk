@@ -131,7 +131,9 @@ export class SocketServer {
             .from_extension,
         Context: "from-internal",
         Priority: 1,
-        Callerid: (data.message as { to_extension: string, from_extension: string}).from_extension
+        Callerid:
+          (data.message as { to_extension: string; from_extension: string })
+            .from_extension,
       });
     });
 
