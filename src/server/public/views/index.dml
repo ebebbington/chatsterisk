@@ -1,46 +1,5 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title><% title %>></title>
-    <meta name="viewport" content="width=device-width, minimum-scale=1.0, user-scalable=no"/>
-    <link rel="stylesheet" href="/public/css/global.css">
-    <script src="/public/js/sip_ami.js" type="module"></script>
-</head>
-<body>
-    <h1><% title %></h1>
-
-    <div class="container">
-
-        <p>Remember to refresh the extensions to make a call!</p>
-
-        <div class="row flex">
-
-            <div class="col-6 text-align-c">
-                <p>Select an extension to call from</p>
-                <select id="extension-to-call-from">
-                    <option value="" selected>Select...</option>
-                </select>
-            </div>
-
-            <div class="col-6 text-align-c">
-                <p>Select an extension to call to</p>
-                <select id="extension-to-call-to">
-                    <option value="" selected>Select...</option>
-                </select>
-            </div>
-
-        </div>
-
-        <div class="row">
-            <button type="button" id="initiate-call">Initiate Call</button>
-        </div>
-
-        <div class="row">
-            <audio id="audio-remote" controls>
-                <p>Your browser doesn't support HTML5 audio.</p>
-            </audio>
-        </div>
-
-    </div>
-</body>
-</html>
+<% extends("/layout.dml") %>
+<div style="display: flex">
+    <a href="/call">Call</a>
+    <a href="/chat">Chat</a>
+</div>

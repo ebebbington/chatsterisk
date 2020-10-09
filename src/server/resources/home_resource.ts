@@ -1,4 +1,4 @@
-import {Drash} from "../deps";
+import {Drash} from "../deps.ts";
 
 export default class HomeResource extends Drash.Http.Resource {
   static paths = ["/", "/home"];
