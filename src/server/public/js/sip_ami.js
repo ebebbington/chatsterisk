@@ -52,11 +52,11 @@ client.onclose = function () {
 client.onopen = function () {
   console.log("client ws conn opened");
   client.send(JSON.stringify({
-    connect_to: ["get-extensions", "make-call"],
+    connect_to: ["call.get-extensions", "make-call"],
   }));
   client.send(JSON.stringify({
     send_packet: {
-      to: "get-extensions",
+      to: "call.get-extensions",
       message: "",
     },
   }));
@@ -123,7 +123,7 @@ window.addEventListener("DOMContentLoaded", function () {
       const to = document.getElementById("extension-to-call-to").value;
       client.send(JSON.stringify({
         send_packet: {
-          to: "make-call",
+          to: "call.make-call",
           message: {
             to_extension: Number(to),
             from_extension: Number(from),

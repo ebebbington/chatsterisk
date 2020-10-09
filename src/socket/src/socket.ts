@@ -95,7 +95,7 @@ export class SocketServer {
       if (!Array.isArray(exten) && !Array.isArray(state)) {
         this.peer_entry_states[exten] = state;
         this.Socket.to(
-          "extension-states",
+          "call.extension-states",
           JSON.stringify(this.peer_entry_states),
         );
       }
@@ -107,7 +107,7 @@ export class SocketServer {
       if (!Array.isArray(exten) && !Array.isArray(state)) {
         this.peer_entry_states[exten] = state;
         this.Socket.to(
-          "extension-states",
+          "call.extension-states",
           JSON.stringify(this.peer_entry_states),
         );
       }
@@ -118,8 +118,8 @@ export class SocketServer {
    * Creates the listeners for the socket server
    */
   private async initialiseSocketChannels() {
-    this.Socket.openChannel("make-call");
-    this.Socket.on("make-call", async (data: Packet) => {
+    this.Socket.openChannel("call.make-call");
+    this.Socket.on("call.make-call", async (data: Packet) => {
       console.log("data was received for make call");
       console.log(data);
       await this.Dami.to("Originate", {
@@ -137,15 +137,15 @@ export class SocketServer {
       });
     });
 
-    this.Socket.openChannel("get-extensions");
-    this.Socket.on("get-extensions", async (data: Packet) => {
-      console.log("get-extensions called");
+    this.Socket.openChannel("call.get-extensions");
+    this.Socket.on("call.get-extensions", async (data: Packet) => {
+      console.log("call.get-extensions called");
       //const extensions = await getExtensionsFromAsterisk()
       const extensions = this.peer_entries.map((peerEntry) => {
         return peerEntry.ObjectName;
       });
       console.log(extensions);
-      this.Socket.to("get-extensions", JSON.stringify(extensions));
+      this.Socket.to("call.get-extensions", JSON.stringify(extensions));
     });
   }
 }
