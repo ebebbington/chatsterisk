@@ -1,19 +1,13 @@
 import { Action, DAMI, DrashSocketServer, Event, Packet } from "../deps.ts";
+import {Call} from "./call.ts";
+import {Video} from "./video.ts";
+import {Chat} from "./chat.ts";
 
 export class SocketServer {
   /**
-   * Connection configs for the AMI client
+   * To create our socket server
    */
-  private readonly ami_configs = {
-    hostname: "asterisk_pbx",
-    port: 5038,
-    logger: true,
-  };
-
-  /**
-   * Auth details for logging in to the AMI
-   */
-  private readonly ami_auth = { username: "admin", secret: "mysecret" };
+  private readonly Socket: DrashSocketServer;
 
   /**
    * Connection configs for the socket server
@@ -24,30 +18,9 @@ export class SocketServer {
   };
 
   /**
-   * DAMI  instance to speak to the AMI
-   */
-  private readonly Dami: DAMI;
-
-  /**
-   * To create our socket server
-   */
-  private readonly Socket: DrashSocketServer;
-
-  /**
-   * Holds all registered extensions
-   */
-  private peer_entries: Event[] = [];
-
-  /**
-   * Extensions and their states
-   */
-  private peer_entry_states: { [exten: string]: string } = {};
-
-  /**
    * Creates instances of the socket server and DAMI
    */
   constructor() {
-    this.Dami = new DAMI(this.ami_configs);
     this.Socket = new DrashSocketServer();
   }
 
@@ -55,10 +28,6 @@ export class SocketServer {
    * Starts our socket server, connects and logs in to the AMI
    */
   public async start(): Promise<void> {
-    // Connect and listen to the AMI
-    await this.Dami.connectAndLogin(this.ami_auth);
-    await this.Dami.listen();
-
     // Start the socket server
     await this.Socket.run(this.socket_configs);
     console.log(
@@ -71,81 +40,12 @@ export class SocketServer {
       console.log("A socket client disconnected.");
     });
 
-    // Set peer entries immediantly so  we have access to all extensions
-    this.Dami.to("SIPPeers", {}, (data: Event[]) => {
-      data = data.filter(((d) => d["Event"] === "PeerEntry"));
-      this.peer_entries = data;
-    });
-
-    // Keep our entry statuses updated
-    this.listenForExtensionStates();
-
-    // Start listening on the socket channels
-    await this.initialiseSocketChannels();
-  }
-
-  /**
-   * Used to listen on any states extensions to update the states property when required
-   */
-  private listenForExtensionStates(): void {
-    // on calls hung up, set status to available
-    this.Dami.on("Hangup", (data: Event[]) => {
-      const exten: string = data[0]["CallerIDNum"].toString();
-      const state: string = data[0]["ChannelStateDesc"].toString();
-      if (!Array.isArray(exten) && !Array.isArray(state)) {
-        this.peer_entry_states[exten] = state;
-        this.Socket.to(
-          "call.extension-states",
-          JSON.stringify(this.peer_entry_states),
-        );
-      }
-    });
-    // When a channel is created, set the status, handles declining calls (sets to busy) and when an exten is called, sets it to ringing
-    this.Dami.on("Newstate", (data: Event[]) => {
-      const exten: string = data[0]["CallerIDNum"].toString();
-      const state: string = data[0]["ChannelStateDesc"].toString();
-      if (!Array.isArray(exten) && !Array.isArray(state)) {
-        this.peer_entry_states[exten] = state;
-        this.Socket.to(
-          "call.extension-states",
-          JSON.stringify(this.peer_entry_states),
-        );
-      }
-    });
-  }
-
-  /**
-   * Creates the listeners for the socket server
-   */
-  private async initialiseSocketChannels() {
-    this.Socket.openChannel("call.make-call");
-    this.Socket.on("call.make-call", async (data: Packet) => {
-      console.log("data was received for make call");
-      console.log(data);
-      await this.Dami.to("Originate", {
-        Channel: "SIP/" +
-          (data.message as { to_extension: string; from_extension: string })
-            .to_extension,
-        Exten:
-          (data.message as { to_extension: string; from_extension: string })
-            .from_extension,
-        Context: "from-internal",
-        Priority: 1,
-        Callerid:
-          (data.message as { to_extension: string; from_extension: string })
-            .from_extension,
-      });
-    });
-
-    this.Socket.openChannel("call.get-extensions");
-    this.Socket.on("call.get-extensions", async (data: Packet) => {
-      console.log("call.get-extensions called");
-      //const extensions = await getExtensionsFromAsterisk()
-      const extensions = this.peer_entries.map((peerEntry) => {
-        return peerEntry.ObjectName;
-      });
-      console.log(extensions);
-      this.Socket.to("call.get-extensions", JSON.stringify(extensions));
-    });
+    // Start listening on the socket channels for the different apps
+    const call = new Call(this.Socket)
+    const video = new Video(this.Socket)
+    const chat = new Chat(this.Socket)
+    await call.start()
+    await video.start()
+    await chat.start()
   }
 }
