@@ -12,9 +12,9 @@ const server = new Drash.Http.Server({
   directory: ".",
   resources: [
     HomeResource,
-      CallResource,
-      ChatResource,
-      VideoResource
+    CallResource,
+    ChatResource,
+    VideoResource,
   ],
   static_paths: ["/public"],
   views_path: "./public/views",

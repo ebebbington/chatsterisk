@@ -21,7 +21,7 @@ import SocketClient from "https://cdn.jsdelivr.net/gh/drashland/sockets-client@l
 //   port: 1668,
 // });
 
-import { client } from '../modules/socket-client.js'
+import { client } from "../modules/socket-client.js";
 
 const socketListeners = {
   "call.get-extensions": function (data) {
@@ -66,7 +66,7 @@ client.onmessage = function (event) {
     console.log(event.data);
   } else {
     // msg event
-    console.log(event)
+    console.log(event);
     const data = JSON.parse(event.data); // { from, to, message }
     data.message = JSON.parse(data.message);
     socketListeners[data.to](data);

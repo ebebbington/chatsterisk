@@ -2,7 +2,7 @@ import { Drash } from "./deps.ts";
 
 export default class Response extends Drash.Http.Response {
   public generateResponse(): string {
-    let acceptHeaders = this.request.headers.get("accept")!.split(";")[0];
+    const acceptHeaders = this.request.headers.get("accept")!.split(";")[0];
     const wantsJson = acceptHeaders.indexOf("application/json") > -1;
     const wantsXml = acceptHeaders.indexOf("application/xml") > -1 ||
       acceptHeaders.indexOf("text/xml") > -1;
