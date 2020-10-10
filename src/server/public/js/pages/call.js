@@ -21,9 +21,10 @@ import SocketClient from "https://cdn.jsdelivr.net/gh/drashland/sockets-client@l
 //   port: 1668,
 // });
 
+import { client } from '../modules/socket-client.js'
+
 const socketListeners = {
-  "get-extensions": function (data) {
-    console.log(data);
+  "call.get-extensions": function (data) {
     const extensions = data.message;
     const $extensionToCallFrom = document.getElementById(
       "extension-to-call-from",
@@ -45,14 +46,11 @@ const socketListeners = {
   },
 };
 
-const client = new WebSocket("ws://0.0.0.0:1668");
-client.onclose = function () {
-  console.log("clint ws conn closed");
-};
+//const client = new WebSocket("ws://0.0.0.0:1668");
 client.onopen = function () {
   console.log("client ws conn opened");
   client.send(JSON.stringify({
-    connect_to: ["call.get-extensions", "make-call"],
+    connect_to: ["call.get-extensions", "call.make-call"],
   }));
   client.send(JSON.stringify({
     send_packet: {
@@ -68,13 +66,11 @@ client.onmessage = function (event) {
     console.log(event.data);
   } else {
     // msg event
+    console.log(event)
     const data = JSON.parse(event.data); // { from, to, message }
     data.message = JSON.parse(data.message);
     socketListeners[data.to](data);
   }
-};
-client.onerror = function () {
-  console.log("client ws conn errored");
 };
 
 window.addEventListener("DOMContentLoaded", function () {

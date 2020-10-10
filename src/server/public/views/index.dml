@@ -2,4 +2,5 @@
 <div style="display: flex">
     <a href="/call">Call</a>
     <a href="/chat">Chat</a>
+    <a href="/video">Video</a>
 </div>

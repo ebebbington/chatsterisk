@@ -1,1 +1,3 @@
 <% extends("/layout.dml") %>
+
+<script src="/public/js/pages/chat.js"></script>

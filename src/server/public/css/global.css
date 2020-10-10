@@ -16,6 +16,12 @@ button {
     font-size: 1em;
     transition-duration: .3s;
 }
+button.success {
+    background: green;
+}
+button.error {
+    background: red;
+}
 button:hover {
     cursor: pointer;
     box-shadow: 0px 0px 2px 2px var(--ter-colour);
@@ -116,4 +122,17 @@ ul {
 #navbar {
     text-align: center;
     margin-bottom: 5em;
+}
+
+#video-chat > video {
+    height: 200px;
+}
+#video-chat > #user-video {
+    position: fixed;
+    left: 2px;
+    bottom: 2px;
+}
+#video-chat > #peer-video {
+    width: 100%;
+    height: auto;
 }

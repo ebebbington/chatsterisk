@@ -28,4 +28,4 @@
                 <p>Your browser doesn't support HTML5 audio.</p>
             </audio>
         </div>
-<script src="/public/js/sip_ami.js" type="module"></script>
+<script src="/public/js/pages/call.js" type="module"></script>

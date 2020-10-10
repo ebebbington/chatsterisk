@@ -1,6 +1,8 @@
 import { config, Drash, Paladin } from "./deps.ts";
 import HomeResource from "./resources/home_resource.ts";
 import CallResource from "./resources/call_resource.ts";
+import ChatResource from "./resources/chat_resource.ts";
+import VideoResource from "./resources/video_resource.ts";
 
 config();
 
@@ -10,7 +12,9 @@ const server = new Drash.Http.Server({
   directory: ".",
   resources: [
     HomeResource,
-      CallResource
+      CallResource,
+      ChatResource,
+      VideoResource
   ],
   static_paths: ["/public"],
   views_path: "./public/views",

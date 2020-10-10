@@ -1,6 +1,6 @@
 import { Rhum } from "../deps.ts";
 
-Rhum.testPlan("server/tests/test.ts", () => {
+Rhum.testPlan("tests/integration/call_resource_test.ts", () => {
   Rhum.testSuite("GET /call", () => {
     Rhum.testCase("Responds with a 200 status", async () => {
       const res = await fetch("http://drash_server:1667/call");
