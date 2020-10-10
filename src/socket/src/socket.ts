@@ -13,7 +13,7 @@ export class SocketServer {
    * Connection configs for the socket server
    */
   private readonly socket_configs = {
-    hostname: "ami_socket",
+    hostname: "socket",
     port: 1668,
   };
 

@@ -4,7 +4,7 @@ Rhum.testPlan("tests/integration/call_test.ts", () => {
   Rhum.testSuite("Events", async () => {
     Rhum.testCase("Client gets all peer entries when connected", async () => {
       const promise = deferred();
-      const client = new WebSocket("ws://ami_socket:1668");
+      const client = new WebSocket("ws://socket:1668");
       let extensions = [];
       client.onopen = function () {
         client.send(JSON.stringify({

@@ -5,7 +5,7 @@ Rhum.testPlan("tests/integration/socket_test.ts", () => {
     // Needs to be deno v1.4.0, but denon doesnt work currently with 1.4.0
     Rhum.testCase("Client can connect to socket server", async () => {
       const promise = deferred();
-      const client = new WebSocket("ws://ami_socket:1668");
+      const client = new WebSocket("ws://socket:1668");
       let connected = false;
       client.onopen = function () {
         connected = true;

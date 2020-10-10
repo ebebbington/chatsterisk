@@ -1,4 +1,4 @@
-import {DAMI, DrashSocketServer, Event, Packet} from "../deps";
+import {DAMI, DrashSocketServer, Event, Packet} from "../deps.ts";
 
 export class Call {
   /**

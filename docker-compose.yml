@@ -19,7 +19,7 @@ services:
       - chatsterisk-app-network
 
   socket:
-    container_name: ami_socket
+    container_name: socket
     depends_on:
       - asterisk
     build:
