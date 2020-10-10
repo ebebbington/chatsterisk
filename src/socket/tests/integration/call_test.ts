@@ -8,11 +8,11 @@ Rhum.testPlan("tests/integration/call_test.ts", () => {
       const extensions = [];
       client.onopen = function () {
         client.send(JSON.stringify({
-          connect_to: ["get-extensions"],
+          connect_to: ["call.get-extensions"],
         }));
         client.send(JSON.stringify({
           send_packet: {
-            to: "get-extensions",
+            to: "call.get-extensions",
             message: "",
           },
         }));
@@ -22,7 +22,7 @@ Rhum.testPlan("tests/integration/call_test.ts", () => {
           const data = JSON.parse(msg.data);
           Rhum.asserts.assertEquals(data, {
             from: "Server",
-            to: "get-extensions",
+            to: "call.get-extensions",
             message: "[6001,6002]",
           });
           client.close();

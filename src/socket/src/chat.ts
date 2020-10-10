@@ -1,4 +1,4 @@
-import { DAMI, DrashSocketServer } from "../deps";
+import { DAMI, DrashSocketServer } from "../deps.ts";
 
 export class Chat {
   /**
