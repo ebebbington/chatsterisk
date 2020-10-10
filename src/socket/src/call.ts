@@ -1,4 +1,4 @@
-import {DAMI, DrashSocketServer, Event, Packet} from "../deps.ts";
+import { DAMI, DrashSocketServer, Event, Packet } from "../deps.ts";
 
 export class Call {
   /**
@@ -40,10 +40,10 @@ export class Call {
    */
   constructor(socket: DrashSocketServer) {
     this.Dami = new DAMI(this.ami_configs);
-    this.Socket = socket
+    this.Socket = socket;
   }
 
-  public async start () {
+  public async start() {
     // Connect and listen to the AMI
     await this.Dami.connectAndLogin(this.ami_auth);
     await this.Dami.listen();
@@ -54,25 +54,25 @@ export class Call {
       this.peer_entries = data;
     });
 
-    await this.initialiseSocketChannels()
+    await this.initialiseSocketChannels();
   }
 
-  private async initialiseSocketChannels (): Promise<void> {
+  private async initialiseSocketChannels(): Promise<void> {
     this.Socket.openChannel("call.make-call");
     this.Socket.on("call.make-call", async (data: Packet) => {
       console.log("data was received for make call");
       console.log(data);
       await this.Dami.to("Originate", {
         Channel: "SIP/" +
-            (data.message as { to_extension: string; from_extension: string })
-                .to_extension,
+          (data.message as { to_extension: string; from_extension: string })
+            .to_extension,
         Exten:
-        (data.message as { to_extension: string; from_extension: string })
+          (data.message as { to_extension: string; from_extension: string })
             .from_extension,
         Context: "from-internal",
         Priority: 1,
         Callerid:
-        (data.message as { to_extension: string; from_extension: string })
+          (data.message as { to_extension: string; from_extension: string })
             .from_extension,
       });
     });
@@ -100,8 +100,8 @@ export class Call {
       if (!Array.isArray(exten) && !Array.isArray(state)) {
         this.peer_entry_states[exten] = state;
         this.Socket.to(
-            "call.extension-states",
-            JSON.stringify(this.peer_entry_states),
+          "call.extension-states",
+          JSON.stringify(this.peer_entry_states),
         );
       }
     });
@@ -112,8 +112,8 @@ export class Call {
       if (!Array.isArray(exten) && !Array.isArray(state)) {
         this.peer_entry_states[exten] = state;
         this.Socket.to(
-            "call.extension-states",
-            JSON.stringify(this.peer_entry_states),
+          "call.extension-states",
+          JSON.stringify(this.peer_entry_states),
         );
       }
     });

@@ -1,4 +1,4 @@
-import {DAMI, DrashSocketServer} from "../deps";
+import { DAMI, DrashSocketServer } from "../deps";
 
 export class Video {
   /**
@@ -10,10 +10,10 @@ export class Video {
    * Creates instances of the socket server and DAMI
    */
   constructor(socket: DrashSocketServer) {
-    this.Socket = socket
+    this.Socket = socket;
   }
 
-  public async start () {
+  public async start() {
     // TODO
   }
 }

@@ -1,4 +1,4 @@
-import {deferred, Rhum} from "../deps.ts";
+import { deferred, Rhum } from "../deps.ts";
 
 Rhum.testPlan("tests/integration/call_test.ts", () => {
   Rhum.testSuite("Events", async () => {
@@ -34,6 +34,6 @@ Rhum.testPlan("tests/integration/call_test.ts", () => {
       await promise;
     });
   });
-})
+});
 
-Rhum.run()
+Rhum.run();
