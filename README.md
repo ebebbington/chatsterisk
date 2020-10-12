@@ -13,6 +13,17 @@ VoIP application ran using: Drash and Asterisk, to make and demonstrate voice ca
 
 I've decided to skip the IVR menu because I ddon't think we have a keypad for softphones int eh Telephone app? See [here](https://wiki.asterisk.org/wiki/display/AST/Creating+a+Simple+IVR+Menu)
 
+## Tools Used
+
+* Drash - web server
+* Drash Sockets - web socket server
+* Bundler - bundling client TS code (not yet added)
+* Asterisk
+* Denon - file watcher
+* Rhum - Testing framework
+* Dawn - browser testing framework (not yet added)
+* Dami - ami client
+
 ## Project Flow
 
 1. Docker environment is started
@@ -36,7 +47,7 @@ I've decided to skip the IVR menu because I ddon't think we have a keypad for so
 
 * `.github` - Holds our workflows
 
-* `src/ami` - Our AMI socket server
+* `src/socket` - Our AMI socket server
 
 * `src/server` - Our drash application that acts as the server for this project, to serve a client on the web
 
