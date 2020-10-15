@@ -11,25 +11,25 @@ const Video = (function () {
     }
 
     /**
-             * @method handleRoom
-             *
-             * @description
-             * Handles the event/callback of the `room` message.
-             * Updates the UI, such as the user ids. The `room` event is sent each time a user joins or leaves
-             *
-             * @param {object}      data        Data sent back from the socket server
-             * @param {string}      data.myId   Your socket id
-             * @param {string[]}    data.users  List of other users in the room. Empty is no other users
-             * @param {string}      data.name   Name of the socket room you're in
-             *
-             */
+     * @method handleRoom
+     *
+     * @description
+     * Handles the event/callback of the `room` message.
+     * Updates the UI, such as the user ids. The `room` event is sent each time a user joins or leaves
+     *
+     * @param {object}      data        Data sent back from the socket server
+     * @param {string}      data.myId   Your socket id
+     * @param {string[]}    data.users  List of other users in the room. Empty is no other users
+     * @param {string}      data.name   Name of the socket room you're in
+     *
+     */
     function handleRoom(data: { myId: string; users: string[]; name: string }) {
       // Check the id elem text to see if a user was on the page
       const callUserElement = document.getElementById("call-user");
       const theirId = callUserElement.dataset.socketId;
       // If they have left e.g. no users, remove the src object
       if (theirId && !data.users.length) {
-        Notifier.warning("User Left", "User has left the room");
+        //Notifier.warning("User Left", "User has left the room");
         const peerVideoElement: HTMLVideoElement = document.querySelector(
           "video#peer-video",
         );
@@ -39,7 +39,7 @@ const Video = (function () {
         endCallElement.classList.add("hide");
       }
       if (!theirId && data.users.length) {
-        Notifier.success("User Joined", "User has joined the room");
+        //Notifier.success("User Joined", "User has joined the room");
       }
       callUserElement.textContent = data.users[0]
         ? "Call User!"
@@ -61,10 +61,10 @@ const Video = (function () {
           new RTCSessionDescription(offer),
         );
       }).then(() => {
-        socket.emit("call-user", {
+        socket.send(JSON.stringify({to: "video.call-user", message: {
           offer: peerConnection.localDescription,
           to: socketId,
-        });
+        }}));
       });
     }
 
@@ -86,10 +86,10 @@ const Video = (function () {
       await peerConnection.setLocalDescription(
         new RTCSessionDescription(answer),
       );
-      socket.emit("make-answer", {
+      socket.send(JSON.stringify({to: "video.make-answer", message: {
         answer,
         to: data.socket,
-      });
+      }}));
     }
 
     /**
@@ -181,16 +181,16 @@ const Video = (function () {
       };
 
       socket
-        .on("room", Methods.handleRoom)
+        .on("video.room", Methods.handleRoom)
         // subscribe to room event to get the event
-        .emit("room")
+        .emit("video.room")
         .on(
-          "call-made",
+          "video.call-made",
           async (data: { offer: any; socket: string }) =>
             Methods.handleCallMade(data),
         )
         .on(
-          "answer-made",
+          "video.answer-made",
           async (data: { answer: any; socket: string }) =>
             Methods.handleAnswerMade(data),
         );
@@ -199,7 +199,7 @@ const Video = (function () {
         "click",
         function (event: any) {
           const callUserElement = document.getElementById("call-user");
-          Notifier.success("Call User", "Calling user...");
+          //Notifier.success("Call User", "Calling user...");
           const id = callUserElement.dataset.socketId;
           if (!id) {
             return false;
@@ -211,7 +211,7 @@ const Video = (function () {
       document.getElementById("end-call").addEventListener(
         "click",
         function () {
-          Loading(true);
+          //Loading(true);
           peerConnection.close();
           window.location.href = "/chat";
         },
