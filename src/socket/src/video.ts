@@ -30,7 +30,7 @@ export class Video {
 
   public async start() {
     this.Socket.on("connection", (packet: Packet) => {
-      this.joinRoom(packet.from.id)
+      this.joinRoom(Number(packet.from.id))
 
       /**
        * When requested, will get the room data, so your id, their ids and the name.
@@ -38,25 +38,27 @@ export class Video {
        */
       this.Socket.openChannel("video.room")
       this.Socket.on('video.room', (packet: Packet) => {
-        this.emitRoom(packet.from.id)
+        this.emitRoom(Number(packet.from.id))
       })
 
       // Update rooms
       this.Socket.on("disconnect", (packet: Packet) => {
-        this.emitRoom(packet.from.id, true)
-        this.removeUserFromRoom(packet.from.id)
+        this.emitRoom(Number(packet.from.id, true))
+        this.removeUserFromRoom(Number(packet.from.id))
       });
 
       // Make a call request
       this.Socket.openChannel("video.call-user")
       this.Socket.on("video.call-user", (packet: Packet) => {
-        this.emitCallMade(packet.from.id, (packet.message as { to: string, offer: RTCOfferOptions }))
+        // @ts-ignore
+        this.emitCallMade(Number(packet.from.id), (packet.message as { to: string, offer: RTCOfferOptions }))
       });
 
       // Answer the call request
       this.Socket.openChannel("video.make-answer")
       this.Socket.on("video.make-answer", (packet: Packet) => {
-        this.emitAnswerMade(packet.from.id, (packet.message as { to: string, answer: RTCOfferOptions }))
+        // @ts-ignore
+        this.emitAnswerMade(Number(packet.from.id), (packet.message as { to: string, answer: RTCOfferOptions }))
       });
     })
   }

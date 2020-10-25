@@ -1,7 +1,7 @@
 {
   "scripts": {
     "start": {
-      "cmd": "deno run app.ts",
+      "cmd": "deno run --config tsconfig.json app.ts",
       "desc": "Run the server.",
       "allow": [
         "env",

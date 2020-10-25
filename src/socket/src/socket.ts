@@ -1,6 +1,6 @@
 import { Action, DAMI, DrashSocketServer, Event, Packet } from "../deps.ts";
 import { Call } from "./call.ts";
-import { Video } from "./video.ts";
+//import { Video } from "./video.ts";
 import { Chat } from "./chat.ts";
 
 export class SocketServer {
@@ -42,10 +42,10 @@ export class SocketServer {
 
     // Start listening on the socket channels for the different apps
     const call = new Call(this.Socket);
-    const video = new Video(this.Socket);
+    //const video = new Video(this.Socket);
     const chat = new Chat(this.Socket);
     await call.start();
-    await video.start();
+    //await video.start();
     await chat.start();
   }
 }

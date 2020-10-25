@@ -1,4 +1,4 @@
-import { config, Drash, Paladin } from "./deps.ts";
+import { config, Drash, Paladin, CSRF } from "./deps.ts";
 import HomeResource from "./resources/home_resource.ts";
 import CallResource from "./resources/call_resource.ts";
 import ChatResource from "./resources/chat_resource.ts";
