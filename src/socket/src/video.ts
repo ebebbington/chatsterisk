@@ -1,4 +1,4 @@
-import { DAMI, DrashSocketServer, Packet } from "../deps.ts";
+import { DrashSocketServer, Packet } from "../deps.ts";
 
 interface Room {
   name: string,
@@ -30,21 +30,20 @@ export class Video {
 
   public async start() {
     this.Socket.on("connection", (packet: Packet) => {
-      this.joinRoom(packet.from.id)
+      this.joinRoom(Number(packet.from.id))
 
       /**
        * When requested, will get the room data, so your id, their ids and the name.
        * It will also send an event to the other users in the room with the updated user list
        */
-      this.Socket.openChannel("video.room")
       this.Socket.on('video.room', (packet: Packet) => {
-        this.emitRoom(packet.from.id)
+        this.emitRoom(Number(packet.from.id))
       })
 
       // Update rooms
       this.Socket.on("disconnect", (packet: Packet) => {
-        this.emitRoom(packet.from.id, true)
-        this.removeUserFromRoom(packet.from.id)
+        this.emitRoom(Number(packet.from.id), true)
+        this.removeUserFromRoom(Number(packet.from.id))
       });
 
       // Make a call request
@@ -66,11 +65,11 @@ export class Video {
    * Get the room the user is in by their socket id
    *
    * @example
-   * const joinedRoom = this.getJoinedRoom(socket.id)
+   * const joinedRoom = this.getJoinedRoom(packet.id)
    *
-   * @param {string} socketId socket.id
+   * @param socketId - socket.id
    *
-   * @return {Room|undefined} The room object or undefined if they haven't joined a room
+   * @return The room object or undefined if they haven't joined a room
    */
   private getJoinedRoom (socketId: number): Room|undefined {
     const joinedRoom = this.rooms.filter(room => room.users.includes(socketId))
@@ -87,7 +86,7 @@ export class Video {
    * const newRoomName = this.generateRoomName()
    * socket.join(newRoomName)
    *
-   * @return {string} A randomised 14 character string
+   * @return A randomised 14 character string
    */
   private generateRoomName (): string {
     return Math.random().toString(36).substring(7) + Math.random().toString(36).substring(7);
@@ -123,9 +122,7 @@ export class Video {
    * @example
    * this.joinRoom(socket)
    *
-   * @param {SocketIO.Socket} socket Passed back data from the io.on connection callback
-   *
-   * @return {void}
+   * @param socketId - Socket conn to join room
    */
   private joinRoom (socketId: number): void {
     // find a spare room
@@ -153,7 +150,7 @@ export class Video {
    * @example
    * this.io.on('connection', (socket) => this.removeUserFromRoom(socket))
    *
-   * @param {SocketIO.Socket} socket The socket object
+   * @param socketId - The socket object
    */
   private removeUserFromRoom (socketId: number) {
     // remove user
@@ -180,19 +177,21 @@ export class Video {
    * @example
    * this.emitRoom(socket, true|false)
    *
-   * @param {SocketIO.Socket} socket The socket object
-   * @param {boolean} isDisconnecting If the user is disconnecting. If true will omit the disconnecting users is
+   * @param socketId - The socket object
+   * @param isDisconnecting - If the user is disconnecting. If true will omit the disconnecting users is
+   *
+   * @returns False if the socket id is not in a room, else void if we send the msg
    */
-  private emitRoom (socketId: number, isDisconnecting: boolean = false) {
+  private emitRoom (socketId: number, isDisconnecting: boolean = false): false | void {
     const otherUsersId = this.getOtherUsersIdByRoom(socketId)
     const joinedRoom = this.getJoinedRoom(socketId)
     if (!joinedRoom)
       return false
-    this.Socket.to(otherUsersId).emit('video.room', {
+    this.Socket.to("video.room", {
       myId: otherUsersId,
       users: isDisconnecting ? joinedRoom.users.filter(id => id !== socketId && id !== otherUsersId) : [socketId],
       name: joinedRoom.name
-    })
+    }, otherUsersId)
     this.Socket.emit('video.room', {
       myId: socketId,
       users: joinedRoom.users.filter(id => id !== socketId),
@@ -206,10 +205,8 @@ export class Video {
    * @description
    * On calling a user, emit an event to say a call has been made
    *
-   * @param {SocketIO.Socket}   socket      The socket object
-   * @param {object}            data        The data passed back from the event
-   * @param {string}            data.to     The id of the the user to make the call to
-   * @param {RTCOfferOptions}   data.offer  Offer options
+   * @param socketId - The socket object
+   * @param data - Holding the id of the socket to send to and the other users offer
    */
   private emitCallMade (socketId: number, data: { to: string, offer: RTCOfferOptions}) {
     this.Socket.to(data.to).emit("video.call-made", {
@@ -230,9 +227,9 @@ export class Video {
    * @param {RTCAnswerOptions}  data.answer  Answer options
    */
   private emitAnswerMade (socketId: number, data:  { to: string, answer: RTCAnswerOptions}) {
-    this.Socket.to(data.to).emit("video.answer-made", {
+    this.Socket.to("video.answer-made", {
       socket: socketId,
       answer: data.answer
-    });
+    }, data.to);
   }
 }

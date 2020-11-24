@@ -10,7 +10,7 @@
       ]
     },
     "build": {
-      "cmd": "deno bundle public/ts/app.ts public/js/app.js"
+      "cmd": "deno bundle public/js/pages/video.ts public/js/pages/video.js"
     }
   },
   "watcher": {
