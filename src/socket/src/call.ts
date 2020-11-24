@@ -1,4 +1,5 @@
-import { DAMI, DrashSocketServer, Event, Packet } from "../deps.ts";
+import { DAMI, DrashSocketServer } from "../deps.ts";
+import type { Event, Action, Packet } from "../deps.ts"
 
 export class Call {
   /**
@@ -45,20 +46,20 @@ export class Call {
 
   public async start() {
     // Connect and listen to the AMI
-    await this.Dami.connectAndLogin(this.ami_auth);
-    await this.Dami.listen();
+    await this.Dami.connect(this.ami_auth);
 
     // Set peer entries immediantly so  we have access to all extensions
-    this.Dami.to("SIPPeers", {}, (data: Event[]) => {
-      data = data.filter(((d) => d["Event"] === "PeerEntry"));
-      this.peer_entries = data;
-    });
+    const peerEntries = await this.Dami.to("SIPPeers", {})
+    peerEntries.forEach(entry => {
+      if (entry["Event"] === "PeerEntry") {
+        this.peer_entries.push(entry)
+      }
+    })
 
     await this.initialiseSocketChannels();
   }
 
   private async initialiseSocketChannels(): Promise<void> {
-    this.Socket.openChannel("call.make-call");
     this.Socket.on("call.make-call", async (data: Packet) => {
       console.log("data was received for make call");
       console.log(data);
@@ -77,7 +78,6 @@ export class Call {
       });
     });
 
-    this.Socket.openChannel("call.get-extensions");
     this.Socket.on("call.get-extensions", async (data: Packet) => {
       console.log("call.get-extensions called");
       //const extensions = await getExtensionsFromAsterisk()
@@ -94,9 +94,9 @@ export class Call {
    */
   private listenForExtensionStates(): void {
     // on calls hung up, set status to available
-    this.Dami.on("Hangup", (data: Event[]) => {
-      const exten: string = data[0]["CallerIDNum"].toString();
-      const state: string = data[0]["ChannelStateDesc"].toString();
+    this.Dami.on("Hangup", (data: Event) => {
+      const exten: string = data["CallerIDNum"].toString();
+      const state: string = data["ChannelStateDesc"].toString();
       if (!Array.isArray(exten) && !Array.isArray(state)) {
         this.peer_entry_states[exten] = state;
         this.Socket.to(
@@ -106,9 +106,9 @@ export class Call {
       }
     });
     // When a channel is created, set the status, handles declining calls (sets to busy) and when an exten is called, sets it to ringing
-    this.Dami.on("Newstate", (data: Event[]) => {
-      const exten: string = data[0]["CallerIDNum"].toString();
-      const state: string = data[0]["ChannelStateDesc"].toString();
+    this.Dami.on("Newstate", (data: Event) => {
+      const exten: string = data["CallerIDNum"].toString();
+      const state: string = data["ChannelStateDesc"].toString();
       if (!Array.isArray(exten) && !Array.isArray(state)) {
         this.peer_entry_states[exten] = state;
         this.Socket.to(
