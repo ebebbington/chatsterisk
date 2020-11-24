@@ -1,6 +1,6 @@
 export {
-  Packet,
   Server as DrashSocketServer,
-} from "https://deno.land/x/sockets@v0.5.0/mod.ts";
-
-export { Action, DAMI, Event } from "https://deno.land/x/dami@v3.0.1/mod.ts";
+} from "https://deno.land/x/wocket@v0.6.0/mod.ts";
+export type { Packet } from "https://deno.land/x/wocket@v0.6.0/mod.ts";
+export { DAMI } from "https://deno.land/x/dami@v4.0.1/mod.ts";
+export type { Event, Action } from "https://deno.land/x/dami@v4.0.1/mod.ts";
