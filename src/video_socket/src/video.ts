@@ -15,7 +15,7 @@ export class Video {
    * Connection configs for the socket server
    */
   private readonly socket_configs = {
-    hostname: "rtc_socket",
+    hostname: "video_socket",
     port: 1669,
   };
 

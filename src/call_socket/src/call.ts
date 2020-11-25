@@ -40,7 +40,7 @@ export class Call {
    * Connection configs for the socket server
    */
   private readonly socket_configs = {
-    hostname: "sip_socket",
+    hostname: "call_socket",
     port: 1668,
   };
 
