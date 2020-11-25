@@ -10,7 +10,7 @@
       ]
     },
     "build": {
-      "cmd": "deno bundle public/js/pages/video.ts public/js/pages/video.js"
+      "cmd": "deno bundle public/js/pages/video.ts public/js/pages/video.js && deno bundle public/js/modules/socket-client.ts public/js/modules/socket-client.js"
     }
   },
   "watcher": {

@@ -11,6 +11,7 @@ services:
         DENO_VERSION: 1.5.4
     environment:
       USE_DENON: "true"
+      BUILD: "true"
     volumes:
       - ./src/server:/var/www/server
     working_dir: /var/www/server
