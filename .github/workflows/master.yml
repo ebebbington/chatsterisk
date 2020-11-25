@@ -24,11 +24,23 @@ jobs:
           sleep 20
           docker exec drash_server deno test -A
 
-      - name: Run Socket Tests
+      - name: Run Chat Socket Tests
         run: |
           docker-compose up -d
           sleep 20
-          docker exec socket deno test -A
+          docker exec chat_socket deno test -A
+
+      - name: Run RTC Socket Tests
+        run: |
+          docker-compose up -d
+          sleep 20
+          docker exec rtc_socket deno test -A
+
+      - name: Run Chat Socket Tests
+        run: |
+          docker-compose up -d
+          sleep 20
+          docker exec chat_socket deno test -A
 
   linter:
     # Only one OS is required since fmt is cross platform

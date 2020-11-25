@@ -12,6 +12,14 @@ export class Video {
   private readonly Socket: DrashSocketServer;
 
   /**
+   * Connection configs for the socket server
+   */
+  private readonly socket_configs = {
+    hostname: "socket",
+    port: 1669,
+  };
+
+  /**
    * A list of rooms for users
    */
   private rooms: Room[] = []
@@ -24,11 +32,13 @@ export class Video {
   /**
    * Creates instances of the socket server and DAMI
    */
-  constructor(socket: DrashSocketServer) {
-    this.Socket = socket;
+  constructor() {
+    this.Socket = new DrashSocketServer();
   }
 
   public async start() {
+    await this.Socket.run(this.socket_configs)
+
     this.Socket.on("connection", (packet: Packet) => {
       this.joinRoom(Number(packet.from.id))
 
@@ -36,7 +46,7 @@ export class Video {
        * When requested, will get the room data, so your id, their ids and the name.
        * It will also send an event to the other users in the room with the updated user list
        */
-      this.Socket.on('video.room', (packet: Packet) => {
+      this.Socket.on('room', (packet: Packet) => {
         this.emitRoom(Number(packet.from.id))
       })
 
@@ -47,14 +57,14 @@ export class Video {
       });
 
       // Make a call request
-      this.Socket.openChannel("video.call-user")
-      this.Socket.on("video.call-user", (packet: Packet) => {
+      this.Socket.openChannel("call-user")
+      this.Socket.on("call-user", (packet: Packet) => {
         this.emitCallMade(packet.from.id, (packet.message as { to: string, offer: RTCOfferOptions }))
       });
 
       // Answer the call request
-      this.Socket.openChannel("video.make-answer")
-      this.Socket.on("video.make-answer", (packet: Packet) => {
+      this.Socket.openChannel("make-answer")
+      this.Socket.on("make-answer", (packet: Packet) => {
         this.emitAnswerMade(packet.from.id, (packet.message as { to: string, answer: RTCOfferOptions }))
       });
     })
@@ -187,12 +197,12 @@ export class Video {
     const joinedRoom = this.getJoinedRoom(socketId)
     if (!joinedRoom)
       return false
-    this.Socket.to("video.room", {
+    this.Socket.to("room", {
       myId: otherUsersId,
       users: isDisconnecting ? joinedRoom.users.filter(id => id !== socketId && id !== otherUsersId) : [socketId],
       name: joinedRoom.name
     }, otherUsersId)
-    this.Socket.emit('video.room', {
+    this.Socket.emit('room', {
       myId: socketId,
       users: joinedRoom.users.filter(id => id !== socketId),
       name: joinedRoom.name
@@ -209,7 +219,7 @@ export class Video {
    * @param data - Holding the id of the socket to send to and the other users offer
    */
   private emitCallMade (socketId: number, data: { to: string, offer: RTCOfferOptions}) {
-    this.Socket.to(data.to).emit("video.call-made", {
+    this.Socket.to(data.to).emit("call-made", {
       offer: data.offer,
       socket: socketId
     });
@@ -227,7 +237,7 @@ export class Video {
    * @param {RTCAnswerOptions}  data.answer  Answer options
    */
   private emitAnswerMade (socketId: number, data:  { to: string, answer: RTCAnswerOptions}) {
-    this.Socket.to("video.answer-made", {
+    this.Socket.to("answer-made", {
       socket: socketId,
       answer: data.answer
     }, data.to);

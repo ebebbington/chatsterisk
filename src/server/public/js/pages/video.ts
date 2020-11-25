@@ -48,20 +48,20 @@ const Video = (function () {
     }
 
     /**
-             * @method callUser
-             *
-             * @description
-             * Make a WebRTC call to a user using their socket id, and send it through the socket server
-             *
-             * @param {string} socketId The other persons socket id
-             */
+     * @method callUser
+     *
+     * @description
+     * Make a WebRTC call to a user using their socket id, and send it through the socket server
+     *
+     * @param {string} socketId The other persons socket id
+     */
     function callUser(socketId: string) {
       peerConnection.createOffer().then((offer) => {
         return peerConnection.setLocalDescription(
           new RTCSessionDescription(offer),
         );
       }).then(() => {
-        socket.send(JSON.stringify({to: "video.call-user", message: {
+        socket.send(JSON.stringify({to: "call-user", message: {
           offer: peerConnection.localDescription,
           to: socketId,
         }}));
@@ -69,15 +69,15 @@ const Video = (function () {
     }
 
     /**
-             * @method handleCallMade
-             *
-             * @description
-             * Handle the event for `call-made` from the socket. Answer the call
-             *
-             * @param {object}  data        The data passed back from the event
-             * @param {any}     data.offer  The offer for the call
-             * @param {string}  data.socket Socket id trying to call
-             */
+     * @method handleCallMade
+     *
+     * @description
+     * Handle the event for `call-made` from the socket. Answer the call
+     *
+     * @param {object}  data        The data passed back from the event
+     * @param {any}     data.offer  The offer for the call
+     * @param {string}  data.socket Socket id trying to call
+     */
     async function handleCallMade(data: { offer: any; socket: string }) {
       await peerConnection.setRemoteDescription(
         new RTCSessionDescription(data.offer),
@@ -86,7 +86,7 @@ const Video = (function () {
       await peerConnection.setLocalDescription(
         new RTCSessionDescription(answer),
       );
-      socket.send(JSON.stringify({to: "video.make-answer", message: {
+      socket.send(JSON.stringify({to: "make-answer", message: {
         answer,
         to: data.socket,
       }}));

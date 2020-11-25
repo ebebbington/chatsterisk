@@ -7,13 +7,23 @@ export class Chat {
   private readonly Socket: DrashSocketServer;
 
   /**
+   * Connection configs for the socket server
+   */
+  private readonly socket_configs = {
+    hostname: "socket",
+    port: 1667,
+  };
+
+  /**
    * Creates instances of the socket server and DAMI
    */
-  constructor(socket: DrashSocketServer) {
-    this.Socket = socket;
+  constructor() {
+    this.Socket = new DrashSocketServer();
   }
 
   public async start() {
+    await this.Socket.run(this.socket_configs)
+
     // TODO
   }
 }

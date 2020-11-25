@@ -1,6 +1,7 @@
 version: '3'
 
 services:
+
   server:
     container_name: drash_server
     build:
@@ -18,8 +19,8 @@ services:
     networks:
       - chatsterisk-app-network
 
-  socket:
-    container_name: socket
+  sip_socket:
+    container_name: sip_socket
     depends_on:
       - asterisk
     build:
@@ -32,8 +33,46 @@ services:
     ports:
       - "1668:1668"
     volumes:
-    - "./src/socket:/var/www/socket"
-    working_dir: /var/www/socket
+    - "./src/sip_socket:/var/www/sip_socket"
+    working_dir: /var/www/rtc_socket
+    networks:
+      - chatsterisk-app-network
+
+  rtc_socket:
+    container_name: rtc_socket
+    depends_on:
+      - asterisk
+    build:
+      context: .
+      dockerfile: .docker/deno.dockerfile
+      args:
+        DENO_VERSION: 1.5.4
+    environment:
+      USE_DENON: "true"
+    ports:
+      - "1669:1669"
+    volumes:
+      - "./src/rtc_socket:/var/www/rtc_socket"
+    working_dir: /var/www/rtc_socket
+    networks:
+      - chatsterisk-app-network
+
+  chat_socket:
+    container_name: chat_socket
+    depends_on:
+      - asterisk
+    build:
+      context: .
+      dockerfile: .docker/deno.dockerfile
+      args:
+        DENO_VERSION: 1.5.4
+    environment:
+      USE_DENON: "true"
+    ports:
+      - "1667:1667"
+    volumes:
+      - "./src/sip_socket:/var/www/chat_socket"
+    working_dir: /var/www/chat_socket
     networks:
       - chatsterisk-app-network
 
