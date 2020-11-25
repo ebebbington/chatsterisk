@@ -10,8 +10,8 @@ export class Chat {
    * Connection configs for the socket server
    */
   private readonly socket_configs = {
-    hostname: "socket",
-    port: 1667,
+    hostname: "chat_socket",
+    port: 1670,
   };
 
   /**

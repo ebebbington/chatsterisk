@@ -10,8 +10,7 @@ services:
       args:
         DENO_VERSION: 1.5.4
     environment:
-      USE_DENON: "true"
-      BUILD: "true"
+      MAKE_BUILD: "true"
     volumes:
       - ./src/server:/var/www/server
     working_dir: /var/www/server
@@ -29,13 +28,11 @@ services:
       dockerfile: .docker/deno.dockerfile
       args:
         DENO_VERSION: 1.5.4
-    environment:
-      USE_DENON: "true"
     ports:
       - "1668:1668"
     volumes:
     - "./src/sip_socket:/var/www/sip_socket"
-    working_dir: /var/www/rtc_socket
+    working_dir: /var/www/sip_socket
     networks:
       - chatsterisk-app-network
 
@@ -48,8 +45,6 @@ services:
       dockerfile: .docker/deno.dockerfile
       args:
         DENO_VERSION: 1.5.4
-    environment:
-      USE_DENON: "true"
     ports:
       - "1669:1669"
     volumes:
@@ -70,9 +65,9 @@ services:
     environment:
       USE_DENON: "true"
     ports:
-      - "1667:1667"
+      - "1670:1670"
     volumes:
-      - "./src/sip_socket:/var/www/chat_socket"
+      - "./src/chat_socket:/var/www/chat_socket"
     working_dir: /var/www/chat_socket
     networks:
       - chatsterisk-app-network

@@ -4,7 +4,8 @@ ARG DENO_VERSION
 
 RUN apt update -y \
   && apt clean \
-  && apt install bash curl unzip -y
+  && apt install bash curl unzip -y \
+  && apt install make
   #&& apt install -y --no-install-recommends nodejs \
   #&& apt install -y --no-install-recommends npm \
   #&& npm install -g npm@latest

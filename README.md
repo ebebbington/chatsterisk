@@ -16,7 +16,7 @@ I've decided to skip the IVR menu because I ddon't think we have a keypad for so
 ## Tools Used
 
 * Drash - web server
-* Drash Sockets - web socket server
+* Wocket - web socket server
 * Bundler - bundling client TS code (not yet added)
 * Asterisk
 * Denon - file watcher

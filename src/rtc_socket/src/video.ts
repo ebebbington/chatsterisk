@@ -15,7 +15,7 @@ export class Video {
    * Connection configs for the socket server
    */
   private readonly socket_configs = {
-    hostname: "socket",
+    hostname: "rtc_socket",
     port: 1669,
   };
 
@@ -57,15 +57,13 @@ export class Video {
       });
 
       // Make a call request
-      this.Socket.openChannel("call-user")
       this.Socket.on("call-user", (packet: Packet) => {
-        this.emitCallMade(packet.from.id, (packet.message as { to: string, offer: RTCOfferOptions }))
+        this.emitCallMade(Number(packet.from.id), (packet.message as { to: string, offer: RTCOfferOptions }))
       });
 
       // Answer the call request
-      this.Socket.openChannel("make-answer")
       this.Socket.on("make-answer", (packet: Packet) => {
-        this.emitAnswerMade(packet.from.id, (packet.message as { to: string, answer: RTCOfferOptions }))
+        this.emitAnswerMade(Number(packet.from.id), (packet.message as { to: string, answer: RTCOfferOptions }))
       });
     })
   }
@@ -202,7 +200,7 @@ export class Video {
       users: isDisconnecting ? joinedRoom.users.filter(id => id !== socketId && id !== otherUsersId) : [socketId],
       name: joinedRoom.name
     }, otherUsersId)
-    this.Socket.emit('room', {
+    this.Socket.to('room', {
       myId: socketId,
       users: joinedRoom.users.filter(id => id !== socketId),
       name: joinedRoom.name
@@ -219,10 +217,10 @@ export class Video {
    * @param data - Holding the id of the socket to send to and the other users offer
    */
   private emitCallMade (socketId: number, data: { to: string, offer: RTCOfferOptions}) {
-    this.Socket.to(data.to).emit("call-made", {
+    this.Socket.to("call-made", {
       offer: data.offer,
       socket: socketId
-    });
+    }, data.to);
   }
 
   /**
@@ -240,6 +238,6 @@ export class Video {
     this.Socket.to("answer-made", {
       socket: socketId,
       answer: data.answer
-    }, data.to);
+    }, Number(data.to));
   }
 }
