@@ -60,7 +60,8 @@ export class Video {
       this.Socket.on("call-user", (packet: Packet) => {
         this.emitCallMade(
           Number(packet.from.id),
-          (packet.message as { to: string; offer: RTCOfferOptions }),
+            // @ts-ignore Deno cannot find the name apprently...
+            (packet.message as { to: string; offer: RTCOfferOptions }),
         );
       });
 
@@ -68,7 +69,8 @@ export class Video {
       this.Socket.on("make-answer", (packet: Packet) => {
         this.emitAnswerMade(
           Number(packet.from.id),
-          (packet.message as { to: string; answer: RTCOfferOptions }),
+            // @ts-ignore Deno cannot find the name apprently...
+            (packet.message as { to: string; answer: RTCOfferOptions }),
         );
       });
     });
@@ -209,6 +211,9 @@ export class Video {
     isDisconnecting: boolean = false,
   ): false | void {
     const otherUsersId = this.getOtherUsersIdByRoom(socketId);
+    if (otherUsersId === false) {
+      return false
+    }
     const joinedRoom = this.getJoinedRoom(socketId);
     if (!joinedRoom) {
       return false;
@@ -240,12 +245,13 @@ export class Video {
    */
   private emitCallMade(
     socketId: number,
+    // @ts-ignore Deno cannot find the name apprently...
     data: { to: string; offer: RTCOfferOptions },
   ) {
     this.Socket.to("call-made", {
       offer: data.offer,
       socket: socketId,
-    }, data.to);
+    }, Number(data.to));
   }
 
   /**
@@ -261,6 +267,7 @@ export class Video {
    */
   private emitAnswerMade(
     socketId: number,
+    // @ts-ignore Deno cannot find the name apprently...
     data: { to: string; answer: RTCAnswerOptions },
   ) {
     this.Socket.to("answer-made", {
