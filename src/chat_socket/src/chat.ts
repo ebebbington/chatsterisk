@@ -22,7 +22,7 @@ export class Chat {
   }
 
   public async start() {
-    await this.Socket.run(this.socket_configs)
+    await this.Socket.run(this.socket_configs);
 
     // TODO
   }

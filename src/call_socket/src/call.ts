@@ -1,5 +1,5 @@
 import { DAMI, DrashSocketServer } from "../deps.ts";
-import type { Event, Action, Packet } from "../deps.ts"
+import type { Action, Event, Packet } from "../deps.ts";
 
 export class Call {
   /**
@@ -60,47 +60,43 @@ export class Call {
     await this.Dami.connect(this.ami_auth);
 
     // Set peer entries immediantly so we have access to all extensions
-    const peerEntries = await this.Dami.to("SIPPeers", {})
-    peerEntries.forEach(entry => {
+    const peerEntries = await this.Dami.to("SIPPeers", {});
+    peerEntries.forEach((entry) => {
       if (entry["Event"] === "PeerEntry") {
-        this.peer_entries.push(entry)
+        this.peer_entries.push(entry);
       }
-    })
+    });
 
     await this.initialiseSocketChannels();
   }
 
   private async initialiseSocketChannels(): Promise<void> {
-
-      this.Socket.on("make-call", async (data: Packet) => {
-        console.log("data was received for make call");
-        console.log(data);
-        await this.Dami.to("Originate", {
-          Channel: "SIP/" +
-              (data.message as { to_extension: string; from_extension: string })
-                  .to_extension,
-          Exten:
+    this.Socket.on("make-call", async (data: Packet) => {
+      console.log("data was received for make call");
+      console.log(data);
+      await this.Dami.to("Originate", {
+        Channel: "SIP/" +
           (data.message as { to_extension: string; from_extension: string })
-              .from_extension,
-          Context: "from-internal",
-          Priority: 1,
-          Callerid:
+            .to_extension,
+        Exten:
           (data.message as { to_extension: string; from_extension: string })
-              .from_extension,
-        });
+            .from_extension,
+        Context: "from-internal",
+        Priority: 1,
+        Callerid:
+          (data.message as { to_extension: string; from_extension: string })
+            .from_extension,
       });
+    });
 
-      this.Socket.on("get-extensions", async (data: Packet) => {
-        console.log("get-extensions called");
-        const extensions = this.peer_entries.map((peerEntry) => {
-          return peerEntry["ObjectName"];
-        });
-        this.Socket.to("get-extensions", JSON.stringify(extensions));
+    this.Socket.on("get-extensions", async (data: Packet) => {
+      console.log("get-extensions called");
+      const extensions = this.peer_entries.map((peerEntry) => {
+        return peerEntry["ObjectName"];
       });
-
+      this.Socket.to("get-extensions", JSON.stringify(extensions));
+    });
   }
-
-
 
   /**
    * Used to listen on any states extensions to update the states property when required

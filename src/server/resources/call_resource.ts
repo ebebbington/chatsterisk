@@ -7,7 +7,6 @@ export default class CallResource extends Drash.Http.Resource {
       title: "Chatsterisk - Call",
     });
 
-
     return this.response;
   }
 }

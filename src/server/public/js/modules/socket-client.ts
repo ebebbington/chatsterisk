@@ -3,8 +3,8 @@ import SocketClient from "https://cdn.jsdelivr.net/gh/drashland/sockets-client@l
 const sockets = {
   chat: 1670,
   sip: 1668,
-  rtc: 1669
-}
+  rtc: 1669,
+};
 
 export interface Deferred<T> extends Promise<T> {
   resolve: (value?: T | PromiseLike<T>) => void;
@@ -28,19 +28,19 @@ export function deferred<T>(): Deferred<T> {
 //   return client
 // }
 
-export async function createWebSocketClient (options: { port: number }) {
+export async function createWebSocketClient(options: { port: number }) {
   const prom = deferred();
   const client = new WebSocket("ws://0.0.0.0:1668");
   client.onopen = function () {
-    prom.resolve()
+    prom.resolve();
   };
   client.onerror = function (e) {
-    console.log('client got error')
-    console.log(e)
-  }
+    console.log("client got error");
+    console.log(e);
+  };
   await prom;
-  console.log('ws client connected')
-  return client
+  console.log("ws client connected");
+  return client;
 }
 // client.onclose = function () {
 //   console.log("clint ws conn closed");

@@ -7,6 +7,6 @@ window.addEventListener("DOMContentLoaded", function () {
   }
 
   if (window.location.pathname === "/call") {
-    CallPage.init()
+    CallPage.init();
   }
-})
+});

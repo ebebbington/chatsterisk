@@ -1,7 +1,6 @@
-function init () {
-
+function init() {
 }
 
 export const ChatPage = {
-  init
-}
+  init,
+};
