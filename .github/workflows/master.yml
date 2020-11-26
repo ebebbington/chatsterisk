@@ -30,17 +30,17 @@ jobs:
           sleep 20
           docker exec chat_socket deno test -A
 
-      - name: Run RTC Socket Tests
+      - name: Run Video Socket Tests
         run: |
           docker-compose up -d
           sleep 20
-          docker exec rtc_socket deno test -A
+          docker exec video_socket deno test -A
 
-      - name: Run Chat Socket Tests
+      - name: Run Call Socket Tests
         run: |
           docker-compose up -d
           sleep 20
-          docker exec chat_socket deno test -A
+          docker exec call_socket deno test -A
 
   linter:
     # Only one OS is required since fmt is cross platform

@@ -71,12 +71,6 @@ export class Call {
   }
 
   private async initialiseSocketChannels(): Promise<void> {
-    this.Socket.on("disconnect", (packet: Packet) => {
-      console.log('client ' + packet.from.id + ' has  disconnedd')
-    })
-    this.Socket.on("connect", (packet: Packet) => {
-      console.log('server got conn')
-    })
 
       this.Socket.on("make-call", async (data: Packet) => {
         console.log("data was received for make call");
