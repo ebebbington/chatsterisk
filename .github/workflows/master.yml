@@ -10,7 +10,7 @@ on:
 
 jobs:
 
-  tests:
+  server_tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -24,17 +24,41 @@ jobs:
           sleep 20
           docker exec drash_server deno test -A
 
+  chat_tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install Deno
+        uses: denolib/setup-deno@master
+
       - name: Run Chat Socket Tests
         run: |
           docker-compose up -d
           sleep 20
           docker exec chat_socket deno test -A
 
+  video_tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install Deno
+        uses: denolib/setup-deno@master
+
       - name: Run Video Socket Tests
         run: |
           docker-compose up -d
           sleep 20
           docker exec video_socket deno test -A
+
+  call_tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install Deno
+        uses: denolib/setup-deno@master
 
       - name: Run Call Socket Tests
         run: |
