@@ -2,6 +2,23 @@ import { createWebSocketClient } from "../modules/socket-client.ts";
 
 async function init() {
   const socket = await createWebSocketClient({ port: 1669 });
+  socket.onmessage = function (message) {
+    const data = JSON.parse(message.data)
+    switch (data.to) {
+      case "room":
+        handleRoom(data.message)
+        break
+      case "call-made":
+        handleCallMade(data.message)
+        break
+      case 'answer-made':
+        handleAnswerMade(data.message)
+        break
+      default:
+        break
+    }
+  }
+
   const peerConnection = new RTCPeerConnection();
   let isAlreadyCalling = false;
 
@@ -62,8 +79,7 @@ async function init() {
         new RTCSessionDescription(offer),
       );
     }).then(() => {
-      socket.to(
-        "call-user",
+      socket.send(
         JSON.stringify({
           to: "call-user",
           message: {
@@ -93,8 +109,7 @@ async function init() {
     await peerConnection.setLocalDescription(
       new RTCSessionDescription(answer),
     );
-    socket.to(
-      "make-answer",
+    socket.send(
       JSON.stringify({
         to: "make-answer",
         message: {
@@ -185,16 +200,11 @@ async function init() {
       }
     };
 
-    socket.on("video.room", handleRoom);
-    socket.to("video.room", "");
-    socket.on(
-      "video.call-made",
-      async (data: { offer: any; socket: string }) => handleCallMade(data),
-    );
-    socket.on(
-      "video.answer-made",
-      async (data: { answer: any; socket: string }) => handleAnswerMade(data),
-    );
+    socket.send(JSON.stringify({
+      send_packet: {
+        to: "room"
+      }
+    }));
 
     document.getElementById("call-user")!.addEventListener(
       "click",
