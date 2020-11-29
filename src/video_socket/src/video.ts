@@ -213,7 +213,7 @@ export class Video {
    */
   private emitRoom(
     socketId: number,
-    isDisconnecting: boolean = false,
+    isDisconnecting = false,
   ): false | void {
     const otherUsersId = this.getOtherUsersIdByRoom(socketId);
     if (otherUsersId === false) {

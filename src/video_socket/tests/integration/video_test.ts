@@ -10,7 +10,6 @@ async function createWebSocketClient(): Promise<WebSocket> {
   return client;
 }
 
-// deno-lint-ignore no-explicit-any
 async function waitForConnectedToChannelEvent(
   client: WebSocket,
 ): Promise<void> {
@@ -23,11 +22,10 @@ async function waitForConnectedToChannelEvent(
   await promise;
 }
 
-// deno-lint-ignore no-explicit-any
 async function waitForMessage(
   client: WebSocket,
   thenClose?: boolean,
-): Promise<any> {
+): Promise<unknown> {
   const promise1 = deferred();
   // deno-lint-ignore no-explicit-any
   const promise2: any = deferred();
