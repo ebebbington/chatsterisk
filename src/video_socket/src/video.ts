@@ -40,8 +40,8 @@ export class Video {
     await this.Socket.run(this.socket_configs);
 
     // Channels purely so the client can listen on them
-    this.Socket.on("call-made", (data: Packet) => {})
-    this.Socket.on("answer-made", (data: Packet) => {})
+    this.Socket.on("call-made", (data: Packet) => {});
+    this.Socket.on("answer-made", (data: Packet) => {});
 
     /**
      * When requested, will get the room data, so your id, their ids and the name.
@@ -60,23 +60,23 @@ export class Video {
     // Make a call request
     this.Socket.on("call-user", (packet: Packet) => {
       this.emitCallMade(
-          Number(packet.from.id),
-          // @ts-ignore Deno cannot find the name apprently...
-          (packet.message as { to: string; offer: RTCOfferOptions }),
+        Number(packet.from.id),
+        // @ts-ignore Deno cannot find the name apprently...
+        (packet.message as { to: string; offer: RTCOfferOptions }),
       );
     });
 
     // Answer the call request
     this.Socket.on("make-answer", (packet: Packet) => {
       this.emitAnswerMade(
-          Number(packet.from.id),
-          // @ts-ignore Deno cannot find the name apprently...
-          (packet.message as { to: string; answer: RTCOfferOptions }),
+        Number(packet.from.id),
+        // @ts-ignore Deno cannot find the name apprently...
+        (packet.message as { to: string; answer: RTCOfferOptions }),
       );
     });
 
     this.Socket.on("connect", (packet: Packet) => {
-      console.log('client conned')
+      console.log("client conned");
       this.joinRoom(Number(packet.from.id));
     });
   }
@@ -217,7 +217,7 @@ export class Video {
   ): false | void {
     const otherUsersId = this.getOtherUsersIdByRoom(socketId);
     if (otherUsersId === false) {
-      return false
+      return false;
     }
     const joinedRoom = this.getJoinedRoom(socketId);
     if (!joinedRoom) {
@@ -237,8 +237,6 @@ export class Video {
       users: joinedRoom.users.filter((id) => id !== socketId),
       name: joinedRoom.name,
     }, socketId);
-
-
   }
 
   /**
@@ -255,7 +253,7 @@ export class Video {
     // @ts-ignore Deno cannot find the name apprently...
     data: { to: string; offer: RTCOfferOptions },
   ) {
-    console.log('going to emit call made to ' + data.to)
+    console.log("going to emit call made to " + data.to);
     this.Socket.to("call-made", {
       offer: data.offer,
       socket: socketId,
