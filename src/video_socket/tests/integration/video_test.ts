@@ -25,7 +25,8 @@ async function waitForConnectedToChannelEvent(
 async function waitForMessage(
   client: WebSocket,
   thenClose?: boolean,
-): Promise<unknown> {
+  // deno-lint-ignore no-explicit-any
+): Promise<any> {
   const promise1 = deferred();
   // deno-lint-ignore no-explicit-any
   const promise2: any = deferred();
