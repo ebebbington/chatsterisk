@@ -93,6 +93,8 @@ Rhum.testPlan("tests/integration/video_test.ts", () => {
         users: [number];
         name: string;
       };
+      console.log(message)
+      console.log(message2)
       Rhum.asserts.assert(!!message.name);
       Rhum.asserts.assert(!!message.myId);
       Rhum.asserts.assert(message.users.length === 1);
