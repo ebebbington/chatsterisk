@@ -29,17 +29,17 @@ jobs:
 
       - name: Update RTC Socket Deps
         run: |
-          cd src/rtc_socket
+          cd src/video_socket
           deno run --allow-net --allow-read --allow-write https://deno.land/x/dmm/mod.ts update
 
       - name: Update RTC Socket Test Deps
         run: |
-          cd src/rtc_socket/tests
+          cd src/video_socket/tests
           deno run --allow-net --allow-read --allow-write https://deno.land/x/dmm/mod.ts update
 
       - name: Update Chat Socket Deps
         run: |
-          cd src/chat_docket
+          cd src/chat_socket
           deno run --allow-net --allow-read --allow-write https://deno.land/x/dmm/mod.ts update
 
       - name: Update Chat Socket Test Deps
@@ -49,12 +49,12 @@ jobs:
 
       - name: Update SIP Socket Deps
         run: |
-          cd src/sip-socket
+          cd src/call_socket
           deno run --allow-net --allow-read --allow-write https://deno.land/x/dmm/mod.ts update
 
       - name: Update SIP Socket Test Deps
         run: |
-          cd src/sip_socket/tests
+          cd src/call_socket/tests
           deno run --allow-net --allow-read --allow-write https://deno.land/x/dmm/mod.ts update
 
       - name: Update Dep Versions In Dockerfile

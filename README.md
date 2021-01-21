@@ -5,6 +5,12 @@
   <a href="https://github.com/ebebbington/chatsterisk/actions">
     <img src="https://img.shields.io/github/workflow/status/ebebbington/chatsterisk/master?label=ci">
   </a>
+  <a href="https://github.com/drashland/chatsterisk/actions">
+    <img src="https://img.shields.io/github/workflow/status/ebebbington/chatsterisk/CodeQL?label=CodeQL">
+  </a>
+  <a href="https://sonarcloud.io/dashboard?id=ebebbington_chatsterisk">
+    <img src="https://sonarcloud.io/api/project_badges/measure?project=ebebbington_chatsterisk&metric=alert_status">
+  </a>
 </p>
 
 ---
