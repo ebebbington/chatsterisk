@@ -70,7 +70,7 @@ export class Call {
     this.initialiseSocketChannels();
   }
 
-  private initialiseSocketChannels(): Promise<void> {
+  private initialiseSocketChannels(): void {
     this.Socket.on("make-call", async (data: Packet) => {
       console.log("data was received for make call");
       console.log(data);

@@ -1,4 +1,4 @@
-import { config, Drash, Paladin } from "./deps.ts";
+import {config, Drash, Paladin, Tengine} from "./deps.ts";
 import HomeResource from "./resources/home_resource.ts";
 import CallResource from "./resources/call_resource.ts";
 import ChatResource from "./resources/chat_resource.ts";
@@ -7,6 +7,12 @@ import VideoResource from "./resources/video_resource.ts";
 config();
 
 const paladin = Paladin();
+const tengine = Tengine({
+  render: (...args: unknown[]): boolean => {
+    return false;
+  },
+  views_path: "./public/views"
+});
 
 const server = new Drash.Http.Server({
   directory: ".",
@@ -17,8 +23,6 @@ const server = new Drash.Http.Server({
     VideoResource,
   ],
   static_paths: ["/public"],
-  views_path: "./public/views",
-  template_engine: true,
   response_output: "text/html",
   logger: new Drash.CoreLoggers.ConsoleLogger({
     enabled: true,
@@ -34,6 +38,9 @@ const server = new Drash.Http.Server({
     after_request: [
       paladin,
     ],
+    after_resource: [
+      tengine
+    ]
   },
 });
 

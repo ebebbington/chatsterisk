@@ -44,7 +44,7 @@ services:
       context: .
       dockerfile: .docker/deno.dockerfile
       args:
-        DENO_VERSION: 1.5.4
+        DENO_VERSION: 1.7.0
     ports:
       - "1669:1669"
     volumes:
