@@ -77,14 +77,14 @@ Rhum.testPlan("tests/integration/video_test.ts", () => {
         connect_to: ["room"],
       }));
       await waitForConnectedToChannelEvent(client2);
-      const p1 = deferred()
-      const p2 = deferred()
+      const p1 = deferred();
+      const p2 = deferred();
       client.onmessage = function (evt) {
-        p1.resolve(JSON.parse(evt.data).message)
-      }
+        p1.resolve(JSON.parse(evt.data).message);
+      };
       client2.onmessage = function (evt) {
-        p2.resolve(JSON.parse(evt.data).message)
-      }
+        p2.resolve(JSON.parse(evt.data).message);
+      };
       client.send(JSON.stringify({
         send_packet: {
           to: "room",
@@ -92,32 +92,32 @@ Rhum.testPlan("tests/integration/video_test.ts", () => {
         },
       }));
       const client1Msg = await p1 as {
-        name: string,
-        users: [number],
-        myId: number
-      }
+        name: string;
+        users: [number];
+        myId: number;
+      };
       const client2Msg = await p2 as {
-        name: string,
-        users: [number],
-        myId: number
-      }
-      console.log(client1Msg)
-      console.log(client2Msg)
-      const closeP = deferred()
+        name: string;
+        users: [number];
+        myId: number;
+      };
+      console.log(client1Msg);
+      console.log(client2Msg);
+      const closeP = deferred();
       client.onclose = function () {
-        client2.close()
-      }
+        client2.close();
+      };
       client2.onclose = function () {
-        closeP.resolve()
-      }
-      client.close()
-      await closeP
+        closeP.resolve();
+      };
+      client.close();
+      await closeP;
       Rhum.asserts.assert(!!client1Msg.name);
       Rhum.asserts.assert(!!client1Msg.myId);
-      Rhum.asserts.assertEquals(client1Msg.users.length, 1)
+      Rhum.asserts.assertEquals(client1Msg.users.length, 1);
       Rhum.asserts.assert(!!client2Msg.name);
       Rhum.asserts.assert(!!client2Msg.myId);
-      Rhum.asserts.assertEquals(client2Msg.users.length, 1)
+      Rhum.asserts.assertEquals(client2Msg.users.length, 1);
       Rhum.asserts.assert(client1Msg.myId !== client1Msg.users[0]);
       Rhum.asserts.assert(client1Msg.myId === client2Msg.users[0]);
     });
