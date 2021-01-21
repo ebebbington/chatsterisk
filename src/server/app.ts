@@ -1,4 +1,4 @@
-import {config, Drash, Paladin, Tengine} from "./deps.ts";
+import { config, Drash, Paladin, Tengine } from "./deps.ts";
 import HomeResource from "./resources/home_resource.ts";
 import CallResource from "./resources/call_resource.ts";
 import ChatResource from "./resources/chat_resource.ts";
@@ -11,7 +11,7 @@ const tengine = Tengine({
   render: (...args: unknown[]): boolean => {
     return false;
   },
-  views_path: "./public/views"
+  views_path: "./public/views",
 });
 
 const server = new Drash.Http.Server({
@@ -39,8 +39,8 @@ const server = new Drash.Http.Server({
       paladin,
     ],
     after_resource: [
-      tengine
-    ]
+      tengine,
+    ],
   },
 });
 

@@ -119,10 +119,10 @@ Rhum.testPlan("tests/integration/video_test.ts", () => {
         await waitForConnectedToChannelEvent(client2);
         await closeClient(client);
         const message = await waitForMessage(client2, true);
-        Rhum.asserts.assertEquals(!!message, true)
-        Rhum.asserts.assertEquals(message.users.length, 0)
-        Rhum.asserts.assertEquals(!!message.name, true)
-        Rhum.asserts.assertEquals(!!message.myId, true)
+        Rhum.asserts.assertEquals(!!message, true);
+        Rhum.asserts.assertEquals(message.users.length, 0);
+        Rhum.asserts.assertEquals(!!message.name, true);
+        Rhum.asserts.assertEquals(!!message.myId, true);
       },
     );
   });
