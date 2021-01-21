@@ -77,34 +77,49 @@ Rhum.testPlan("tests/integration/video_test.ts", () => {
         connect_to: ["room"],
       }));
       await waitForConnectedToChannelEvent(client2);
+      const p1 = deferred()
+      const p2 = deferred()
+      client.onmessage = function (evt) {
+        p1.resolve(JSON.parse(evt.data).message)
+      }
+      client2.onmessage = function (evt) {
+        p2.resolve(JSON.parse(evt.data).message)
+      }
       client.send(JSON.stringify({
         send_packet: {
           to: "room",
           message: "",
         },
       }));
-      const message = await waitForMessage(client, true) as {
-        myId: number;
-        users: [number];
-        name: string;
-      };
-      const message2 = await waitForMessage(client2, true) as {
-        myId: number;
-        users: [number];
-        name: string;
-      };
-      console.log(message)
-      console.log(message2)
-      Rhum.asserts.assert(!!message.name);
-      Rhum.asserts.assert(!!message.myId);
-      Rhum.asserts.assert(message.users.length === 1);
-      Rhum.asserts.assert(message.myId !== message.users[0]);
-      Rhum.asserts.assert(message.myId === message2.users[0]);
-      Rhum.asserts.assert(!!message2.name);
-      Rhum.asserts.assert(!!message2.myId);
-      Rhum.asserts.assert(message2.users.length === 1);
-      Rhum.asserts.assert(message2.myId !== message2.users[0]);
-      Rhum.asserts.assert(message2.myId === message.users[0]);
+      const client1Msg = await p1 as {
+        name: string,
+        users: [number],
+        myId: number
+      }
+      const client2Msg = await p2 as {
+        name: string,
+        users: [number],
+        myId: number
+      }
+      console.log(client1Msg)
+      console.log(client2Msg)
+      const closeP = deferred()
+      client.onclose = function () {
+        client2.close()
+      }
+      client2.onclose = function () {
+        closeP.resolve()
+      }
+      client.close()
+      await closeP
+      Rhum.asserts.assert(!!client1Msg.name);
+      Rhum.asserts.assert(!!client1Msg.myId);
+      Rhum.asserts.assertEquals(client1Msg.users.length, 1)
+      Rhum.asserts.assert(!!client2Msg.name);
+      Rhum.asserts.assert(!!client2Msg.myId);
+      Rhum.asserts.assertEquals(client2Msg.users.length, 1)
+      Rhum.asserts.assert(client1Msg.myId !== client1Msg.users[0]);
+      Rhum.asserts.assert(client1Msg.myId === client2Msg.users[0]);
     });
     Rhum.testCase(
       "Client gets event when the other user in the room leaves",
