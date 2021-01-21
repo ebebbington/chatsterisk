@@ -47,6 +47,7 @@ async function waitForMessage(
   if (thenClose) {
     await promise2;
   }
+  console.log(msg.data)
   try {
     return JSON.parse(JSON.parse(msg.data).message);
   } catch (err) {
@@ -173,7 +174,7 @@ Rhum.testPlan("tests/integration/video_test.ts", () => {
         const client = await createWebSocketClient();
         const client2 = await createWebSocketClient();
         client.send(JSON.stringify({
-          connect_to: ["make-answer"],
+          connect_to: ["make-answer", "room"],
         }));
         await waitForConnectedToChannelEvent(client);
         client2.send(JSON.stringify({
@@ -195,7 +196,7 @@ Rhum.testPlan("tests/integration/video_test.ts", () => {
             to: "make-answer",
             message: {
               to: client2Id,
-              offer: "My answer :)",
+              answer: "My answer :)",
             },
           },
         }));
@@ -203,7 +204,7 @@ Rhum.testPlan("tests/integration/video_test.ts", () => {
         await closeClient(client);
         await closeClient(client2);
         Rhum.asserts.assertEquals(msg, {
-          offer: "My answer :)",
+          answer: "My answer :)",
           socket: client1Id,
         });
       },
