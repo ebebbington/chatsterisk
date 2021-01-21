@@ -47,7 +47,6 @@ async function waitForMessage(
   if (thenClose) {
     await promise2;
   }
-  console.log(msg.data)
   try {
     return JSON.parse(JSON.parse(msg.data).message);
   } catch (err) {
@@ -120,7 +119,10 @@ Rhum.testPlan("tests/integration/video_test.ts", () => {
         await waitForConnectedToChannelEvent(client2);
         await closeClient(client);
         const message = await waitForMessage(client2, true);
-        console.log(message); // TODO :: Hangs because wocket doesnt send a disconnect event to the server
+        Rhum.asserts.assertEquals(!!message, true)
+        Rhum.asserts.assertEquals(message.users.length, 0)
+        Rhum.asserts.assertEquals(!!message.name, true)
+        Rhum.asserts.assertEquals(!!message.myId, true)
       },
     );
   });
