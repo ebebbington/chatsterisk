@@ -17,24 +17,44 @@ jobs:
         #with:
         #  deno-version: ${{ matrix.deno }}
 
+      - name: Update Server Deps
+        run: |
+          cd src/server
+          deno run --allow-net --allow-read --allow-write https://deno.land/x/dmm/mod.ts update
+
       - name: Update Server Test Deps
         run: |
           cd src/server/tests
           deno run --allow-net --allow-read --allow-write https://deno.land/x/dmm/mod.ts update
 
-      - name: Update Socket Test Deps
+      - name: Update RTC Socket Deps
         run: |
-          cd src/socket/tests
+          cd src/video_socket
           deno run --allow-net --allow-read --allow-write https://deno.land/x/dmm/mod.ts update
 
-      - name: Update Socket Deps
+      - name: Update RTC Socket Test Deps
         run: |
-          cd src/socket
+          cd src/video_socket/tests
           deno run --allow-net --allow-read --allow-write https://deno.land/x/dmm/mod.ts update
 
-      - name: Update Server Deps
+      - name: Update Chat Socket Deps
         run: |
-          cd src/server
+          cd src/chat_socket
+          deno run --allow-net --allow-read --allow-write https://deno.land/x/dmm/mod.ts update
+
+      - name: Update Chat Socket Test Deps
+        run: |
+          cd src/chat_socket/tests
+          deno run --allow-net --allow-read --allow-write https://deno.land/x/dmm/mod.ts update
+
+      - name: Update SIP Socket Deps
+        run: |
+          cd src/call_socket
+          deno run --allow-net --allow-read --allow-write https://deno.land/x/dmm/mod.ts update
+
+      - name: Update SIP Socket Test Deps
+        run: |
+          cd src/call_socket/tests
           deno run --allow-net --allow-read --allow-write https://deno.land/x/dmm/mod.ts update
 
       - name: Update Dep Versions In Dockerfile
@@ -42,7 +62,7 @@ jobs:
           deno run -A console/update_dependency_versions.ts
 
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v2
+        uses: peter-evans/create-pull-request@v3
         with:
           token: ${{ secrets.CI_USER_PAT }}
           commit-message: Update dependencies

@@ -1,6 +1,6 @@
-import { SocketServer } from "./src/socket.ts";
+import { Call } from "./src/call.ts";
 
-const server = new SocketServer();
+const server = new Call();
 await server.start();
 
 // const socketClient = new SocketClient({

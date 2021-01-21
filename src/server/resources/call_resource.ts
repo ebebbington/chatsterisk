@@ -11,6 +11,7 @@ export default class CallResource extends Drash.Http.Resource {
     this.response.body = this.response.render("/call.dml", {
       title: "Chatsterisk - Call",
     });
+
     return this.response;
   }
 }

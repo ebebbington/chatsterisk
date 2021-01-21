@@ -1,15 +1,16 @@
 version: '3'
 
 services:
+
   server:
     container_name: drash_server
     build:
       context: .
       dockerfile: .docker/deno.dockerfile
       args:
-        DENO_VERSION: 1.4.6
+        DENO_VERSION: 1.5.4
     environment:
-      USE_DENON: "true"
+      MAKE_BUILD: "true"
     volumes:
       - ./src/server:/var/www/server
     working_dir: /var/www/server
@@ -18,22 +19,56 @@ services:
     networks:
       - chatsterisk-app-network
 
-  socket:
-    container_name: socket
+  call_socket:
+    container_name: call_socket
     depends_on:
       - asterisk
     build:
       context: .
       dockerfile: .docker/deno.dockerfile
       args:
-        DENO_VERSION: 1.4.6
-    environment:
-      USE_DENON: "true"
+        DENO_VERSION: 1.5.4
     ports:
       - "1668:1668"
     volumes:
-    - "./src/socket:/var/www/socket"
-    working_dir: /var/www/socket
+    - "./src/call_socket:/var/www/call_socket"
+    working_dir: /var/www/call_socket
+    networks:
+      - chatsterisk-app-network
+
+  video_socket:
+    container_name: video_socket
+    depends_on:
+      - asterisk
+    build:
+      context: .
+      dockerfile: .docker/deno.dockerfile
+      args:
+        DENO_VERSION: 1.7.0
+    ports:
+      - "1669:1669"
+    volumes:
+      - "./src/video_socket:/var/www/video_socket"
+    working_dir: /var/www/video_socket
+    networks:
+      - chatsterisk-app-network
+
+  chat_socket:
+    container_name: chat_socket
+    depends_on:
+      - asterisk
+    build:
+      context: .
+      dockerfile: .docker/deno.dockerfile
+      args:
+        DENO_VERSION: 1.5.4
+    environment:
+      USE_DENON: "true"
+    ports:
+      - "1670:1670"
+    volumes:
+      - "./src/chat_socket:/var/www/chat_socket"
+    working_dir: /var/www/chat_socket
     networks:
       - chatsterisk-app-network
 

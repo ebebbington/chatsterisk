@@ -1,4 +1,5 @@
-import { DAMI, DrashSocketServer, Event, Packet } from "../deps.ts";
+import { DAMI, DrashSocketServer } from "../deps.ts";
+import type { Action, Event, Packet } from "../deps.ts";
 
 export class Call {
   /**
@@ -36,30 +37,41 @@ export class Call {
   private readonly Socket: DrashSocketServer;
 
   /**
+   * Connection configs for the socket server
+   */
+  private readonly socket_configs = {
+    hostname: "call_socket",
+    port: 1668,
+  };
+
+  /**
    * Creates instances of the socket server and DAMI
    */
-  constructor(socket: DrashSocketServer) {
+  constructor() {
     this.Dami = new DAMI(this.ami_configs);
-    this.Socket = socket;
+    this.Socket = new DrashSocketServer();
   }
 
   public async start() {
-    // Connect and listen to the AMI
-    await this.Dami.connectAndLogin(this.ami_auth);
-    await this.Dami.listen();
+    // Start socket server
+    await this.Socket.run(this.socket_configs);
 
-    // Set peer entries immediantly so  we have access to all extensions
-    this.Dami.to("SIPPeers", {}, (data: Event[]) => {
-      data = data.filter(((d) => d["Event"] === "PeerEntry"));
-      this.peer_entries = data;
+    // Connect and listen to the AMI
+    await this.Dami.connect(this.ami_auth);
+
+    // Set peer entries immediantly so we have access to all extensions
+    const peerEntries = await this.Dami.to("SIPPeers", {});
+    peerEntries.forEach((entry) => {
+      if (entry["Event"] === "PeerEntry") {
+        this.peer_entries.push(entry);
+      }
     });
 
-    await this.initialiseSocketChannels();
+    this.initialiseSocketChannels();
   }
 
-  private async initialiseSocketChannels(): Promise<void> {
-    this.Socket.openChannel("call.make-call");
-    this.Socket.on("call.make-call", async (data: Packet) => {
+  private initialiseSocketChannels(): void {
+    this.Socket.on("make-call", async (data: Packet) => {
       console.log("data was received for make call");
       console.log(data);
       await this.Dami.to("Originate", {
@@ -77,15 +89,12 @@ export class Call {
       });
     });
 
-    this.Socket.openChannel("call.get-extensions");
-    this.Socket.on("call.get-extensions", async (data: Packet) => {
-      console.log("call.get-extensions called");
-      //const extensions = await getExtensionsFromAsterisk()
+    this.Socket.on("get-extensions", (data: Packet) => {
+      console.log("get-extensions called");
       const extensions = this.peer_entries.map((peerEntry) => {
-        return peerEntry.ObjectName;
+        return peerEntry["ObjectName"];
       });
-      console.log(extensions);
-      this.Socket.to("call.get-extensions", JSON.stringify(extensions));
+      this.Socket.to("get-extensions", JSON.stringify(extensions));
     });
   }
 
@@ -94,25 +103,25 @@ export class Call {
    */
   private listenForExtensionStates(): void {
     // on calls hung up, set status to available
-    this.Dami.on("Hangup", (data: Event[]) => {
-      const exten: string = data[0]["CallerIDNum"].toString();
-      const state: string = data[0]["ChannelStateDesc"].toString();
+    this.Dami.on("Hangup", (data: Event) => {
+      const exten: string = data["CallerIDNum"].toString();
+      const state: string = data["ChannelStateDesc"].toString();
       if (!Array.isArray(exten) && !Array.isArray(state)) {
         this.peer_entry_states[exten] = state;
         this.Socket.to(
-          "call.extension-states",
+          "extension-states",
           JSON.stringify(this.peer_entry_states),
         );
       }
     });
     // When a channel is created, set the status, handles declining calls (sets to busy) and when an exten is called, sets it to ringing
-    this.Dami.on("Newstate", (data: Event[]) => {
-      const exten: string = data[0]["CallerIDNum"].toString();
-      const state: string = data[0]["ChannelStateDesc"].toString();
+    this.Dami.on("Newstate", (data: Event) => {
+      const exten: string = data["CallerIDNum"].toString();
+      const state: string = data["ChannelStateDesc"].toString();
       if (!Array.isArray(exten) && !Array.isArray(state)) {
         this.peer_entry_states[exten] = state;
         this.Socket.to(
-          "call.extension-states",
+          "extension-states",
           JSON.stringify(this.peer_entry_states),
         );
       }
