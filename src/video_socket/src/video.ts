@@ -39,40 +39,45 @@ export class Video {
   public async start() {
     await this.Socket.run(this.socket_configs);
 
-    this.Socket.on("connection", (packet: Packet) => {
+    // Channels purely so the client can listen on them
+    this.Socket.on("call-made", (data: Packet) => {});
+    this.Socket.on("answer-made", (data: Packet) => {});
+
+    /**
+     * When requested, will get the room data, so your id, their ids and the name.
+     * It will also send an event to the other users in the room with the updated user list
+     */
+    this.Socket.on("room", (packet: Packet) => {
+      this.emitRoom(Number(packet.from.id));
+    });
+
+    // Update rooms
+    this.Socket.on("disconnect", (packet: Packet) => {
+      this.emitRoom(Number(packet.from.id), true);
+      this.removeUserFromRoom(Number(packet.from.id));
+    });
+
+    // Make a call request
+    this.Socket.on("call-user", (packet: Packet) => {
+      this.emitCallMade(
+        Number(packet.from.id),
+        // @ts-ignore Deno cannot find the name apprently...
+        (packet.message as { to: string; offer: RTCOfferOptions }),
+      );
+    });
+
+    // Answer the call request
+    this.Socket.on("make-answer", (packet: Packet) => {
+      this.emitAnswerMade(
+        Number(packet.from.id),
+        // @ts-ignore Deno cannot find the name apprently...
+        (packet.message as { to: string; answer: RTCOfferOptions }),
+      );
+    });
+
+    this.Socket.on("connect", (packet: Packet) => {
+      console.log("client conned");
       this.joinRoom(Number(packet.from.id));
-
-      /**
-       * When requested, will get the room data, so your id, their ids and the name.
-       * It will also send an event to the other users in the room with the updated user list
-       */
-      this.Socket.on("room", (packet: Packet) => {
-        this.emitRoom(Number(packet.from.id));
-      });
-
-      // Update rooms
-      this.Socket.on("disconnect", (packet: Packet) => {
-        this.emitRoom(Number(packet.from.id), true);
-        this.removeUserFromRoom(Number(packet.from.id));
-      });
-
-      // Make a call request
-      this.Socket.on("call-user", (packet: Packet) => {
-        this.emitCallMade(
-          Number(packet.from.id),
-            // @ts-ignore Deno cannot find the name apprently...
-            (packet.message as { to: string; offer: RTCOfferOptions }),
-        );
-      });
-
-      // Answer the call request
-      this.Socket.on("make-answer", (packet: Packet) => {
-        this.emitAnswerMade(
-          Number(packet.from.id),
-            // @ts-ignore Deno cannot find the name apprently...
-            (packet.message as { to: string; answer: RTCOfferOptions }),
-        );
-      });
     });
   }
 
@@ -208,11 +213,11 @@ export class Video {
    */
   private emitRoom(
     socketId: number,
-    isDisconnecting: boolean = false,
+    isDisconnecting = false,
   ): false | void {
     const otherUsersId = this.getOtherUsersIdByRoom(socketId);
     if (otherUsersId === false) {
-      return false
+      return false;
     }
     const joinedRoom = this.getJoinedRoom(socketId);
     if (!joinedRoom) {
@@ -231,7 +236,7 @@ export class Video {
       myId: socketId,
       users: joinedRoom.users.filter((id) => id !== socketId),
       name: joinedRoom.name,
-    });
+    }, socketId);
   }
 
   /**
@@ -248,6 +253,7 @@ export class Video {
     // @ts-ignore Deno cannot find the name apprently...
     data: { to: string; offer: RTCOfferOptions },
   ) {
+    console.log("going to emit call made to " + data.to);
     this.Socket.to("call-made", {
       offer: data.offer,
       socket: socketId,

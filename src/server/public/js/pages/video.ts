@@ -3,21 +3,21 @@ import { createWebSocketClient } from "../modules/socket-client.ts";
 async function init() {
   const socket = await createWebSocketClient({ port: 1669 });
   socket.onmessage = function (message) {
-    const data = JSON.parse(message.data)
+    const data = JSON.parse(message.data);
     switch (data.to) {
       case "room":
-        handleRoom(data.message)
-        break
+        handleRoom(data.message);
+        break;
       case "call-made":
-        handleCallMade(data.message)
-        break
-      case 'answer-made':
-        handleAnswerMade(data.message)
-        break
+        handleCallMade(data.message);
+        break;
+      case "answer-made":
+        handleAnswerMade(data.message);
+        break;
       default:
-        break
+        break;
     }
-  }
+  };
 
   const peerConnection = new RTCPeerConnection();
   let isAlreadyCalling = false;
@@ -202,8 +202,8 @@ async function init() {
 
     socket.send(JSON.stringify({
       send_packet: {
-        to: "room"
-      }
+        to: "room",
+      },
     }));
 
     document.getElementById("call-user")!.addEventListener(

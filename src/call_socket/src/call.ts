@@ -67,10 +67,10 @@ export class Call {
       }
     });
 
-    await this.initialiseSocketChannels();
+    this.initialiseSocketChannels();
   }
 
-  private async initialiseSocketChannels(): Promise<void> {
+  private initialiseSocketChannels(): void {
     this.Socket.on("make-call", async (data: Packet) => {
       console.log("data was received for make call");
       console.log(data);
@@ -89,7 +89,7 @@ export class Call {
       });
     });
 
-    this.Socket.on("get-extensions", async (data: Packet) => {
+    this.Socket.on("get-extensions", (data: Packet) => {
       console.log("get-extensions called");
       const extensions = this.peer_entries.map((peerEntry) => {
         return peerEntry["ObjectName"];
