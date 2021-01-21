@@ -1,10 +1,4 @@
-import SocketClient from "https://cdn.jsdelivr.net/gh/drashland/sockets-client@latest/client.js";
-
-const sockets = {
-  chat: 1670,
-  sip: 1668,
-  rtc: 1669,
-};
+// import SocketClient from "https://cdn.jsdelivr.net/gh/drashland/sockets-client@latest/client.js";
 
 export interface Deferred<T> extends Promise<T> {
   resolve: (value?: T | PromiseLike<T>) => void;
