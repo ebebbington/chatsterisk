@@ -27,9 +27,8 @@ softphones int eh Telephone app? See
 
 - Drash - web server
 - Wocket - web socket server
-- Bundler - bundling client TS code (not yet added)
+- `deno bundlle` - bundling client TS code
 - Asterisk
-- Denon - file watcher
 - Rhum - Testing framework
 - Dawn - browser testing framework (not yet added)
 - Dami - ami client
@@ -38,7 +37,7 @@ softphones int eh Telephone app? See
 
 1. Docker environment is started
 
-2. `server` starts, handling any web requests
+2. `server` bundles client ts, and starts, handling any web requests
 
 3. Asterisk starts, listening for any call requests
 
