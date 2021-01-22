@@ -1,6 +1,11 @@
 <% extends("/layout.dml") %>
+<my-component></my-component>
 <div style="display: flex">
     <a href="/call">Call</a>
     <a href="/chat">Chat</a>
     <a href="/video">Video</a>
 </div>
+
+<wc-button text="Click me" handler="">/wc-button>
+<script src="/public/components/example_component.js"></script>
+<script src="/public/components/button.js" type="module"></script>
