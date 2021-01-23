@@ -54,8 +54,8 @@ const styling = `
  * <script src="/public/components/input_row.js" type="module"></script>
  */
 register(
-    // deno-lint-ignore no-undef
-    class InputRow extends HTMLElement {
+  // deno-lint-ignore no-undef
+  class InputRow extends HTMLElement {
     connectedCallback() {
       const containerId = this.getAttribute("container-id");
       const inputId = this.getAttribute("input-id");

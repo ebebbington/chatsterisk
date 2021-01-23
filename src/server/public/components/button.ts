@@ -31,8 +31,8 @@ button:hover {
 `;
 
 register(
-    // deno-lint-ignore no-undef
-    class AButton extends HTMLElement {
+  // deno-lint-ignore no-undef
+  class AButton extends HTMLElement {
     connectedCallback() {
       const originalInnerText = this.innerText;
       const idAttribute = this.getAttribute("id");

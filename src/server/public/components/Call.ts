@@ -8,7 +8,7 @@ import {
 import { createWebSocketClient } from "../js/socket-client.ts";
 
 register(
-    // deno-lint-ignore no-undef
+  // deno-lint-ignore no-undef
   class CCall extends HTMLElement {
     private client: WebSocket | null = null;
 
@@ -21,7 +21,7 @@ register(
             <div class="col-6 text-align-c">
                 <p>Select an extension to call from</p>
                 <select id="extension-to-call-from">
-                    <option value="" selected>Select...</option>
+                    <option value="" selected>Select...</option>            
                 </select>
             </div>
 
@@ -53,7 +53,8 @@ register(
         "change",
         () => {
           const chosenExtension =
-              (this.querySelector("#extension-to-call-from") as HTMLOptionElement).value;
+            (this.querySelector("#extension-to-call-from") as HTMLOptionElement)
+              .value;
           const $options = this.querySelectorAll(
             "select#extension-to-call-to option",
           ) as unknown as HTMLOptionElement[];
@@ -70,7 +71,8 @@ register(
         "change",
         (event) => {
           const chosenExtension =
-              (this.querySelector("#extension-to-call-to") as HTMLOptionElement).value;
+            (this.querySelector("#extension-to-call-to") as HTMLOptionElement)
+              .value;
           // deno-lint-ignore no-explicit-any
           const $options: any = this.querySelectorAll(
             "select#extension-to-call-from option",
@@ -88,8 +90,12 @@ register(
       this.querySelector("#initiate-call")!.addEventListener(
         "click",
         (event) => {
-          const from = (this.querySelector("#extension-to-call-from") as HTMLOptionElement).value;
-          const to = (this.querySelector("#extension-to-call-to") as HTMLOptionElement).value;
+          const from =
+            (this.querySelector("#extension-to-call-from") as HTMLOptionElement)
+              .value;
+          const to =
+            (this.querySelector("#extension-to-call-to") as HTMLOptionElement)
+              .value;
           this.client!.send(JSON.stringify({
             send_packet: {
               to: "make-call",

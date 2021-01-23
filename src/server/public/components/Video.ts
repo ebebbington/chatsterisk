@@ -27,8 +27,8 @@ const styling = `
 </style>`;
 
 register(
-    // deno-lint-ignore no-undef
-    class CVideo extends HTMLElement {
+  // deno-lint-ignore no-undef
+  class CVideo extends HTMLElement {
     private socket: WebSocket | null = null;
 
     async connectedCallback() {
@@ -124,8 +124,8 @@ register(
     private callUser(socketId: string) {
       peerConnection.createOffer().then((offer: RTCSessionDescriptionInit) => {
         return peerConnection.setLocalDescription(
-            // deno-lint-ignore no-undef
-            new RTCSessionDescription(offer),
+          // deno-lint-ignore no-undef
+          new RTCSessionDescription(offer),
         );
       }).then(() => {
         this.socket!.send(
@@ -150,15 +150,17 @@ register(
    * @param {any}     data.offer  The offer for the call
    * @param {string}  data.socket Socket id trying to call
    */
-    private async handleCallMade(data: { offer: RTCSessionDescriptionInit; socket: string }) {
+    private async handleCallMade(
+      data: { offer: RTCSessionDescriptionInit; socket: string },
+    ) {
       await peerConnection.setRemoteDescription(
-          // deno-lint-ignore no-undef
-          new RTCSessionDescription(data.offer),
+        // deno-lint-ignore no-undef
+        new RTCSessionDescription(data.offer),
       );
       const answer = await peerConnection.createAnswer();
       await peerConnection.setLocalDescription(
-          // deno-lint-ignore no-undef
-          new RTCSessionDescription(answer),
+        // deno-lint-ignore no-undef
+        new RTCSessionDescription(answer),
       );
       this.socket!.send(
         JSON.stringify({
@@ -185,7 +187,7 @@ register(
       data: { answer: RTCSessionDescriptionInit; socket: string },
     ): Promise<void> {
       await peerConnection.setRemoteDescription(
-          // deno-lint-ignore no-undef
+        // deno-lint-ignore no-undef
         new RTCSessionDescription(data.answer),
       );
       if (!isAlreadyCalling) {
@@ -207,7 +209,9 @@ register(
       navigator.getUserMedia(
         { video: true, audio: true },
         (stream) => {
-          const localVideo: HTMLVideoElement | null = this.querySelector("#user-video");
+          const localVideo: HTMLVideoElement | null = this.querySelector(
+            "#user-video",
+          );
           if (localVideo) {
             localVideo.srcObject = stream;
           }
@@ -228,7 +232,9 @@ register(
 
       // Listen for peer connections
       peerConnection.ontrack = ({ streams: [stream] }) => {
-        const remoteVideo: HTMLVideoElement | null = this.querySelector("#peer-video");
+        const remoteVideo: HTMLVideoElement | null = this.querySelector(
+          "#peer-video",
+        );
         if (remoteVideo) {
           remoteVideo.srcObject = stream;
           const callUserElement = this.querySelector("#call-user");
