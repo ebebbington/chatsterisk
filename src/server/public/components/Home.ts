@@ -2,10 +2,6 @@ import { DestinyElement, html, reactive, register } from "https://code.okku.dev/
 
 register(class CHome extends HTMLElement {
   connectedCallback() {
-    const script = document.createElement("script")
-    script.type = "module"
-    script.src = '/public/components/anchor.js'
-    document.body.appendChild(script)
     this.innerHTML =
       `
       <div style="display: flex">

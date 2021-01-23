@@ -2,9 +2,9 @@ import { DestinyElement, html, reactive, register } from "https://code.okku.dev/
 
 register(class AnchorLink extends HTMLElement {
   connectedCallback() {
-    this.originalInnerText = this.innerText
-    this.anchorHref = this.getAttribute("href")
-    this.innerHTML = `<a href="${this.anchorHref}">${this.originalInnerText}</a>
+    const originalInnerText = this.innerText
+    const anchorHref = this.getAttribute("href")
+    this.innerHTML = `<a href="${anchorHref}">${originalInnerText}</a>
 `;
   }
 })

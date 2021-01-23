@@ -7,10 +7,6 @@ register(class CCall extends HTMLElement {
   private client: WebSocket | null = null
 
   public async connectedCallback() {
-    const script = document.createElement("script")
-    script.type = "module"
-    script.src = '/public/components/button.js'
-    document.body.appendChild(script)
     this.innerHTML =
       `<p>Remember to refresh the extensions to make a call!</p>
 
