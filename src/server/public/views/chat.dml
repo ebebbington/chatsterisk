@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <% include_partial("/partials/head.dml") %>
+</head>
+<body>
+<h1><% title %></h1>
+<div class="container">
+    <c-chat></c-chat>
+</div>
+</body>
+</html>

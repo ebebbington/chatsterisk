@@ -4,16 +4,28 @@ import {createWebSocketClient} from "../js/socket-client.ts";
 const peerConnection = new RTCPeerConnection();
 let isAlreadyCalling = false;
 
+const styling = `
+<style>
+#video-chat > video {
+    height: 200px;
+}
+#video-chat > #user-video {
+    position: fixed;
+    left: 2px;
+    bottom: 2px;
+}
+#video-chat > #peer-video {
+    width: 100%;
+    height: auto;
+}
+</style>`
+
 register(class CVideo extends HTMLElement {
   private socket: WebSocket | null = null
 
   async connectedCallback() {
-    const script = document.createElement("script")
-    script.type = "module"
-    script.src = '/public/components/button.js'
-    document.body.appendChild(script)
     this.innerHTML =
-      `<div id="video-chat">
+      `${styling}<div id="video-chat">
     <video id="user-video" autoplay playsinline controls></video>
     <span>
         <a-button id="call-user" class="success" value="call">Waiting for a friend...</a-button>

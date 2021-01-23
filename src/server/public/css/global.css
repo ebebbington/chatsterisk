@@ -60,16 +60,3 @@ ul {
     text-align: center;
     margin-bottom: 5em;
 }
-
-#video-chat > video {
-    height: 200px;
-}
-#video-chat > #user-video {
-    position: fixed;
-    left: 2px;
-    bottom: 2px;
-}
-#video-chat > #peer-video {
-    width: 100%;
-    height: auto;
-}
