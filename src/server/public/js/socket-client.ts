@@ -24,7 +24,7 @@ export function deferred<T>(): Deferred<T> {
 
 export async function createWebSocketClient(options: { port: number }) {
   const prom = deferred();
-  const client = new WebSocket("ws://0.0.0.0:1668");
+  const client = new WebSocket("ws://0.0.0.0:" + options.port);
   client.onopen = function () {
     prom.resolve();
   };

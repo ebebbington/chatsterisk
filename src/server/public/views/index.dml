@@ -1,8 +1,12 @@
-<% extends("/layout.dml") %>
-<div style="display: flex">
-    <anchor-link href="/call">Call</anchor-link>
-    <anchor-link href="/chat">Chat</anchor-link>
-    <anchor-link href="/video">Video</anchor-link>
-</div>
-
-<script src="/public/components/anchor.js" type="module"></script>
+<!DOCTYPE html>
+<html>
+<head>
+    <% include_partial("/partials/head.dml") %>
+</head>
+<body>
+    <h1><% title %></h1>
+    <div class="container">
+        <c-home></c-home>
+    </div>
+</body>
+</html>

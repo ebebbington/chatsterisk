@@ -28,7 +28,9 @@ button:hover {
 register(class AButton extends HTMLElement {
   connectedCallback() {
     this.originalInnerText = this.innerText
-    this.innerHTML = `${styling}<button>${this.originalInnerText}</button>
+    this.idAttribute = this.getAttribute("id")
+    this.classAttribute = this.getAttribute("class")
+    this.innerHTML = `${styling}<button id="${this.idAttribute}" class="${this.classAttribute}">${this.originalInnerText}</button>
 `;
   }
 })
