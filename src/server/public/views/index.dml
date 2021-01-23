@@ -1,6 +1,12 @@
-<% extends("/layout.dml") %>
-<div style="display: flex">
-    <a href="/call">Call</a>
-    <a href="/chat">Chat</a>
-    <a href="/video">Video</a>
-</div>
+<!DOCTYPE html>
+<html>
+<head>
+    <% include_partial("/partials/head.dml") %>
+</head>
+<body>
+    <h1><% title %></h1>
+    <div class="container">
+        <c-home></c-home>
+    </div>
+</body>
+</html>

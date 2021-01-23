@@ -80,4 +80,4 @@ jobs:
         run: deno fmt --check
 
       - name: linter
-        run: deno lint --unstable --ignore='src/server/public'
+        run: deno lint --unstable --ignore='src/server/public/js/app.js,src/server/public/components/example_component.js'
