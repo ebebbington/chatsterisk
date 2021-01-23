@@ -6,7 +6,8 @@ import {
 } from "https://code.okku.dev/destiny-ui/0.4.1/dist/mod.js";
 
 register(
-  class AnchorLink extends HTMLElement {
+    // deno-lint-ignore no-undef
+    class AnchorLink extends HTMLElement {
     connectedCallback() {
       const originalInnerText = this.innerText;
       const anchorHref = this.getAttribute("href");

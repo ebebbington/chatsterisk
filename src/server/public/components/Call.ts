@@ -8,10 +8,11 @@ import {
 import { createWebSocketClient } from "../js/socket-client.ts";
 
 register(
+    // deno-lint-ignore no-undef
   class CCall extends HTMLElement {
     private client: WebSocket | null = null;
 
-    public async connectedCallback() {
+    public connectedCallback() {
       this.innerHTML =
         `<p>Remember to refresh the extensions to make a call!</p>
 
@@ -52,12 +53,11 @@ register(
         "change",
         () => {
           const chosenExtension =
-            // @ts-ignore
-            this.querySelector("#extension-to-call-from")!.value;
+              (this.querySelector("#extension-to-call-from") as HTMLOptionElement).value;
           const $options = this.querySelectorAll(
             "select#extension-to-call-to option",
-          );
-          $options.forEach(($option: any) => {
+          ) as unknown as HTMLOptionElement[];
+          $options.forEach(($option: HTMLOptionElement) => {
             if ($option.value === chosenExtension) {
               $option.classList.add("hide");
             } else {
@@ -70,12 +70,12 @@ register(
         "change",
         (event) => {
           const chosenExtension =
-            // @ts-ignore
-            this.querySelector("#extension-to-call-to").value;
+              (this.querySelector("#extension-to-call-to") as HTMLOptionElement).value;
+          // deno-lint-ignore no-explicit-any
           const $options: any = this.querySelectorAll(
             "select#extension-to-call-from option",
           );
-          $options.forEach(($option: any) => {
+          $options.forEach(($option: HTMLOptionElement) => {
             if ($option.value === chosenExtension) {
               $option.classList.add("hide");
             } else {
@@ -88,10 +88,8 @@ register(
       this.querySelector("#initiate-call")!.addEventListener(
         "click",
         (event) => {
-          // @ts-ignore
-          const from: any = this.querySelector("#extension-to-call-from").value;
-          // @ts-ignore
-          const to: any = this.querySelector("#extension-to-call-to")!.value;
+          const from = (this.querySelector("#extension-to-call-from") as HTMLOptionElement).value;
+          const to = (this.querySelector("#extension-to-call-to") as HTMLOptionElement).value;
           this.client!.send(JSON.stringify({
             send_packet: {
               to: "make-call",
@@ -106,19 +104,20 @@ register(
     }
 
     private handleGetExtensions(message: string[]) {
-      const extensions = message;
       const $extensionToCallFrom = this.querySelector(
         "#extension-to-call-from",
       );
       const $extensionToCallTo = this.querySelector("#extension-to-call-to");
-      extensions.forEach((extension: any) => {
+      message.forEach((extension) => {
         let $option;
 
+        // deno-lint-ignore no-undef
         $option = document.createElement("option");
         $option.value = extension;
         $option.innerText = extension;
         $extensionToCallFrom!.appendChild($option);
 
+        // deno-lint-ignore no-undef
         $option = document.createElement("option");
         $option.value = extension;
         $option.innerText = extension;

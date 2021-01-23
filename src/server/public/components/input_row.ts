@@ -54,17 +54,18 @@ const styling = `
  * <script src="/public/components/input_row.js" type="module"></script>
  */
 register(
-  class InputRow extends HTMLElement {
+    // deno-lint-ignore no-undef
+    class InputRow extends HTMLElement {
     connectedCallback() {
-      this.containerId = this.getAttribute("container-id");
-      this.inputId = this.getAttribute("input-id");
-      this.inputPlaceHolder = this.getAttribute("input-placeholder");
-      this.buttonId = this.getAttribute("button-id");
+      const containerId = this.getAttribute("container-id");
+      const inputId = this.getAttribute("input-id");
+      const inputPlaceHolder = this.getAttribute("input-placeholder");
+      const buttonId = this.getAttribute("button-id");
       this.innerHTML = `
 ${styling}
-<div class="input-row" id="${this.containerId}">
-    <input id="${this.inputId}" type="text" placeholder="${this.inputPlaceHolder}">
-    <button id="${this.buttonId}" type="button">&#10004</button>
+<div class="input-row" id="${containerId}">
+    <input id="${inputId}" type="text" placeholder="${inputPlaceHolder}">
+    <button id="${buttonId}" type="button">&#10004</button>
 </div>
 `;
     }

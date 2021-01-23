@@ -6,6 +6,7 @@ import {
 } from "https://code.okku.dev/destiny-ui/0.4.1/dist/mod.js";
 import { createWebSocketClient } from "../js/socket-client.ts";
 
+// deno-lint-ignore no-undef
 const peerConnection = new RTCPeerConnection();
 let isAlreadyCalling = false;
 
@@ -26,7 +27,8 @@ const styling = `
 </style>`;
 
 register(
-  class CVideo extends HTMLElement {
+    // deno-lint-ignore no-undef
+    class CVideo extends HTMLElement {
     private socket: WebSocket | null = null;
 
     async connectedCallback() {
@@ -122,7 +124,8 @@ register(
     private callUser(socketId: string) {
       peerConnection.createOffer().then((offer: RTCSessionDescriptionInit) => {
         return peerConnection.setLocalDescription(
-          new RTCSessionDescription(offer),
+            // deno-lint-ignore no-undef
+            new RTCSessionDescription(offer),
         );
       }).then(() => {
         this.socket!.send(
@@ -147,13 +150,15 @@ register(
    * @param {any}     data.offer  The offer for the call
    * @param {string}  data.socket Socket id trying to call
    */
-    private async handleCallMade(data: { offer: any; socket: string }) {
+    private async handleCallMade(data: { offer: RTCSessionDescriptionInit; socket: string }) {
       await peerConnection.setRemoteDescription(
-        new RTCSessionDescription(data.offer),
+          // deno-lint-ignore no-undef
+          new RTCSessionDescription(data.offer),
       );
       const answer = await peerConnection.createAnswer();
       await peerConnection.setLocalDescription(
-        new RTCSessionDescription(answer),
+          // deno-lint-ignore no-undef
+          new RTCSessionDescription(answer),
       );
       this.socket!.send(
         JSON.stringify({
@@ -177,9 +182,10 @@ register(
    * @param {string}  data.socket     Socket id trying to call
    */
     private async handleAnswerMade(
-      data: { answer: any; socket: string },
+      data: { answer: RTCSessionDescriptionInit; socket: string },
     ): Promise<void> {
       await peerConnection.setRemoteDescription(
+          // deno-lint-ignore no-undef
         new RTCSessionDescription(data.answer),
       );
       if (!isAlreadyCalling) {
@@ -195,12 +201,13 @@ register(
    * @description
    * Display the users video and add the tracks to the peer connection
    */
-    private async displayMyVideoAndGetTracks() {
+    private displayMyVideoAndGetTracks() {
       // Display stream and set tracks
+      // deno-lint-ignore no-undef
       navigator.getUserMedia(
         { video: true, audio: true },
         (stream) => {
-          const localVideo: any = document.getElementById("user-video");
+          const localVideo: HTMLVideoElement | null = this.querySelector("#user-video");
           if (localVideo) {
             localVideo.srcObject = stream;
           }
@@ -221,7 +228,7 @@ register(
 
       // Listen for peer connections
       peerConnection.ontrack = ({ streams: [stream] }) => {
-        const remoteVideo: any = this.querySelector("#peer-video");
+        const remoteVideo: HTMLVideoElement | null = this.querySelector("#peer-video");
         if (remoteVideo) {
           remoteVideo.srcObject = stream;
           const callUserElement = this.querySelector("#call-user");
@@ -231,7 +238,7 @@ register(
         }
       };
 
-      peerConnection.oniceconnectionstatechange = (data: any) => {
+      peerConnection.oniceconnectionstatechange = () => {
         if (
           peerConnection.iceConnectionState === "failed" ||
           peerConnection.iceConnectionState === "disconnected" ||
@@ -256,7 +263,7 @@ register(
 
       this.querySelector("#call-user")!.addEventListener(
         "click",
-        (event: any) => {
+        () => {
           const callUserElement = this.querySelector("call-user");
           //Notifier.success("Call User", "Calling user...");
           const id = callUserElement!.getAttribute("socketId");
