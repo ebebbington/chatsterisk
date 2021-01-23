@@ -7,7 +7,7 @@ register(
   class CCall extends HTMLElement {
     private client: WebSocket | null = null;
 
-    public connectedCallback() {
+    connectedCallback() {
       this.innerHTML =
         `<p>Remember to refresh the extensions to make a call!</p>
 
@@ -16,7 +16,7 @@ register(
             <div class="col-6 text-align-c">
                 <p>Select an extension to call from</p>
                 <select id="extension-to-call-from">
-                    <option value="" selected>Select...</option>            
+                    <option value="" selected>Select...</option>                   
                 </select>
             </div>
 

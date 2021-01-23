@@ -47,7 +47,6 @@ register(
         if (message.data.indexOf("Connected to") > -1) {
           return false;
         }
-        console.log(message.data);
         const data = JSON.parse(message.data);
         switch (data.to) {
           case "room":
