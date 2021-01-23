@@ -1,11 +1,8 @@
 <% extends("/layout.dml") %>
-<my-component></my-component>
 <div style="display: flex">
-    <a href="/call">Call</a>
-    <a href="/chat">Chat</a>
-    <a href="/video">Video</a>
+    <anchor-link href="/call">Call</anchor-link>
+    <anchor-link href="/chat">Chat</anchor-link>
+    <anchor-link href="/video">Video</anchor-link>
 </div>
 
-<wc-button text="Click me" handler="">/wc-button>
-<script src="/public/components/example_component.js"></script>
-<script src="/public/components/button.js" type="module"></script>
+<script src="/public/components/anchor.js" type="module"></script>
