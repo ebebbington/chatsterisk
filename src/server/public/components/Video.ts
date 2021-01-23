@@ -1,5 +1,10 @@
-import { DestinyElement, html, reactive, register } from "https://code.okku.dev/destiny-ui/0.4.1/dist/mod.js";
-import {createWebSocketClient} from "../js/socket-client.ts";
+import {
+  DestinyElement,
+  html,
+  reactive,
+  register,
+} from "https://code.okku.dev/destiny-ui/0.4.1/dist/mod.js";
+import { createWebSocketClient } from "../js/socket-client.ts";
 
 const peerConnection = new RTCPeerConnection();
 let isAlreadyCalling = false;
@@ -18,14 +23,14 @@ const styling = `
     width: 100%;
     height: auto;
 }
-</style>`
+</style>`;
 
-register(class CVideo extends HTMLElement {
-  private socket: WebSocket | null = null
+register(
+  class CVideo extends HTMLElement {
+    private socket: WebSocket | null = null;
 
-  async connectedCallback() {
-    this.innerHTML =
-      `${styling}<div id="video-chat">
+    async connectedCallback() {
+      this.innerHTML = `${styling}<div id="video-chat">
     <video id="user-video" autoplay playsinline controls></video>
     <span>
         <a-button id="call-user" class="success" value="call">Waiting for a friend...</a-button>
@@ -35,35 +40,35 @@ register(class CVideo extends HTMLElement {
     <video id="peer-video" autoplay playsinline controls></video>
 </div>
 `;
-    await this.initialiseSocketClient()
-    this.registerListeners()
-  }
+      await this.initialiseSocketClient();
+      this.registerListeners();
+    }
 
-  private async initialiseSocketClient () {
-    this.socket = await createWebSocketClient({ port: 1669 });
-    this.socket!.onmessage = (message) => {
-      if (message.data.indexOf("Connected to") > -1) {
-        return false
-      }
-      console.log(message.data)
-      const data = JSON.parse(message.data);
-      switch (data.to) {
-        case "room":
-          this.handleRoom(data.message);
-          break;
-        case "call-made":
-          this.handleCallMade(data.message);
-          break;
-        case "answer-made":
-          this.handleAnswerMade(data.message);
-          break;
-        default:
-          break;
-      }
-    };
-  }
+    private async initialiseSocketClient() {
+      this.socket = await createWebSocketClient({ port: 1669 });
+      this.socket!.onmessage = (message) => {
+        if (message.data.indexOf("Connected to") > -1) {
+          return false;
+        }
+        console.log(message.data);
+        const data = JSON.parse(message.data);
+        switch (data.to) {
+          case "room":
+            this.handleRoom(data.message);
+            break;
+          case "call-made":
+            this.handleCallMade(data.message);
+            break;
+          case "answer-made":
+            this.handleAnswerMade(data.message);
+            break;
+          default:
+            break;
+        }
+      };
+    }
 
-  /**
+    /**
    * @method handleRoom
    *
    * @description
@@ -76,37 +81,37 @@ register(class CVideo extends HTMLElement {
    * @param {string}      data.name   Name of the socket room you're in
    *
    */
-  private handleRoom(
+    private handleRoom(
       data: {
         readonly myId: string;
         readonly users: string[];
         readonly name: string;
       },
-  ) {
-    // Check the id elem text to see if a user was on the page
-    const callUserElement = this.querySelector("#call-user");
-    const theirId = callUserElement!.getAttribute("socket-id")
-    // If they have left e.g. no users, remove the src object
-    if (theirId && !data.users.length) {
-      //Notifier.warning("User Left", "User has left the room");
-      const peerVideoElement: HTMLVideoElement | null = this.querySelector(
+    ) {
+      // Check the id elem text to see if a user was on the page
+      const callUserElement = this.querySelector("#call-user");
+      const theirId = callUserElement!.getAttribute("socket-id");
+      // If they have left e.g. no users, remove the src object
+      if (theirId && !data.users.length) {
+        //Notifier.warning("User Left", "User has left the room");
+        const peerVideoElement: HTMLVideoElement | null = this.querySelector(
           "video#peer-video",
-      );
-      peerVideoElement!.srcObject = null;
-      const endCallElement = this.querySelector("#end-call");
-      callUserElement!.classList.remove("hide");
-      endCallElement!.classList.add("hide");
-    }
-    if (!theirId && data.users.length) {
-      //Notifier.success("User Joined", "User has joined the room");
-    }
-    callUserElement!.textContent = data.users[0]
+        );
+        peerVideoElement!.srcObject = null;
+        const endCallElement = this.querySelector("#end-call");
+        callUserElement!.classList.remove("hide");
+        endCallElement!.classList.add("hide");
+      }
+      if (!theirId && data.users.length) {
+        //Notifier.success("User Joined", "User has joined the room");
+      }
+      callUserElement!.textContent = data.users[0]
         ? "Call User!"
         : "Waiting for a friend...";
-    callUserElement!.setAttribute("socketId", data.users[0]);
-  }
+      callUserElement!.setAttribute("socketId", data.users[0]);
+    }
 
-  /**
+    /**
    * @method callUser
    *
    * @description
@@ -114,13 +119,13 @@ register(class CVideo extends HTMLElement {
    *
    * @param {string} socketId The other persons socket id
    */
-  private callUser(socketId: string) {
-    peerConnection.createOffer().then((offer: RTCSessionDescriptionInit) => {
-      return peerConnection.setLocalDescription(
+    private callUser(socketId: string) {
+      peerConnection.createOffer().then((offer: RTCSessionDescriptionInit) => {
+        return peerConnection.setLocalDescription(
           new RTCSessionDescription(offer),
-      );
-    }).then(() => {
-      this.socket!.send(
+        );
+      }).then(() => {
+        this.socket!.send(
           JSON.stringify({
             to: "call-user",
             message: {
@@ -128,11 +133,11 @@ register(class CVideo extends HTMLElement {
               to: socketId,
             },
           }),
-      );
-    });
-  }
+        );
+      });
+    }
 
-  /**
+    /**
    * @method handleCallMade
    *
    * @description
@@ -142,15 +147,15 @@ register(class CVideo extends HTMLElement {
    * @param {any}     data.offer  The offer for the call
    * @param {string}  data.socket Socket id trying to call
    */
-  private async handleCallMade(data: { offer: any; socket: string }) {
-    await peerConnection.setRemoteDescription(
+    private async handleCallMade(data: { offer: any; socket: string }) {
+      await peerConnection.setRemoteDescription(
         new RTCSessionDescription(data.offer),
-    );
-    const answer = await peerConnection.createAnswer();
-    await peerConnection.setLocalDescription(
+      );
+      const answer = await peerConnection.createAnswer();
+      await peerConnection.setLocalDescription(
         new RTCSessionDescription(answer),
-    );
-    this.socket!.send(
+      );
+      this.socket!.send(
         JSON.stringify({
           to: "make-answer",
           message: {
@@ -158,10 +163,10 @@ register(class CVideo extends HTMLElement {
             to: data.socket,
           },
         }),
-    );
-  }
+      );
+    }
 
-  /**
+    /**
    * @method handleAnswerMade
    *
    * @description
@@ -171,28 +176,28 @@ register(class CVideo extends HTMLElement {
    * @param {any}     data.answer     The answer object for the call
    * @param {string}  data.socket     Socket id trying to call
    */
-  private async handleAnswerMade(
+    private async handleAnswerMade(
       data: { answer: any; socket: string },
-  ): Promise<void> {
-    await peerConnection.setRemoteDescription(
+    ): Promise<void> {
+      await peerConnection.setRemoteDescription(
         new RTCSessionDescription(data.answer),
-    );
-    if (!isAlreadyCalling) {
-      this.callUser(data.socket);
-      isAlreadyCalling = true;
+      );
+      if (!isAlreadyCalling) {
+        this.callUser(data.socket);
+        isAlreadyCalling = true;
+      }
+      isAlreadyCalling = false;
     }
-    isAlreadyCalling = false;
-  }
 
-  /**
+    /**
    * @method displayMyVideoAndGetTracks
    *
    * @description
    * Display the users video and add the tracks to the peer connection
    */
-  private async displayMyVideoAndGetTracks() {
-    // Display stream and set tracks
-    navigator.getUserMedia(
+    private async displayMyVideoAndGetTracks() {
+      // Display stream and set tracks
+      navigator.getUserMedia(
         { video: true, audio: true },
         (stream) => {
           const localVideo: any = document.getElementById("user-video");
@@ -207,48 +212,49 @@ register(class CVideo extends HTMLElement {
         },
         (error) => {
           console.warn(error.message);
-        })
-  }
+        },
+      );
+    }
 
-  private registerListeners () {
-    this.displayMyVideoAndGetTracks();
+    private registerListeners() {
+      this.displayMyVideoAndGetTracks();
 
-    // Listen for peer connections
-    peerConnection.ontrack = ({ streams: [stream] }) => {
-      const remoteVideo: any = this.querySelector("#peer-video");
-      if (remoteVideo) {
-        remoteVideo.srcObject = stream;
-        const callUserElement = this.querySelector("#call-user");
-        const endCallElement = this.querySelector("#end-call");
-        callUserElement!.classList.add("hide");
-        endCallElement!.classList.remove("hide");
-      }
-    };
+      // Listen for peer connections
+      peerConnection.ontrack = ({ streams: [stream] }) => {
+        const remoteVideo: any = this.querySelector("#peer-video");
+        if (remoteVideo) {
+          remoteVideo.srcObject = stream;
+          const callUserElement = this.querySelector("#call-user");
+          const endCallElement = this.querySelector("#end-call");
+          callUserElement!.classList.add("hide");
+          endCallElement!.classList.remove("hide");
+        }
+      };
 
-    peerConnection.oniceconnectionstatechange = (data: any) => {
-      if (
+      peerConnection.oniceconnectionstatechange = (data: any) => {
+        if (
           peerConnection.iceConnectionState === "failed" ||
           peerConnection.iceConnectionState === "disconnected" ||
           peerConnection.iceConnectionState === "closed"
-      ) {
-        const peerVideo: HTMLVideoElement | null = this.querySelector(
+        ) {
+          const peerVideo: HTMLVideoElement | null = this.querySelector(
             "video#peer-video",
-        );
-        peerVideo!.srcObject = null;
-        window.location.href = "/chat";
-      }
-    };
+          );
+          peerVideo!.srcObject = null;
+          window.location.href = "/chat";
+        }
+      };
 
-    this.socket!.send(JSON.stringify({
-      connect_to: ["room"]
-    }))
-    this.socket!.send(JSON.stringify({
-      send_packet: {
-        to: "room",
-      },
-    }));
+      this.socket!.send(JSON.stringify({
+        connect_to: ["room"],
+      }));
+      this.socket!.send(JSON.stringify({
+        send_packet: {
+          to: "room",
+        },
+      }));
 
-    this.querySelector("#call-user")!.addEventListener(
+      this.querySelector("#call-user")!.addEventListener(
         "click",
         (event: any) => {
           const callUserElement = this.querySelector("call-user");
@@ -259,15 +265,16 @@ register(class CVideo extends HTMLElement {
           }
           this.callUser(id);
         },
-    );
+      );
 
-    this.querySelector("#end-call")!.addEventListener(
+      this.querySelector("#end-call")!.addEventListener(
         "click",
         function () {
           //Loading(true);
           peerConnection.close();
           window.location.href = "/chat";
         },
-    );
-  }
-})
+      );
+    }
+  },
+);

@@ -1,4 +1,9 @@
-import { DestinyElement, html, reactive, register } from "https://code.okku.dev/destiny-ui/0.4.1/dist/mod.js";
+import {
+  DestinyElement,
+  html,
+  reactive,
+  register,
+} from "https://code.okku.dev/destiny-ui/0.4.1/dist/mod.js";
 
 const styling = `
 <style>
@@ -25,12 +30,15 @@ button:hover {
 </style>
 `;
 
-register(class AButton extends HTMLElement {
-  connectedCallback() {
-    const originalInnerText = this.innerText
-    const idAttribute = this.getAttribute("id")
-    const classAttribute = this.getAttribute("class")
-    this.innerHTML = `${styling}<button id="${idAttribute}" class="${classAttribute}">${originalInnerText}</button>
+register(
+  class AButton extends HTMLElement {
+    connectedCallback() {
+      const originalInnerText = this.innerText;
+      const idAttribute = this.getAttribute("id");
+      const classAttribute = this.getAttribute("class");
+      this.innerHTML =
+        `${styling}<button id="${idAttribute}" class="${classAttribute}">${originalInnerText}</button>
 `;
-  }
-})
+    }
+  },
+);

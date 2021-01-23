@@ -1,4 +1,9 @@
-import { DestinyElement, html, reactive, register } from "https://code.okku.dev/destiny-ui/0.4.1/dist/mod.js";
+import {
+  DestinyElement,
+  html,
+  reactive,
+  register,
+} from "https://code.okku.dev/destiny-ui/0.4.1/dist/mod.js";
 
 const styling = `
 <style>
@@ -48,19 +53,20 @@ const styling = `
  * <input-row container-id="new-todo-holder" input-id="new-todo-title" input-placeholder="Walk the dog" button-id="submit-new-todo"></input-row>
  * <script src="/public/components/input_row.js" type="module"></script>
  */
-register(class InputRow extends HTMLElement {
-  connectedCallback() {
-    this.containerId = this.getAttribute("container-id")
-    this.inputId = this.getAttribute("input-id")
-    this.inputPlaceHolder = this.getAttribute("input-placeholder")
-    this.buttonId = this.getAttribute("button-id")
-    this.innerHTML =
-      `
+register(
+  class InputRow extends HTMLElement {
+    connectedCallback() {
+      this.containerId = this.getAttribute("container-id");
+      this.inputId = this.getAttribute("input-id");
+      this.inputPlaceHolder = this.getAttribute("input-placeholder");
+      this.buttonId = this.getAttribute("button-id");
+      this.innerHTML = `
 ${styling}
 <div class="input-row" id="${this.containerId}">
     <input id="${this.inputId}" type="text" placeholder="${this.inputPlaceHolder}">
     <button id="${this.buttonId}" type="button">&#10004</button>
 </div>
 `;
-  }
-})
+    }
+  },
+);

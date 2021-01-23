@@ -1,4 +1,3 @@
-
 // This will be a single component.
 // Because it extends HTMLElement, `this` refers to the element,
 // eg `this.innerHtml = ...`. It also provides extra methods like `this.getAttribute(...)`
@@ -6,7 +5,6 @@
 // `<example-component></example-component>`.
 // It seems like the text added inside (`<wc-component>my button</...>`) displays before the lifecycle methods, eg before the component has loaded and rendered, then when it has, if the component sets the inner html it will be overriden
 class ExampleComponent extends HTMLElement {
-
   /**
    * This is a lifecycle method. It is used (best practice) to actually say what this component will render,
    * ie its responsible for setting the html content.
@@ -19,14 +17,14 @@ class ExampleComponent extends HTMLElement {
      * it, or use a certain class, we can do `<example-component disable="true">` or `<wc-component i-like-cheese="yes i do">`,
      * and we'd grab it by `this.getAttribute(<name>)`
      */
-    this.textAttribute = this.getAttribute("text")
+    this.textAttribute = this.getAttribute("text");
     /**
      * We can also use a component to display custom text, so say we use this
      * on the login page, we might want the button to say "Login". So we can
      * do that by doing: `<wc-component>Login</...>`, and retrieve it by doing
      * `this.innerText`
      */
-    this.originalInnerText = this.innerText
+    this.originalInnerText = this.innerText;
     /**
      * Here is where we finally decide the content of this component.
      * In this example, we are getting extra text from an attribute, and displaying it
@@ -39,7 +37,8 @@ class ExampleComponent extends HTMLElement {
      * `<example-component>Loading...</example-component>` which will display Loading... whilst the `connectedCallback`
      * method is still processing, then it would get overriden with `Hello` once it has loaded
      */
-    this.innerHTML = `<button>${this.textAttribute} ${this.originalInnerText}</button>`;
+    this.innerHTML =
+      `<button>${this.textAttribute} ${this.originalInnerText}</button>`;
   }
 }
 
@@ -52,4 +51,4 @@ class ExampleComponent extends HTMLElement {
  * <wc-component text="Hello"></...> --> <button>Hello</button</...>
  * <wc-component text="Hello">Bye</...> --> <button>Hello Bye</...>
  */
-customElements.define('example-component', ExampleComponent);
+customElements.define("example-component", ExampleComponent);
