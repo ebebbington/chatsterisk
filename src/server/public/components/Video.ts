@@ -199,7 +199,6 @@ register(
    */
     private displayMyVideoAndGetTracks() {
       // Display stream and set tracks
-      // deno-lint-ignore no-undef
       navigator.getUserMedia(
         { video: true, audio: true },
         (stream) => {
