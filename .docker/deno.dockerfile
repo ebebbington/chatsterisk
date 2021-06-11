@@ -14,8 +14,6 @@ RUN curl -fsSL https://deno.land/x/install/install.sh | DENO_INSTALL=/usr/local 
 RUN export DENO_INSTALL="/root/.local"
 RUN export PATH="$DENO_INSTALL/bin:$PATH"
 
-FROM debian:stable-slim
-
 # Install chrome driver
 RUN apt update -y && apt clean -y
 RUN apt install gnupg -y
