@@ -66,17 +66,17 @@ jobs:
           sleep 20
           docker exec call_socket deno test -A
 
-    browser-tests:
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v2
-        - name: Install deno
-          uses: denolib/setup-deno@master
-        - name: Run browser tests
-          run: |
-            docker-compose up -d
-            sleep 2
-            docker exec drash_server deno test -A tests/browser
+  browser-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install deno
+        uses: denolib/setup-deno@master
+      - name: Run browser tests
+        run: |
+          docker-compose up -d
+          sleep 2
+          docker exec drash_server deno test -A tests/browser
 
   linter:
     # Only one OS is required since fmt is cross platform
