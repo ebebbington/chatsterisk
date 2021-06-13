@@ -76,7 +76,7 @@ jobs:
         run: |
           docker-compose up -d
           sleep 2
-          docker exec drash_server deno test -A tests/browser
+          docker exec drash_server deno test --config tests/browser/tsconfig.json -A tests/browser
 
   linter:
     # Only one OS is required since fmt is cross platform
