@@ -1,5 +1,5 @@
 import { DAMI, DrashSocketServer } from "../deps.ts";
-import type { Action, Event, Packet } from "../deps.ts";
+import type { Event, Packet } from "../deps.ts";
 
 export class Call {
   /**
@@ -89,7 +89,7 @@ export class Call {
       });
     });
 
-    this.Socket.on("get-extensions", (data: Packet) => {
+    this.Socket.on("get-extensions", (_data: Packet) => {
       console.log("get-extensions called");
       const extensions = this.peer_entries.map((peerEntry) => {
         return peerEntry["ObjectName"];
