@@ -75,7 +75,7 @@ jobs:
       - name: Run browser tests
         run: |
           docker-compose up -d
-          sleep 2
+          sleep 20
           docker exec drash_server deno test --config tests/browser/tsconfig.json -A tests/browser
 
   linter:
