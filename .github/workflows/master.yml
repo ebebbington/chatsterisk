@@ -10,6 +10,18 @@ on:
 
 jobs:
 
+  build-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install Deno
+        uses: denolib/setup-deno@master
+
+      - name: Run Build Checks
+        run: |
+          make build
+
   server_tests:
     runs-on: ubuntu-latest
     steps:
