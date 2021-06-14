@@ -9,7 +9,7 @@ Rhum.testPlan("tests/browser/home_page_test.ts", () => {
         const elem: HTMLAnchorElement | null = document.querySelector(
           'a[href="/call"]',
         );
-        return elem!.href;
+        return elem ? elem.href : "Element does not exist";
       });
       Rhum.asserts.assertEquals(val, "http://drash_server:1667/call");
       await Sinco.click('a[href="/call"]');
@@ -24,7 +24,7 @@ Rhum.testPlan("tests/browser/home_page_test.ts", () => {
         const elem: HTMLAnchorElement | null = document.querySelector(
           'a[href="/chat"]',
         );
-        return elem!.href;
+        return elem ? elem.href : "Element does not exist";
       });
       Rhum.asserts.assertEquals(val, "http://drash_server:1667/chat");
       await Sinco.click('a[href="/chat"]');
@@ -39,7 +39,7 @@ Rhum.testPlan("tests/browser/home_page_test.ts", () => {
         const elem: HTMLAnchorElement | null = document.querySelector(
           'a[href="/video"]',
         );
-        return elem!.href;
+        return elem ? elem.href : "Element does not exist";
       });
       Rhum.asserts.assertEquals(val, "http://drash_server:1667/video");
       await Sinco.click('a[href="/video"]');

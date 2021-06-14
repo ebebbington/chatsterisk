@@ -40,8 +40,8 @@ export class Video {
     await this.Socket.run(this.socket_configs);
 
     // Channels purely so the client can listen on them
-    this.Socket.on("call-made", (data: Packet) => {});
-    this.Socket.on("answer-made", (data: Packet) => {});
+    this.Socket.on("call-made", (_data: Packet) => {});
+    this.Socket.on("answer-made", (_data: Packet) => {});
 
     /**
      * When requested, will get the room data, so your id, their ids and the name.

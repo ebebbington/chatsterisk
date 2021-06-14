@@ -34,7 +34,6 @@ async function waitForMessageThenClose(client: WebSocket): Promise<any> {
 Rhum.testPlan("tests/integration/call_test.ts", () => {
   Rhum.testSuite("Event Handlers", () => {
     Rhum.testCase("Client gets all peer entries when connected", async () => {
-      const promise = deferred();
       const client = await createWebSocketClient();
       client.send(JSON.stringify({
         connect_to: ["get-extensions"],
