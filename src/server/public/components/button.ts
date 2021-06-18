@@ -31,6 +31,7 @@ register(
     connectedCallback() {
       const originalInnerText = this.innerText;
       const idAttribute = this.getAttribute("id");
+      this.removeAttribute("id")
       const classAttribute = this.getAttribute("class");
       this.innerHTML =
         `${styling}<button id="${idAttribute}" class="${classAttribute}">${originalInnerText}</button>
