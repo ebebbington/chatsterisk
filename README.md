@@ -52,7 +52,8 @@ softphones int eh Telephone app? See
 
 1. Register 2 phones, for demo-alice (pass = verysecretpassword as seen in
    sip.conf) and demo-bob (pass = anothersecretpassword). Domain is 0.0.0.0
-   (because docker). Username is also demo-alice (see sip.conf), or. it's thee extension eg 6001 or 6002
+   (because docker). Username is also demo-alice (see sip.conf), or. it's thee
+   extension eg 6001 or 6002
 2. Make a call! We can see the dialplans in extensions.conf (note the context
    for our 2 phones are from-internal), so make a call to 6001 (to alice) or
    6002 (to bob)

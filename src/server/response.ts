@@ -48,7 +48,7 @@ export default class Response extends Drash.Http.Response {
         const view = decoder.decode(
           Deno.readFileSync("./public/views/error.html"),
         );
-        const errorMessage = "URI " + this.request.url + " doesn't exist";
+        const _errorMessage = "URI " + this.request.url + " doesn't exist";
         this.body = view
           .replace(/\{\{ statusCode \}\}/g, this.status_code.toString())
           .replace(/\{\{ uri \}\}/g, this.request.url)

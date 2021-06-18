@@ -7,7 +7,7 @@ config();
 
 const paladin = Paladin();
 const tengine = Tengine({
-  render: (...args: unknown[]): boolean => {
+  render: (..._args: unknown[]): boolean => {
     return false;
   },
   views_path: "./public/views",
