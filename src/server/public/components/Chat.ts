@@ -4,8 +4,6 @@ import {
 } from "https://code.okku.dev/destiny-ui/v0.6.0/dist/mod.js";
 import { createWebSocketClient } from "../js/socket-client.ts";
 
-// todo :: users online events dont work
-
 register(
   class CChat extends Component {
     private client: WebSocket | null = null;

@@ -54,7 +54,7 @@ export class Chat {
       const { username, message } = packet.message as ReceivedChatMessage;
       console.log(`user ${username} has sent a msg: ${message}`);
       if (username && message) {
-        this.emitChatMessage(username, message, packet.from.id);
+        this.emitChatMessage(username, message);
       }
     });
 
@@ -65,7 +65,7 @@ export class Chat {
         return user.username !== username;
       });
       if (username !== "") {
-        this.emitChatMessage(username, "has left", packet.from.id);
+        this.emitChatMessage(username, "has left");
         this.emitUsersOnline();
       }
     });
@@ -80,7 +80,7 @@ export class Chat {
         });
         console.log("total users is now:");
         console.log(this.usersOnline);
-        this.emitChatMessage(username, "has joined", packet.from.id);
+        this.emitChatMessage(username, "has joined");
         this.emitUsersOnline();
       }
     });
