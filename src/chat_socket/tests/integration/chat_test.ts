@@ -12,10 +12,10 @@ async function createWebSocketClient(): Promise<WebSocket> {
   return client;
 }
 
-// deno-lint-ignore no-explicit-any
 async function waitForMessageThenClose(
   client: WebSocket,
   close = true,
+  // deno-lint-ignore no-explicit-any
 ): Promise<any> {
   const promise1 = deferred();
   // deno-lint-ignore no-explicit-any

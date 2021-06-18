@@ -52,7 +52,7 @@ register(
       };
       document.querySelector("h2")!.addEventListener(
         "click",
-        (event) => {
+        () => {
           console.log("yo moma");
           this.showUsers = true;
           this.render();
@@ -60,7 +60,7 @@ register(
       );
       this.querySelector(".chatHolder > .header > .status i")!.addEventListener(
         "mouseleave",
-        (event) => {
+        () => {
           this.showUsers = false;
           this.render();
         },
@@ -68,10 +68,12 @@ register(
       document.querySelector("body")!.addEventListener(
         "keyup",
         (event) => {
+          // deno-lint-ignore ban-ts-comment
           // @ts-ignore
           if (event.target.id !== "message") {
             return;
           }
+          // deno-lint-ignore ban-ts-comment
           // @ts-ignore
           const value = event.target.value;
           this.messageToSend = value;
@@ -80,6 +82,7 @@ register(
       document.querySelector("body")!.addEventListener(
         "click",
         (event) => {
+          // deno-lint-ignore ban-ts-comment
           // @ts-ignore
           if (event.target.id !== "send-chat-message") {
             return;

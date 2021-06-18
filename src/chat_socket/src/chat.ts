@@ -18,7 +18,7 @@ export class Chat {
 
   private usersOnline: Array<{
     username: string;
-    id: Number;
+    id: number;
   }> = [];
 
   /**
@@ -90,7 +90,6 @@ export class Chat {
   private emitChatMessage(
     username: string,
     message: string,
-    id: string | number,
   ) {
     console.log("emitting chat msg");
     this.Socket.to(

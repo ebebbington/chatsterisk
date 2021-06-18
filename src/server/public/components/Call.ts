@@ -63,7 +63,7 @@ register(
       );
       this.querySelector("#extension-to-call-to")!.addEventListener(
         "change",
-        (event) => {
+        () => {
           const chosenExtension =
             (this.querySelector("#extension-to-call-to") as HTMLOptionElement)
               .value;
@@ -83,7 +83,7 @@ register(
 
       this.querySelector("#initiate-call")!.addEventListener(
         "click",
-        (event) => {
+        () => {
           const from =
             (this.querySelector("#extension-to-call-from") as HTMLOptionElement)
               .value;

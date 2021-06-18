@@ -49,7 +49,7 @@ async function waitForMessage(
   }
   try {
     return JSON.parse(JSON.parse(msg.data).message);
-  } catch (err) {
+  } catch (_err) {
     return JSON.parse(msg.data).message;
   }
 }
