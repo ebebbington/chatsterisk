@@ -1,4 +1,7 @@
-import { register, Component } from "https://code.okku.dev/destiny-ui/v0.6.0/dist/mod.js";
+import {
+  Component,
+  register,
+} from "https://code.okku.dev/destiny-ui/v0.6.0/dist/mod.js";
 import { createWebSocketClient } from "../js/socket-client.ts";
 
 // todo :: users online events dont work
@@ -13,13 +16,13 @@ register(
     private showUsers = false;
 
     constructor() {
-      super()
-      console.log('hello :)')
+      super();
+      console.log("hello :)");
     }
 
     async connectedCallback() {
-      console.log('connected')
-      this.render()
+      console.log("connected");
+      this.render();
       this.createEventListeners();
       await this.initialiseSocketClient();
       if (!this.username) {
@@ -50,35 +53,36 @@ register(
       document.querySelector("h2")!.addEventListener(
         "click",
         (event) => {
-          console.log('yo moma')
+          console.log("yo moma");
           this.showUsers = true;
-          this.render()
+          this.render();
         },
       );
       this.querySelector(".chatHolder > .header > .status i")!.addEventListener(
         "mouseleave",
         (event) => {
           this.showUsers = false;
-          this.render()
+          this.render();
         },
       );
       document.querySelector("body")!.addEventListener(
         "keyup",
         (event) => {
-           // @ts-ignore
-           if (event.target.id !== "message") {
-            return
+          // @ts-ignore
+          if (event.target.id !== "message") {
+            return;
           }
           // @ts-ignore
-          const value = event.target.value
-          this.messageToSend = value
-        })
+          const value = event.target.value;
+          this.messageToSend = value;
+        },
+      );
       document.querySelector("body")!.addEventListener(
         "click",
         (event) => {
           // @ts-ignore
           if (event.target.id !== "send-chat-message") {
-            return
+            return;
           }
           this.client!.send(JSON.stringify({
             send_packet: {
@@ -101,19 +105,28 @@ register(
     private async initialiseSocketClient() {
       this.client = await createWebSocketClient({ port: 1670 });
       this.client.send(JSON.stringify({
-        connect_to: ["user-joined", "chat-message", "users-online", "user-left"],
+        connect_to: [
+          "user-joined",
+          "chat-message",
+          "users-online",
+          "user-left",
+        ],
       }));
       this.client.onmessage = (msg) => {
-        console.log('got msg')
+        console.log("got msg");
         if (msg.data.indexOf("Connected to") > -1) {
           return;
         }
         const data = JSON.parse(msg.data); // { from, to, message }
-        console.log(data)
+        console.log(data);
         data.message = JSON.parse(data.message);
         switch (data.to) {
           case "chat-message":
-            this.handleWSChatMessage({type: "add", username: data.message.username, message: data.message.message});
+            this.handleWSChatMessage({
+              type: "add",
+              username: data.message.username,
+              message: data.message.message,
+            });
             break;
           case "users-online":
             this.handleWSUsersOnline(data.message.usersOnline);
@@ -124,24 +137,23 @@ register(
 
     private handleWSUsersOnline(newUserList: string[]) {
       this.usersOnline = newUserList;
-      this.render()
+      this.render();
     }
 
     private handleWSChatMessage(
       messagePayload: { type: string; username: string; message: string },
     ) {
       const { type, username, message } = messagePayload;
-      console.log('handle chat message', type, username, message)
+      console.log("handle chat message", type, username, message);
       if (type === "add") {
         this.messagesReceived.push({ username, message });
       }
-      this.render()
+      this.render();
     }
 
     private render() {
-      console.log('render')
-      let html = 
-      `<div class="chatHolder">
+      console.log("render");
+      let html = `<div class="chatHolder">
         <div class="header">
           <div class="status">
             <i class="fa fa-circle"></i>`;
@@ -180,7 +192,7 @@ register(
         </div>
       </div>
 `;
-      this.innerHTML = html
+      this.innerHTML = html;
     }
   },
 );

@@ -13,7 +13,10 @@ async function createWebSocketClient(): Promise<WebSocket> {
 }
 
 // deno-lint-ignore no-explicit-any
-async function waitForMessageThenClose(client: WebSocket, close = true): Promise<any> {
+async function waitForMessageThenClose(
+  client: WebSocket,
+  close = true,
+): Promise<any> {
   const promise1 = deferred();
   // deno-lint-ignore no-explicit-any
   const promise2: any = deferred();
@@ -21,8 +24,9 @@ async function waitForMessageThenClose(client: WebSocket, close = true): Promise
     if (ev.data.indexOf("Connected to") > -1) {
       return;
     }
-    if (close === true)
+    if (close === true) {
       client.close();
+    }
     promise1.resolve(ev);
   };
   client.onclose = function () {
@@ -30,8 +34,9 @@ async function waitForMessageThenClose(client: WebSocket, close = true): Promise
   };
   // deno-lint-ignore no-explicit-any
   const msg: any = await promise1;
-  if (close)
+  if (close) {
     await promise2;
+  }
   return JSON.parse(JSON.parse(msg.data).message);
 }
 
@@ -47,14 +52,14 @@ Rhum.testPlan("tests/integration/chat_test.ts", () => {
           to: "chat-message",
           message: {
             username: "Edward :)",
-            message: "Hello from test"
+            message: "Hello from test",
           },
         },
       }));
       const message = await waitForMessageThenClose(client);
       Rhum.asserts.assertEquals(message, {
         message: "Hello from test",
-        username: "Edward :)"
+        username: "Edward :)",
       });
     });
     Rhum.testCase("Send message to 'user-joined' listener", async () => {
@@ -73,11 +78,11 @@ Rhum.testPlan("tests/integration/chat_test.ts", () => {
       const message1 = await waitForMessageThenClose(client1, false);
       Rhum.asserts.assertEquals(message1, {
         username: "Simon",
-        message: "has joined"
+        message: "has joined",
       });
       const message2 = await waitForMessageThenClose(client1, false);
       Rhum.asserts.assertEquals(message2, {
-        usersOnline: ["Simon"]
+        usersOnline: ["Simon"],
       });
       const client2 = await createWebSocketClient();
       client2.send(JSON.stringify({
@@ -94,24 +99,33 @@ Rhum.testPlan("tests/integration/chat_test.ts", () => {
       const message3 = await waitForMessageThenClose(client2, false);
       Rhum.asserts.assertEquals(message3, {
         username: "Harry",
-        message: "has joined"
+        message: "has joined",
       });
-      const message4 = await waitForMessageThenClose(client2, false)
+      const message4 = await waitForMessageThenClose(client2, false);
       Rhum.asserts.assertEquals(message4, {
-        usersOnline: ["Simon", "Harry"]
+        usersOnline: ["Simon", "Harry"],
       });
-      const [p1, p2] = [deferred(), deferred()]
-      client1.onclose = () => { p1.resolve()}
-      client2.onclose = () => { p2.resolve()}
-      client1.close()
-      client2.close()
-      await p1
-      await p2
+      const [p1, p2] = [deferred(), deferred()];
+      client1.onclose = () => {
+        p1.resolve();
+      };
+      client2.onclose = () => {
+        p2.resolve();
+      };
+      client1.close();
+      client2.close();
+      await p1;
+      await p2;
     });
     Rhum.testCase("Send message to 'user-left' listener", async () => {
       const client1 = await createWebSocketClient();
       client1.send(JSON.stringify({
-        connect_to: ["user-joined", "chat-message", "users-online", "user-left"],
+        connect_to: [
+          "user-joined",
+          "chat-message",
+          "users-online",
+          "user-left",
+        ],
       }));
       client1.send(JSON.stringify({
         send_packet: {
@@ -124,15 +138,20 @@ Rhum.testPlan("tests/integration/chat_test.ts", () => {
       const message1 = await waitForMessageThenClose(client1, false);
       Rhum.asserts.assertEquals(message1, {
         username: "Simon",
-        message: "has joined"
+        message: "has joined",
       });
       const message2 = await waitForMessageThenClose(client1, false);
       Rhum.asserts.assertEquals(message2, {
-        usersOnline: ["Simon"]
+        usersOnline: ["Simon"],
       });
       const client2 = await createWebSocketClient();
       client2.send(JSON.stringify({
-        connect_to: ["user-joined", "chat-message", "users-online", "user-left"],
+        connect_to: [
+          "user-joined",
+          "chat-message",
+          "users-online",
+          "user-left",
+        ],
       }));
       client2.send(JSON.stringify({
         send_packet: {
@@ -145,11 +164,11 @@ Rhum.testPlan("tests/integration/chat_test.ts", () => {
       const message3 = await waitForMessageThenClose(client2, false);
       Rhum.asserts.assertEquals(message3, {
         username: "Harry",
-        message: "has joined"
+        message: "has joined",
       });
-      const message4 = await waitForMessageThenClose(client2, false)
+      const message4 = await waitForMessageThenClose(client2, false);
       Rhum.asserts.assertEquals(message4, {
-        usersOnline: ["Simon", "Harry"]
+        usersOnline: ["Simon", "Harry"],
       });
       client2.send(JSON.stringify({
         send_packet: {
@@ -159,15 +178,17 @@ Rhum.testPlan("tests/integration/chat_test.ts", () => {
           },
         },
       }));
-      const message5 = await waitForMessageThenClose(client1)
+      const message5 = await waitForMessageThenClose(client1);
       Rhum.asserts.assertEquals(message5, {
         message: "has left",
-        username: "Harry"
-      })
-      const [p2] = [deferred()]
-      client2.onclose = () => { p2.resolve()}
-      client2.close()
-      await p2
+        username: "Harry",
+      });
+      const [p2] = [deferred()];
+      client2.onclose = () => {
+        p2.resolve();
+      };
+      client2.close();
+      await p2;
     });
   });
 });
