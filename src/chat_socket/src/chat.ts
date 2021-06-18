@@ -16,7 +16,10 @@ export class Chat {
    */
   private readonly Socket: DrashSocketServer;
 
-  private usersOnline: string[] = []
+  private usersOnline: Array<{
+    username: string,
+    id: Number
+  }> = []
 
   /**
    * Connection configs for the socket server
@@ -36,14 +39,16 @@ export class Chat {
   public async start() {
     await this.Socket.run(this.socket_configs);
 
-    this.Socket.on("connect", () => {
-      console.log('connected')
-    })
-    this.Socket.on("disconnect", () => {
-      console.log('disconnected')
-    })
-
     this.Socket.on("users-online", () => {})
+
+    this.Socket.on("disconnect", (packet: Packet) => {
+      console.log('disconnect')
+      if (this.usersOnline.find(user => user.id === packet.from.id)) {
+        this.usersOnline = this.usersOnline.filter(user => {
+          return user.id !== packet.from.id
+        })
+      }
+    })
 
     this.Socket.on("chat-message", (packet: Packet) => {
       const { username, message } = packet.message as ReceivedChatMessage
@@ -56,22 +61,30 @@ export class Chat {
     this.Socket.on("user-left", (packet: Packet) => {
       const { username } = packet.message as ReceivedUser
       console.log(`user ${username} has left`)
-      const index = this.usersOnline.indexOf(username)
-      this.usersOnline.splice(index, 1)
+      this.usersOnline = this.usersOnline.filter(user => {
+        return user.username !== username
+      })
       if (username !== "") {
         this.emitChatMessage(username, "has left", packet.from.id)
         this.emitUsersOnline()
       }
     })
+    
 
     this.Socket.on("user-joined", (packet: Packet) => {
       const { username } = (packet.message as ReceivedUser)
       console.log(`user ${username} has joined`)
       if (username !== "" ) {
-        this.usersOnline.push(username)
+        this.usersOnline.push({
+          username,
+          id: Number(packet.from.id)
+        })
+        console.log('total users is now:')
+        console.log(this.usersOnline)
         this.emitChatMessage(username, "has joined", packet.from.id)
         this.emitUsersOnline()
       }
+
     })
 // TODO :: Thsi is where i left off, i was using the tab in chrome of juanportal to add back all the socket handlers and emit methods needed to finish the server
   }
@@ -85,9 +98,13 @@ export class Chat {
   }
 
   private emitUsersOnline() {
-    console.log('emitting users online')
+    console.log('emitting users online, here da data:')
+    const usernames = this.usersOnline.map(user => user.username)
+    console.log(usernames)
     this.Socket.to("users-online", JSON.stringify({
-      usersOnline: this.usersOnline
+      usersOnline: usernames
     }))
+
+
   }
 }
