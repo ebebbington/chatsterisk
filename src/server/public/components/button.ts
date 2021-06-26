@@ -25,9 +25,8 @@ button:hover {
 </style>
 `;
 
-register(
   // deno-lint-ignore no-undef
-  class AButton extends HTMLElement {
+  export class AButton extends HTMLElement {
     connectedCallback() {
       const originalInnerText = this.innerText;
       const idAttribute = this.getAttribute("id");
@@ -37,5 +36,5 @@ register(
         `${styling}<button id="${idAttribute}" class="${classAttribute}">${originalInnerText}</button>
 `;
     }
-  },
-);
+  }
+  register(AButton)
