@@ -4,10 +4,27 @@ import {
   reactive,
   html,
   css,
-  computed
+  computed,
 } from "https://code.okku.dev/destiny-ui/v0.6.0/dist/mod.js";
+import { TemplateResult}from "https://code.okku.dev/destiny-ui/v0.6.0/dist/parsing/TemplateResult.js";
 import { openClient } from "../js/socket-client.ts";
 import { AButton } from "./button.ts"
+
+// TODO(edward): Replace any with proper types eg ReactivePrimitive<boolean> and ReactiveArray<string> once i upgrade the tsc version. tried using it but get errors for it isnt generic which i think is due to the tsc version being different for what we use and estiny uses
+function renderUsers(showUsers: any, users: string[]): TemplateResult | "" {
+  return computed(() => {
+    if (showUsers.value === false) {
+      return ""
+    }
+    return html`
+      <ul>
+      ${users.map(user => html`
+        <li>${user}</li>
+      `)}
+      </ul>
+    `;
+  })
+}
 
 /**
  * General tips when writing destiny components:
@@ -18,12 +35,17 @@ import { AButton } from "./button.ts"
 register(
   // @ts-ignore
   class CChat extends Component {
-    #client: WebSocket = new WebSocket("ws://127.0.0.1:1670?test_param=test_value");
+    readonly #client = new WebSocket("ws://127.0.0.1:1670?test_param=test_value");
+    // TODO(edward): add type
     #messageToSend = reactive("");
+    // TODO(edward): add type
     #messagesReceived: Array<{ username: string; message: string }> = reactive([]);
+    // TODO(edward): add type
     #username = reactive("Guest User");
+    // TODO(edward): add type
     #usersOnline = reactive([]);
-    #showUsers = reactive("false");
+    // TODO(edward): add type
+    #showUsers = reactive(false);
 
     async connectedCallback() {
       window.onbeforeunload = () => {
@@ -219,14 +241,8 @@ register(
     <div class="chatHolder">
       <div class="header">
         <div class="status">
-          <i class="fa fa-circle" on:mouseenter=${() => this.#showUsers.value = "true"} on:mouseleave=${() => this.#showUsers.value = "false"}></i>
-        ${computed(() => { if (this.#showUsers.value === "true") return html`
-          <ul>
-          ${this.#usersOnline.map((username: string) => html`
-            <li>${username}</li>
-          `)}
-          </ul>`
-        })}
+          <i class="fa fa-circle" on:mouseenter=${() => this.#showUsers.value = true} on:mouseleave=${() => this.#showUsers.value = false}></i>
+          ${renderUsers(this.#showUsers, this.#usersOnline)}
           <p>${this.#usersOnline.length} online</p>
         </div>
         <h2>${this.#username}</h2>
