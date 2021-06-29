@@ -1,2 +1,7 @@
 .idea
 src/server/public/js/app.js
+src/server/public/components/*.js
+src/server/public/components/*.map
+!src/server/public/components/example_component.js
+src/server/public/js/*.js
+src/server/public/js/*.map

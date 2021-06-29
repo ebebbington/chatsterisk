@@ -1,13 +1,14 @@
-import { register } from "https://code.okku.dev/destiny-ui/0.4.1/dist/mod.js";
+import { Component, css, html } from "./deps.ts";
+import { globalStyles } from "./global_styles.ts";
 
-register(
-  // deno-lint-ignore no-undef
-  class AnchorLink extends HTMLElement {
-    connectedCallback() {
-      const originalInnerText = this.innerText;
-      const anchorHref = this.getAttribute("href");
-      this.innerHTML = `<a href="${anchorHref}">${originalInnerText}</a>
-`;
-    }
-  },
-);
+// deno-lint-ignore ban-ts-comment
+// @ts-ignore
+export class AnchorLink extends Component<{
+  href: string;
+  text: string;
+}> {
+  static styles = css`${globalStyles}`;
+  // deno-lint-ignore ban-ts-comment
+  // @ts-ignore
+  template = html`<a href=${this.href}>${this.text}</a>`;
+}
