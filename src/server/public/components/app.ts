@@ -7,12 +7,12 @@ import { CCall } from "./Call.ts";
 // TODO :: Apply global styles and bootstrap stuff to comps
 
 const pathname = document.location.pathname;
-const pages: Map<string, string> = new Map()
-pages.set("/", `${CHome}`)
-pages.set("/chat", `${CChat}`)
-pages.set("/video", `${CVideo}`)
-pages.set("/call", `${CCall}`)
-const component = pages.get(pathname) ?? "404" // todo use 404 component
+const pages: Map<string, string> = new Map();
+pages.set("/", `${CHome}`);
+pages.set("/chat", `${CChat}`);
+pages.set("/video", `${CVideo}`);
+pages.set("/call", `${CCall}`);
+const component = pages.get(pathname) ?? "404"; // todo use 404 component
 
 class AppRoot extends Component {
   template = html`

@@ -1,4 +1,11 @@
-import { Component, computed, css, html, reactive, TemplateResult } from "./deps.ts";
+import {
+  Component,
+  computed,
+  css,
+  html,
+  reactive,
+  TemplateResult,
+} from "./deps.ts";
 import { openClient } from "../js/socket-client.ts";
 import { AButton } from "./button.ts";
 import { globalStyles } from "./global_styles.ts";

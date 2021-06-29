@@ -24,6 +24,11 @@ jobs:
           sleep 20
           docker exec drash_server deno test -A
 
+      - name: Run build check
+        run: |
+          docker-compose up -d
+          docker exec drash_server make build
+
   chat_tests:
     runs-on: ubuntu-latest
     steps:

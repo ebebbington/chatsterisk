@@ -1,5 +1,5 @@
 import { openClient } from "../js/socket-client.ts";
-import { Component, html, computed, reactive, css } from "./deps.ts";
+import { Component, computed, css, html, reactive } from "./deps.ts";
 import { AButton } from "./button.ts";
 import { globalStyles } from "./global_styles.ts";
 

@@ -1,4 +1,4 @@
-import { Component, html, css } from "./deps.ts";
+import { Component, css, html } from "./deps.ts";
 import { AnchorLink } from "./anchor.ts";
 import { globalStyles } from "./global_styles.ts";
 
