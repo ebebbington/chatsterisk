@@ -1,12 +1,13 @@
-import { register } from "https://code.okku.dev/destiny-ui/0.4.1/dist/mod.js";
 import { createWebSocketClient } from "../js/socket-client.ts";
+import { AButton } from "./button.ts";
+import { reactive } from "./deps.ts";
+import { Component, html, css, Ref, computed } from "./deps.ts";
+import { globalStyles } from "./global_styles.ts";
 
 // deno-lint-ignore no-undef
-const peerConnection = new RTCPeerConnection();
-let isAlreadyCalling = false;
+const peerConnection = new RTCPeerConnection();// TODO move this to class prop
 
 const styling = `
-<style>
 #video-chat > video {
     height: 200px;
 }
@@ -19,26 +20,72 @@ const styling = `
     width: 100%;
     height: auto;
 }
-</style>`;
+`;
 
-register(
   // deno-lint-ignore no-undef
-  class CVideo extends HTMLElement {
+  class CVideo extends Component {
     private socket: WebSocket | null = null;
 
-    async connectedCallback() {
-      this.innerHTML = `${styling}<div id="video-chat">
-    <video id="user-video" autoplay playsinline controls></video>
-    <span>
-        <a-button id="call-user" class="success" value="call">Waiting for a friend...</a-button>
-        <a-button id="end-call" class="error hide">End Call</a-button>
-    </span>
-    <hr>
-    <video id="peer-video" autoplay playsinline controls></video>
-</div>
-`;
+    #isAlreadyCalling = reactive(false)
+
+    #callUser = reactive({
+      socketId: "",
+      hide: false,
+      textContent: "Waiting for a friend..."
+    })
+
+    #endCall = reactive({
+      hide: true
+    })
+
+    #userVideo = reactive({
+      srcObject: null
+    })
+
+    #peerVideo = reactive({
+      srcObject: ""
+    })
+
+    // @ts-ignore
+    static styles = css`${styling + globalStyles}` as never[]
+
+    template = html`
+      <div id="video-chat">
+      <video id="user-video" autoplay="true" playsinline="true" controls="true" prop:srcObject=${this.#userVideo.srcObject}></video>
+      <span>
+          <${AButton} prop:id=${"call-user"} prop:class=${`success ${this.#callUser.hide.value ? "hide" : ""}`} prop:value=${"call"} prop:text=${this.#callUser.textContent} on:click=${() => this.handleCallUserClick()}></${AButton}>
+          <${AButton} prop:id=${"end-call"} prop:class=${`error ${this.#endCall.hide.value ? "hide" : ""}`} prop:text=${"End Call"} on:click=${() => this.handleEndCallClick()}></${AButton}>
+      </span>
+      <hr />
+      <video id="peer-video" autoplay="true" playsinline="true" controls="true" src=${this.#peerVideo.srcObject}></video>
+      </div>
+    `;
+
+    async connectedCallback () {
+      this.#userVideo.srcObject.bind((e: any) => {
+        console.log('user video prop updated:')
+        console.log(e)
+      })
       await this.initialiseSocketClient();
-      this.registerListeners();
+      await this.registerListeners();
+      console.log(this.#userVideo)
+      console.log(this.#userVideo.srcObject)
+      console.log(this.#userVideo.srcObject.value)
+      console.log(this.querySelector('video'))
+      console.log(document.querySelector('video'))
+    }
+
+    private handleCallUserClick() {
+          //Notifier.success("Call User", "Calling user...");
+          const id = this.#callUser.socketId.value
+          if (id) {
+            this.callUser(id)
+          }
+    }
+
+    private handleEndCallClick() {
+      peerConnection.close();
+      window.location.href = "/chat";
     }
 
     private async initialiseSocketClient() {
@@ -85,26 +132,21 @@ register(
       },
     ) {
       // Check the id elem text to see if a user was on the page
-      const callUserElement = this.querySelector("#call-user");
-      const theirId = callUserElement!.getAttribute("socket-id");
+      const theirId = this.#callUser.socketId.value
       // If they have left e.g. no users, remove the src object
       if (theirId && !data.users.length) {
         //Notifier.warning("User Left", "User has left the room");
-        const peerVideoElement: HTMLVideoElement | null = this.querySelector(
-          "video#peer-video",
-        );
-        peerVideoElement!.srcObject = null;
-        const endCallElement = this.querySelector("#end-call");
-        callUserElement!.classList.remove("hide");
-        endCallElement!.classList.add("hide");
+        this.#peerVideo.srcObject.value = null
+        this.#endCall.hide.value = false
+        this.#callUser.hide.value = true
       }
       if (!theirId && data.users.length) {
         //Notifier.success("User Joined", "User has joined the room");
       }
-      callUserElement!.textContent = data.users[0]
+      this.#callUser.textContent.value = data.users[0]
         ? "Call User!"
         : "Waiting for a friend...";
-      callUserElement!.setAttribute("socketId", data.users[0]);
+      this.#callUser.socketId.value = data.users[0]  
     }
 
     /**
@@ -184,11 +226,11 @@ register(
         // deno-lint-ignore no-undef
         new RTCSessionDescription(data.answer),
       );
-      if (!isAlreadyCalling) {
+      if (!this.#isAlreadyCalling.value) {
         this.callUser(data.socket);
-        isAlreadyCalling = true;
+        this.#isAlreadyCalling.value = true;
       }
-      isAlreadyCalling = false;
+      this.#isAlreadyCalling.value = false;
     }
 
     /**
@@ -197,44 +239,24 @@ register(
    * @description
    * Display the users video and add the tracks to the peer connection
    */
-    private displayMyVideoAndGetTracks() {
+    private async displayMyVideoAndGetTracks() {
       // Display stream and set tracks
-      navigator.getUserMedia(
-        { video: true, audio: true },
-        (stream) => {
-          const localVideo: HTMLVideoElement | null = this.querySelector(
-            "#user-video",
-          );
-          if (localVideo) {
-            localVideo.srcObject = stream;
-          }
-
-          const tracks: MediaStreamTrack[] = stream.getTracks();
-          tracks.forEach((track: MediaStreamTrack) => {
-            peerConnection.addTrack(track, stream);
-          });
-        },
-        (error) => {
-          console.warn(error.message);
-        },
-      );
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+      this.#userVideo.srcObject.value = stream // TODO :: We cant display this src, we need to use srcobject, but how if were reactive?
+      const tracks: MediaStreamTrack[] = stream.getTracks();
+      tracks.forEach((track: MediaStreamTrack) => {
+        peerConnection.addTrack(track, stream);
+      });
     }
 
-    private registerListeners() {
-      this.displayMyVideoAndGetTracks();
+    private async registerListeners() {
+      await this.displayMyVideoAndGetTracks();
 
       // Listen for peer connections
       peerConnection.ontrack = ({ streams: [stream] }) => {
-        const remoteVideo: HTMLVideoElement | null = this.querySelector(
-          "#peer-video",
-        );
-        if (remoteVideo) {
-          remoteVideo.srcObject = stream;
-          const callUserElement = this.querySelector("#call-user");
-          const endCallElement = this.querySelector("#end-call");
-          callUserElement!.classList.add("hide");
-          endCallElement!.classList.remove("hide");
-        }
+        this.#peerVideo.srcObject.value = stream
+          this.#callUser.hide.value = true
+          this.#endCall.hide.value = false
       };
 
       peerConnection.oniceconnectionstatechange = () => {
@@ -243,10 +265,7 @@ register(
           peerConnection.iceConnectionState === "disconnected" ||
           peerConnection.iceConnectionState === "closed"
         ) {
-          const peerVideo: HTMLVideoElement | null = this.querySelector(
-            "video#peer-video",
-          );
-          peerVideo!.srcObject = null;
+          this.#peerVideo.srcObject.value = null
           window.location.href = "/chat";
         }
       };
@@ -260,27 +279,6 @@ register(
         },
       }));
 
-      this.querySelector("#call-user")!.addEventListener(
-        "click",
-        () => {
-          const callUserElement = this.querySelector("call-user");
-          //Notifier.success("Call User", "Calling user...");
-          const id = callUserElement!.getAttribute("socketId");
-          if (!id) {
-            return false;
-          }
-          this.callUser(id);
-        },
-      );
-
-      this.querySelector("#end-call")!.addEventListener(
-        "click",
-        function () {
-          //Loading(true);
-          peerConnection.close();
-          window.location.href = "/chat";
-        },
-      );
     }
-  },
-);
+  }
+  export { CVideo}

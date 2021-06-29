@@ -5,10 +5,11 @@ import {
   html,
   css,
   computed,
-} from "https://code.okku.dev/destiny-ui/v0.6.0/dist/mod.js";
-import { TemplateResult}from "https://code.okku.dev/destiny-ui/v0.6.0/dist/parsing/TemplateResult.js";
+} from "./deps.ts";
+import { TemplateResult}from "./deps.ts";
 import { openClient } from "../js/socket-client.ts";
 import { AButton } from "./button.ts"
+import { globalStyles } from "./global_styles.ts";
 
 // TODO(edward): Replace any with proper types eg ReactivePrimitive<boolean> and ReactiveArray<string> once i upgrade the tsc version. tried using it but get errors for it isnt generic which i think is due to the tsc version being different for what we use and estiny uses
 function renderUsers(showUsers: any, users: string[]): TemplateResult | "" {
@@ -32,7 +33,6 @@ function renderUsers(showUsers: any, users: string[]): TemplateResult | "" {
  * - Use es private properties to avoid conflicts, as outlined by destiny itself
  */
 
-register(
   // @ts-ignore
   class CChat extends Component {
     readonly #client = new WebSocket("ws://127.0.0.1:1670?test_param=test_value");
@@ -130,7 +130,7 @@ register(
       this.#messageToSend.value = "";
     }
 
-    static styles = css`
+    static styles = css`${`
     /* Chat */
     /* Container*/
     .chatHolder {
@@ -235,7 +235,7 @@ register(
       .footer button {
         margin-top: 0.5em;
       }
-    `
+    ` + globalStyles}`
 
     template = html`
     <div class="chatHolder">
@@ -260,9 +260,10 @@ register(
       <div class="footer">
         <label for="message" hidden="hidden">Message</label>
         <input id="message" type="text" placeholder="Talk" class="messageInput form-control" prop:value=${this.#messageToSend} />
-        <a-button id="send-chat-message" on:click=${() => this.handleSendMessageButtonClick()}>Send</a-button>
+        <${AButton} prop:id=${"send-chat-message"} prop:text=${"Send"} on:click=${() => this.handleSendMessageButtonClick()}></${AButton}>
       </div>
     </div>
 `;
   }
-);
+
+  export { CChat}

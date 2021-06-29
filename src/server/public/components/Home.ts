@@ -1,16 +1,25 @@
-import { register } from "https://code.okku.dev/destiny-ui/0.4.1/dist/mod.js";
+import { Component, html } from "./deps.ts";
+import { AnchorLink } from "./anchor.ts"
+import { css } from "./deps.ts";
+import { globalStyles } from "./global_styles.ts";
 
-register(
+const callHref = "/call"
+const chatHref = "/chat"
+const videoHref = "/video"
+const callText = "Call"
+const videoText = "Video"
+const chatText = "Chat"
+
   // deno-lint-ignore no-undef
-  class CHome extends HTMLElement {
-    connectedCallback() {
-      this.innerHTML = `
+  export class CHome extends Component {
+    static styles = css`${globalStyles}` as never
+    template = html`
       <div style="display: flex">
-    <anchor-link href="/call">Call</anchor-link>
-    <anchor-link href="/chat">Chat</anchor-link>
-    <anchor-link href="/video">Video</anchor-link>
+    <${AnchorLink} prop:href=${callHref} prop:text=${callText}></${AnchorLink}>
+    <${AnchorLink} prop:href=${chatHref} prop:text=${chatText}></${AnchorLink}>
+    <${AnchorLink} prop:href=${videoHref} prop:text=${videoText}></${AnchorLink}>
 </div>
 `;
     }
-  },
-);
+  
+
