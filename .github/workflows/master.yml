@@ -27,6 +27,7 @@ jobs:
       - name: Run build check
         run: |
           docker-compose up -d
+          sleep 20
           docker exec drash_server make build
 
   chat_tests:
