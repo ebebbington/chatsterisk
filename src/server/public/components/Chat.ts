@@ -34,7 +34,7 @@ function renderUsers(showUsers: any, users: string[]): TemplateResult | "" {
 // deno-lint-ignore ban-ts-comment
 // @ts-ignore
 class CChat extends Component {
-  readonly #client = new WebSocket("ws://127.0.0.1:1670?test_param=test_value");
+  readonly #client = new WebSocket("ws://127.0.0.1:1670");
   // TODO(edward): add type
   #messageToSend = reactive("");
   // TODO(edward): add type

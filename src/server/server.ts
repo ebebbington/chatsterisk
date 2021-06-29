@@ -16,9 +16,6 @@ class FilesResource extends Drash.Http.Resource {
     const mimeType = url.endsWith(".css")
       ? "text/css"
       : "application/javascript";
-    console.log(path, mimeType);
-    console.log(url);
-    console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
     try {
       const body = new TextDecoder().decode(Deno.readFileSync(path));
       this.response.body = body;
@@ -29,7 +26,6 @@ class FilesResource extends Drash.Http.Resource {
       split.push("ts");
       split.push(ext);
       const newPath = split.join(".");
-      console.log(newPath);
       const body = new TextDecoder().decode(Deno.readFileSync(newPath));
       this.response.body = body;
     }

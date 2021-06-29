@@ -4,9 +4,6 @@ import { reactive } from "./deps.ts";
 import { Component, css, html } from "./deps.ts";
 import { globalStyles } from "./global_styles.ts";
 
-// deno-lint-ignore no-undef
-const peerConnection = new RTCPeerConnection(); // TODO move this to class prop
-
 const styling = `
 #video-chat > video {
     height: 200px;
@@ -25,6 +22,8 @@ const styling = `
 // deno-lint-ignore no-undef
 class CVideo extends Component {
   private socket: WebSocket | null = null;
+
+  #peerConnection = new RTCPeerConnection();
 
   #isAlreadyCalling = reactive(false);
 
@@ -80,7 +79,7 @@ class CVideo extends Component {
   }
 
   private handleEndCallClick() {
-    peerConnection.close();
+    this.#peerConnection.close();
     window.location.href = "/chat";
   }
 
@@ -154,17 +153,19 @@ class CVideo extends Component {
    * @param {string} socketId The other persons socket id
    */
   private callUser(socketId: string) {
-    peerConnection.createOffer().then((offer: RTCSessionDescriptionInit) => {
-      return peerConnection.setLocalDescription(
-        // deno-lint-ignore no-undef
-        new RTCSessionDescription(offer),
-      );
-    }).then(() => {
+    this.#peerConnection.createOffer().then(
+      (offer: RTCSessionDescriptionInit) => {
+        return this.#peerConnection.setLocalDescription(
+          // deno-lint-ignore no-undef
+          new RTCSessionDescription(offer),
+        );
+      },
+    ).then(() => {
       this.socket!.send(
         JSON.stringify({
           to: "call-user",
           message: {
-            offer: peerConnection.localDescription,
+            offer: this.#peerConnection.localDescription,
             to: socketId,
           },
         }),
@@ -185,12 +186,12 @@ class CVideo extends Component {
   private async handleCallMade(
     data: { offer: RTCSessionDescriptionInit; socket: string },
   ) {
-    await peerConnection.setRemoteDescription(
+    await this.#peerConnection.setRemoteDescription(
       // deno-lint-ignore no-undef
       new RTCSessionDescription(data.offer),
     );
-    const answer = await peerConnection.createAnswer();
-    await peerConnection.setLocalDescription(
+    const answer = await this.#peerConnection.createAnswer();
+    await this.#peerConnection.setLocalDescription(
       // deno-lint-ignore no-undef
       new RTCSessionDescription(answer),
     );
@@ -218,7 +219,7 @@ class CVideo extends Component {
   private async handleAnswerMade(
     data: { answer: RTCSessionDescriptionInit; socket: string },
   ): Promise<void> {
-    await peerConnection.setRemoteDescription(
+    await this.#peerConnection.setRemoteDescription(
       // deno-lint-ignore no-undef
       new RTCSessionDescription(data.answer),
     );
@@ -244,7 +245,7 @@ class CVideo extends Component {
     this.#userVideo.srcObject.value = stream; // TODO :: We cant display this src, we need to use srcobject, but how if were reactive?
     const tracks: MediaStreamTrack[] = stream.getTracks();
     tracks.forEach((track: MediaStreamTrack) => {
-      peerConnection.addTrack(track, stream);
+      this.#peerConnection.addTrack(track, stream);
     });
   }
 
@@ -252,17 +253,17 @@ class CVideo extends Component {
     await this.displayMyVideoAndGetTracks();
 
     // Listen for peer connections
-    peerConnection.ontrack = ({ streams: [stream] }) => {
+    this.#peerConnection.ontrack = ({ streams: [stream] }) => {
       this.#peerVideo.srcObject.value = stream;
       this.#callUser.hide.value = true;
       this.#endCall.hide.value = false;
     };
 
-    peerConnection.oniceconnectionstatechange = () => {
+    this.#peerConnection.oniceconnectionstatechange = () => {
       if (
-        peerConnection.iceConnectionState === "failed" ||
-        peerConnection.iceConnectionState === "disconnected" ||
-        peerConnection.iceConnectionState === "closed"
+        this.#peerConnection.iceConnectionState === "failed" ||
+        this.#peerConnection.iceConnectionState === "disconnected" ||
+        this.#peerConnection.iceConnectionState === "closed"
       ) {
         this.#peerVideo.srcObject.value = null;
         window.location.href = "/chat";
