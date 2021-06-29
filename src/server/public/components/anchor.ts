@@ -1,5 +1,4 @@
-import { css } from "./deps.ts";
-import { Component, html } from "./deps.ts";
+import { Component, html, css } from "./deps.ts";
 import { globalStyles } from "./global_styles.ts";
 
 // deno-lint-ignore ban-ts-comment

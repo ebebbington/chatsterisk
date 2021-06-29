@@ -1,9 +1,6 @@
 import { openClient } from "../js/socket-client.ts";
-import { Component, html } from "./deps.ts";
+import { Component, html, computed, reactive, css } from "./deps.ts";
 import { AButton } from "./button.ts";
-import { reactive } from "./deps.ts";
-import { computed } from "./deps.ts";
-import { css } from "./deps.ts";
 import { globalStyles } from "./global_styles.ts";
 
 // deno-lint-ignore no-undef

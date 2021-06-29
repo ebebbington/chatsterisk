@@ -1,5 +1,4 @@
-import { Component, computed, css, html, reactive } from "./deps.ts";
-import { TemplateResult } from "./deps.ts";
+import { Component, computed, css, html, reactive, TemplateResult } from "./deps.ts";
 import { openClient } from "../js/socket-client.ts";
 import { AButton } from "./button.ts";
 import { globalStyles } from "./global_styles.ts";
@@ -50,7 +49,7 @@ class CChat extends Component {
 
   async connectedCallback() {
     window.onbeforeunload = () => {
-      this.#client!.send(JSON.stringify({
+      this.#client.send(JSON.stringify({
         send_packet: {
           to: "user-left",
           message: {

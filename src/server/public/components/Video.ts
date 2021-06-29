@@ -1,7 +1,6 @@
 import { createWebSocketClient } from "../js/socket-client.ts";
 import { AButton } from "./button.ts";
-import { reactive } from "./deps.ts";
-import { Component, css, html } from "./deps.ts";
+import { Component, css, html, reactive } from "./deps.ts";
 import { globalStyles } from "./global_styles.ts";
 
 const styling = `
@@ -242,7 +241,7 @@ class CVideo extends Component {
       video: true,
       audio: true,
     });
-    this.#userVideo.srcObject.value = stream; // TODO :: We cant display this src, we need to use srcobject, but how if were reactive?
+    this.#userVideo.srcObject.value = stream;
     const tracks: MediaStreamTrack[] = stream.getTracks();
     tracks.forEach((track: MediaStreamTrack) => {
       this.#peerConnection.addTrack(track, stream);
