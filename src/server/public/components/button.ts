@@ -1,7 +1,7 @@
-import { register } from "https://code.okku.dev/destiny-ui/0.4.1/dist/mod.js";
+import { Component, css, html } from "./deps.ts";
+import { globalStyles } from "./global_styles.ts";
 
 const styling = `
-<style>
 button {
     color: var(--main-colour);
     background-color: var(--sub-colour);
@@ -22,20 +22,21 @@ button:hover {
     cursor: pointer;
     box-shadow: 0px 0px 2px 2px var(--ter-colour);
 }
-</style>
 `;
 
-register(
-  // deno-lint-ignore no-undef
-  class AButton extends HTMLElement {
-    connectedCallback() {
-      const originalInnerText = this.innerText;
-      const idAttribute = this.getAttribute("id");
-      this.removeAttribute("id");
-      const classAttribute = this.getAttribute("class");
-      this.innerHTML =
-        `${styling}<button id="${idAttribute}" class="${classAttribute}">${originalInnerText}</button>
-`;
-    }
-  },
-);
+// deno-lint-ignore ban-ts-comment
+// @ts-ignore
+export class AButton extends Component<{
+  id: string;
+  class: string;
+  text: string;
+  value: string;
+}> {
+  static styles = css`
+      ${styling + globalStyles}
+    `;
+  template = html
+    // @ts-ignore BECAUSE WITHOUT TYPINGS YET, it doesnt know
+    `<button id=${this.id} class=${this.class} value=${this.value}>${this.text}</button>
+    `;
+}

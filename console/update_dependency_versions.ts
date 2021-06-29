@@ -18,3 +18,17 @@ Deno.writeFileSync(
   "./docker-compose.yml",
   encoder.encode(dockerComposeContent),
 );
+const destinyRes = await fetch(
+  "https://api.github.com/repos/0kku/destiny/tags",
+);
+const destinyJson = await destinyRes.json();
+const latestTag = destinyJson[0];
+const latestVersion = latestTag.name;
+let componentDepsFile = new TextDecoder().decode(
+  Deno.readFileSync("./src/server/public/components/deps.ts"),
+);
+componentDepsFile = componentDepsFile.replace(
+  /v[0-9].[0-9].[0-9]/,
+  latestVersion,
+);
+console.log(componentDepsFile);
