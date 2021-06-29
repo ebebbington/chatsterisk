@@ -1,5 +1,3 @@
-import { css } from "./deps.ts"
-
 export const globalStyles = `
 :root {
     --main-colour: white;

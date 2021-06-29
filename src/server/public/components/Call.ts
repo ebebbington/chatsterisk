@@ -1,72 +1,84 @@
 import { createWebSocketClient } from "../js/socket-client.ts";
 import { Component, html } from "./deps.ts";
-import { AButton } from "./button.ts"
+import { AButton } from "./button.ts";
 import { reactive } from "./deps.ts";
 import { computed } from "./deps.ts";
 import { css } from "./deps.ts";
 import { globalStyles } from "./global_styles.ts";
 
-  // deno-lint-ignore no-undef
-  class CCall extends Component {
-    private client: WebSocket | null = null;
+// deno-lint-ignore no-undef
+class CCall extends Component {
+  private client: WebSocket | null = null;
 
-    #extensions = reactive([])
-    #selectedFromExtension = reactive("")
-    #selectedToExtension = reactive("")
+  #extensions = reactive([]);
+  #selectedFromExtension = reactive("");
+  #selectedToExtension = reactive("");
 
-    static styles = css`${globalStyles}` as never
+  static styles = css`${globalStyles}` as never;
 
-      template = html
-        `<p>Remember to refresh the extensions to make a call!</p>
+  template = html`<p>Remember to refresh the extensions to make a call!</p>
 
         <div class="row flex">
 
             <div class="col-6 text-align-c">
                 <p>Select an extension to call from</p>
                 <select id="extension-to-call-from" prop:value=${this.#selectedFromExtension}>
-                    <option value="" selected=${this.#selectedFromExtension.value === ""}>Select...</option> 
-                    ${computed(() => {
-                      return html`
-                        ${this.#extensions.value.map((extension: number) => {
-                          if (extension === Number(this.#selectedFromExtension.value)) {
-                            return html`<option value=${extension} style="display: none;" selected="true">${extension}</option>`
-                          }
-                          if (extension === Number(this.#selectedToExtension)) {
-                            return ""
-                          }
-                          return html`<option value=${extension}>${extension}</option>`;
-                        })}
-                      `
-                    })}
+                    <option value="" selected=${this.#selectedFromExtension
+    .value === ""}>Select...</option> 
+                    ${
+    computed(() => {
+      return html`
+                        ${
+        this.#extensions.value.map((extension: number) => {
+          if (extension === Number(this.#selectedFromExtension.value)) {
+            return html
+              `<option value=${extension} style="display: none;" selected="true">${extension}</option>`;
+          }
+          if (extension === Number(this.#selectedToExtension)) {
+            return "";
+          }
+          return html`<option value=${extension}>${extension}</option>`;
+        })
+      }
+                      `;
+    })
+  }
                 </select>
             </div>
 
             <div class="col-6 text-align-c">
                 <p>Select an extension to call to</p>
                 <select id="extension-to-call-to" prop:value=${this.#selectedToExtension}>
-                    <option value="" selected=${this.#selectedToExtension.value === ""}>Select...</option>
-                    ${computed(() => {
-                      return html`
-                        ${this.#extensions.value.map((extension: number) => {
-                          // If we selected it, hide it
-                          if (extension === Number(this.#selectedToExtension.value)) {
-                            return html`<option value=${extension} style="display: none;" selected="true">${extension}</option>`
-                          }
-                          // If other field selected it, hide it
-                          if (extension === Number(this.#selectedFromExtension)) {
-                            return ""
-                          }
-                          return html`<option value=${extension}>${extension}</option>`;
-                        })}
-                      `
-                    })}
+                    <option value="" selected=${this.#selectedToExtension
+    .value === ""}>Select...</option>
+                    ${
+    computed(() => {
+      return html`
+                        ${
+        this.#extensions.value.map((extension: number) => {
+          // If we selected it, hide it
+          if (extension === Number(this.#selectedToExtension.value)) {
+            return html
+              `<option value=${extension} style="display: none;" selected="true">${extension}</option>`;
+          }
+          // If other field selected it, hide it
+          if (extension === Number(this.#selectedFromExtension)) {
+            return "";
+          }
+          return html`<option value=${extension}>${extension}</option>`;
+        })
+      }
+                      `;
+    })
+  }
                 </select>
             </div>
 
         </div>
 
         <div class="row">
-            <${AButton} prop:id=${"initiate-call"} prop:text=${"Initiate Call"} on:click=${() => this.handleInitiateCallClick()}></${AButton}>
+            <${AButton} prop:id=${"initiate-call"} prop:text=${"Initiate Call"} on:click=${() =>
+    this.handleInitiateCallClick()}></${AButton}>
         </div>
 
         <div class="row">
@@ -75,11 +87,11 @@ import { globalStyles } from "./global_styles.ts";
             </audio>
         </div>
 `;
-    connectedCallback() {
-      this.initialiseSocketClient();
-    }
+  connectedCallback() {
+    this.initialiseSocketClient();
+  }
 
-    private handleInitiateCallClick() {
+  private handleInitiateCallClick() {
     this.client!.send(JSON.stringify({
       send_packet: {
         to: "make-call",
@@ -89,31 +101,31 @@ import { globalStyles } from "./global_styles.ts";
         },
       },
     }));
-    }
-
-    private async initialiseSocketClient() {
-      this.client = await createWebSocketClient({ port: 1668 });
-      this.client.send(JSON.stringify({
-        connect_to: ["get-extensions", "make-call"],
-      }));
-
-      this.client.onmessage = (msg) => {
-        if (msg.data.indexOf("Connected to") > -1) {
-          return;
-        }
-        const data = JSON.parse(msg.data); // { from, to, message }
-        data.message = JSON.parse(data.message);
-        if (data.to === "get-extensions") {
-          this.#extensions.value = data.message
-        }
-      };
-
-      this.client.send(JSON.stringify({
-        send_packet: {
-          to: "get-extensions",
-          data: "",
-        },
-      }));
-    }
   }
-  export { CCall}
+
+  private async initialiseSocketClient() {
+    this.client = await createWebSocketClient({ port: 1668 });
+    this.client.send(JSON.stringify({
+      connect_to: ["get-extensions", "make-call"],
+    }));
+
+    this.client.onmessage = (msg) => {
+      if (msg.data.indexOf("Connected to") > -1) {
+        return;
+      }
+      const data = JSON.parse(msg.data); // { from, to, message }
+      data.message = JSON.parse(data.message);
+      if (data.to === "get-extensions") {
+        this.#extensions.value = data.message;
+      }
+    };
+
+    this.client.send(JSON.stringify({
+      send_packet: {
+        to: "get-extensions",
+        data: "",
+      },
+    }));
+  }
+}
+export { CCall };

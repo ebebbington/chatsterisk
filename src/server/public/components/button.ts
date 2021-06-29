@@ -24,19 +24,19 @@ button:hover {
 }
 `;
 
-  // deno-lint-ignore no-undef
-  // @ts-ignore
-  export class AButton extends Component<{
-    id: string,
-    class: string,
-    text: string,
-    value: string
-  }> {
-
-    static styles = css`
+// deno-lint-ignore ban-ts-comment
+// @ts-ignore
+export class AButton extends Component<{
+  id: string;
+  class: string;
+  text: string;
+  value: string;
+}> {
+  static styles = css`
       ${styling + globalStyles}
     `;
-    // @ts-ignore
-    template = html`<button id=${this.id} class=${this.class} value=${this.value}>${this.text}</button>
+  template = html
+    // @ts-ignore BECAUSE WITHOUT TYPINGS YET, it doesnt know
+    `<button id=${this.id} class=${this.class} value=${this.value}>${this.text}</button>
     `;
-  }
+}
