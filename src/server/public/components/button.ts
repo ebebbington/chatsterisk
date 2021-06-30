@@ -24,12 +24,14 @@ button:hover {
 }
 `;
 
-export class AButton extends Component<{
+export interface AButton {
   id: string;
   class: string;
   text: string;
   value: string;
-}> {
+}
+
+export class AButton extends Component {
   static styles = css`
       ${styling + globalStyles}
     `;

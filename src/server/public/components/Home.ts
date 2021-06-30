@@ -11,7 +11,7 @@ const chatText = "Chat";
 
 // deno-lint-ignore no-undef
 export class CHome extends Component {
-  static styles = css`${globalStyles}` as never;
+  static styles = css`${globalStyles}`;
   template = html`
       <div style="display: flex">
     <${AnchorLink} prop:href=${callHref} prop:text=${callText}></${AnchorLink}>

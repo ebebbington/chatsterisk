@@ -44,7 +44,7 @@ class CVideo extends Component {
     srcObject: "",
   });
 
-  static styles = css`${styling + globalStyles}` as unknown as never[];
+  static styles = css`${styling + globalStyles}`;
 
   template = html`
       <div id="video-chat">

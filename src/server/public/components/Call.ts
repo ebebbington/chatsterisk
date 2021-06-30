@@ -11,7 +11,7 @@ class CCall extends Component {
   #selectedFromExtension = reactive("");
   #selectedToExtension = reactive("");
 
-  static styles = css`${globalStyles}` as never;
+  static styles = css`${globalStyles}`;
 
   template = html`
     <p>Remember to refresh the extensions to make a call!</p>
