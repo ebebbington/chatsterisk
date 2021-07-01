@@ -37,8 +37,6 @@ function renderUsers(showUsers: any, users: string[]): TemplateResult | "" {
  * - Use es private properties to avoid conflicts, as outlined by destiny itself
  */
 
-// deno-lint-ignore ban-ts-comment
-// @ts-ignore
 class CChat extends Component {
   readonly #client = new WebSocket("ws://127.0.0.1:1670");
   // TODO(edward): add type
@@ -137,7 +135,8 @@ class CChat extends Component {
     this.#messageToSend.value = "";
   }
 
-  static styles = css`${`
+  // TODO :: Once we can import destiny ts files and get type hints, remove this `as`
+  static styles = [css`${`
     /* Chat */
     /* Container*/
     .chatHolder {
@@ -242,7 +241,7 @@ class CChat extends Component {
       .footer button {
         margin-top: 0.5em;
       }
-    ` + globalStyles}`;
+    `}`, css`${globalStyles}`] as never[];
 
   template = html`
     <div class="chatHolder">

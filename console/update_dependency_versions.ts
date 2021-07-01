@@ -31,4 +31,4 @@ componentDepsFile = componentDepsFile.replace(
   /v[0-9].[0-9].[0-9]/,
   latestVersion,
 );
-console.log(componentDepsFile);
+Deno.writeFileSync("./src/server/public/components/deps.ts", new TextEncoder().encode(componentDepsFile))

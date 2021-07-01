@@ -24,19 +24,18 @@ button:hover {
 }
 `;
 
-// deno-lint-ignore ban-ts-comment
-// @ts-ignore
-export class AButton extends Component<{
+export interface AButton {
   id: string;
   class: string;
   text: string;
   value: string;
-}> {
-  static styles = css`
-      ${styling + globalStyles}
-    `;
+}
+
+export class AButton extends Component {
+
+    // TODO :: Once we can import destiny ts files and get type hints, remove this `as`
+  static styles = [css`${styling}`, css`${globalStyles}`] as never[];
   template = html
-    // @ts-ignore BECAUSE WITHOUT TYPINGS YET, it doesnt know
     `<button id=${this.id} class=${this.class} value=${this.value}>${this.text}</button>
     `;
 }
