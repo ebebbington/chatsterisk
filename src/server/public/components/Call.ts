@@ -11,7 +11,8 @@ class CCall extends Component {
   #selectedFromExtension = reactive("");
   #selectedToExtension = reactive("");
 
-  static styles = css`${globalStyles}`;
+  // TODO :: Once we can import destiny ts files and get type hints, remove this `as`
+  static styles = css`${globalStyles}` as unknown as never[];
 
   template = html`
     <p>Remember to refresh the extensions to make a call!</p>

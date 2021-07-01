@@ -44,7 +44,8 @@ class CVideo extends Component {
     srcObject: "",
   });
 
-  static styles = css`${styling + globalStyles}`;
+  // TODO :: Once we can import destiny ts files and get type hints, remove this `as`
+  static styles = [css`${styling}`, css`${globalStyles}`] as unknown as never[];
 
   template = html`
       <div id="video-chat">

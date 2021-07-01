@@ -135,7 +135,8 @@ class CChat extends Component {
     this.#messageToSend.value = "";
   }
 
-  static styles = css`${`
+  // TODO :: Once we can import destiny ts files and get type hints, remove this `as`
+  static styles = [css`${`
     /* Chat */
     /* Container*/
     .chatHolder {
@@ -240,7 +241,7 @@ class CChat extends Component {
       .footer button {
         margin-top: 0.5em;
       }
-    ` + globalStyles}`;
+    `}`, css`${globalStyles}`] as never[];
 
   template = html`
     <div class="chatHolder">

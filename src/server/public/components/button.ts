@@ -32,9 +32,9 @@ export interface AButton {
 }
 
 export class AButton extends Component {
-  static styles = css`
-      ${styling + globalStyles}
-    `;
+
+    // TODO :: Once we can import destiny ts files and get type hints, remove this `as`
+  static styles = [css`${styling}`, css`${globalStyles}`] as never[];
   template = html
     `<button id=${this.id} class=${this.class} value=${this.value}>${this.text}</button>
     `;

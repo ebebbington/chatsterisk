@@ -7,7 +7,8 @@ export interface AnchorLink {
 }
 
 export class AnchorLink extends Component {
-  static styles = css`${globalStyles}`;
+  // TODO :: Once we can import destiny ts files and get type hints, remove this `as`
+  static styles = [css`${globalStyles}`] as never[];
 
   template = html`<a href=${this.href}>${this.text}</a>`;
 }
