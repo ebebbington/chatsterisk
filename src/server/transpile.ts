@@ -1,5 +1,5 @@
 // transpile.ts
-import { Crumpets } from "https://deno.land/x/crumpets@v2.0.1/mod.ts";
+import { Crumpets } from "./deps.ts";
 const crumpet = new Crumpets({
   rootFile: "./public/components/App.ts",
   compilerOptions: {

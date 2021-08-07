@@ -1,7 +1,7 @@
 import { createWebSocketClient } from "../js/socket-client.ts";
+import { BaseComponent } from "./BaseComponent.ts";
 import { AButton } from "./button.ts";
-import { Component, css, html, reactive } from "./deps.ts";
-import { globalStyles } from "./global_styles.ts";
+import { css, reactive, xml } from "./deps.ts";
 
 const styling = `
 #video-chat > video {
@@ -19,7 +19,7 @@ const styling = `
 `;
 
 // deno-lint-ignore no-undef
-class CVideo extends Component {
+class CVideo extends BaseComponent {
   private socket: WebSocket | null = null;
 
   #peerConnection = new RTCPeerConnection();
@@ -44,9 +44,10 @@ class CVideo extends Component {
     srcObject: "",
   });
 
-  static styles = css`${styling + globalStyles}` as unknown as never[];
+  // TODO :: Once we can import destiny ts files and get type hints, remove this `as`
+  static styles = [css`${styling}`] as unknown as never[];
 
-  template = html`
+  template = this.html(xml`
       <div id="video-chat">
       <video id="user-video" autoplay="true" playsinline="true" controls="true" prop:srcObject=${this.#userVideo.srcObject}></video>
       <span>
@@ -62,7 +63,7 @@ class CVideo extends Component {
       <hr />
       <video id="peer-video" autoplay="true" playsinline="true" controls="true" src=${this.#peerVideo.srcObject}></video>
       </div>
-    `;
+    `);
 
   async connectedCallback() {
     await this.initialiseSocketClient();

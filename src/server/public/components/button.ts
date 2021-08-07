@@ -1,5 +1,5 @@
-import { Component, css, html } from "./deps.ts";
-import { globalStyles } from "./global_styles.ts";
+import { BaseComponent } from "./BaseComponent.ts";
+import { css, xml } from "./deps.ts";
 
 const styling = `
 button {
@@ -24,19 +24,19 @@ button:hover {
 }
 `;
 
-// deno-lint-ignore ban-ts-comment
-// @ts-ignore
-export class AButton extends Component<{
+export interface AButton {
   id: string;
   class: string;
   text: string;
   value: string;
-}> {
-  static styles = css`
-      ${styling + globalStyles}
-    `;
-  template = html
-    // @ts-ignore BECAUSE WITHOUT TYPINGS YET, it doesnt know
-    `<button id=${this.id} class=${this.class} value=${this.value}>${this.text}</button>
-    `;
+}
+
+export class AButton extends BaseComponent {
+  // TODO :: Once we can import destiny ts files and get type hints, remove this `as`
+  static styles = [css`${styling}`] as never[];
+  template = this.html(
+    xml
+      `<button id=${this.id} class=${this.class} value=${this.value}>${this.text}</button>
+    `,
+  );
 }
