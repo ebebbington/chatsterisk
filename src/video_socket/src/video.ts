@@ -61,8 +61,7 @@ export class Video {
     this.Socket.on("call-user", (packet: Packet) => {
       this.emitCallMade(
         Number(packet.from.id),
-        // deno-lint-ignore
-        // @ts-ignore
+        // @ts-ignore Because there are no types available for webrtc
         (packet.message as { to: string; offer: RTCOfferOptions }),
       );
     });
@@ -71,8 +70,7 @@ export class Video {
     this.Socket.on("make-answer", (packet: Packet) => {
       this.emitAnswerMade(
         Number(packet.from.id),
-        // deno-lint-ignore
-        // @ts-ignore
+        // @ts-ignore Because there are no types available for webrtc
         (packet.message as { to: string; answer: RTCOfferOptions }),
       );
     });
@@ -252,8 +250,7 @@ export class Video {
    */
   private emitCallMade(
     socketId: number,
-    // deno-lint-ignore
-    // @ts-ignore
+    // @ts-ignore Because there are no types available for webrtc
     data: { to: string; offer: RTCOfferOptions },
   ) {
     console.log("going to emit call made to " + data.to);
@@ -276,8 +273,7 @@ export class Video {
    */
   private emitAnswerMade(
     socketId: number,
-    // deno-lint-ignore
-    // @ts-ignore
+    // @ts-ignore Because there are no types available for webrtc
     data: { to: string; answer: RTCAnswerOptions },
   ) {
     this.Socket.to("answer-made", {
