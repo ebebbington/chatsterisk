@@ -1,14 +1,7 @@
-import {
-  Component,
-  computed,
-  css,
-  html,
-  reactive,
-  TemplateResult,
-} from "./deps.ts";
+import { computed, css, reactive, TemplateResult, xml } from "./deps.ts";
 import { openClient } from "../js/socket-client.ts";
 import { AButton } from "./button.ts";
-import { globalStyles } from "./global_styles.ts";
+import { BaseComponent } from "./BaseComponent.ts";
 
 // TODO(edward): Replace any with proper types eg ReactivePrimitive<boolean> and ReactiveArray<string> once i upgrade the tsc version. tried using it but get errors for it isnt generic which i think is due to the tsc version being different for what we use and estiny uses
 // deno-lint-ignore no-explicit-any
@@ -17,11 +10,11 @@ function renderUsers(showUsers: any, users: string[]): TemplateResult | "" {
     if (showUsers.value === false) {
       return "";
     }
-    return html`
+    return xml`
       <ul>
       ${
       users.map((user) =>
-        html`
+        xml`
         <li>${user}</li>
       `
       )
@@ -37,7 +30,7 @@ function renderUsers(showUsers: any, users: string[]): TemplateResult | "" {
  * - Use es private properties to avoid conflicts, as outlined by destiny itself
  */
 
-class CChat extends Component {
+class CChat extends BaseComponent {
   readonly #client = new WebSocket("ws://127.0.0.1:1670");
   // TODO(edward): add type
   #messageToSend = reactive("");
@@ -241,9 +234,9 @@ class CChat extends Component {
       .footer button {
         margin-top: 0.5em;
       }
-    `}`, css`${globalStyles}`] as never[];
+    `}`] as never[];
 
-  template = html`
+  template = this.html(xml`
     <div class="chatHolder">
       <div class="header">
         <div class="status">
@@ -258,7 +251,7 @@ class CChat extends Component {
       <div class="body">
     ${
     this.#messagesReceived.map((message) =>
-      html`
+      xml`
         <div>
           <strong>
             <p>${message.username}</p>
@@ -276,7 +269,7 @@ class CChat extends Component {
     this.handleSendMessageButtonClick()}></${AButton}>
       </div>
     </div>
-`;
+`);
 }
 
 export { CChat };
