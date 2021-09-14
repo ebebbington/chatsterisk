@@ -13,9 +13,9 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Install Deno
-        uses: denolib/setup-deno@master
-        #with:
-        #  deno-version: ${{ matrix.deno }}
+        uses: denoland/setup-deno@v1
+        with:
+          deno-version: vx.x.x
 
       - name: Update Server Deps
         run: |
