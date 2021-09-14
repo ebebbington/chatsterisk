@@ -15,9 +15,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Install Deno
-        uses: denolib/setup-deno@master
-
       - name: Run Server Tests
         run: |
           docker-compose up -d
@@ -35,9 +32,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Install Deno
-        uses: denolib/setup-deno@master
-
       - name: Run Chat Socket Tests
         run: |
           docker-compose up -d
@@ -49,9 +43,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Install Deno
-        uses: denolib/setup-deno@master
-
       - name: Run Video Socket Tests
         run: |
           docker-compose up -d
@@ -62,9 +53,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-
-      - name: Install Deno
-        uses: denolib/setup-deno@master
 
       - name: Run Call Socket Tests
         run: |
@@ -80,10 +68,12 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Install Deno
-        uses: denolib/setup-deno@master
+        uses: denoland/setup-deno@v1
+        with:
+          deno-version: vx.x.x
 
       - name: Formatter
         run: deno fmt --check
 
       - name: linter
-        run: deno lint --unstable --ignore='src/server/public/js/app.js,src/server/public/components/example_component.js'
+        run: deno lint --ignore='src/server/public/js/app.js,src/server/public/components/example_component.js'
