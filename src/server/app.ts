@@ -1,11 +1,7 @@
 import { server } from "./server.ts";
-import { config } from "./deps.ts";
-await server.run({
-  hostname: config().SERVER_HOSTNAME,
-  port: Number(config().SERVER_PORT),
-});
+server.run();
 
-console.log(`Server running on ${server.hostname}:${server.port}`);
+console.log(`Server running on ${server.address}`);
 
 // const require = createRequire(import.meta.url);
 // const AmiClient = require('asterisk-ami-client');

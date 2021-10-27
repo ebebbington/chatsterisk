@@ -137,7 +137,8 @@ class CChat extends Component {
     this.#messageToSend.value = "";
   }
 
-  static styles = css`${`
+  static styles = css`${
+    `
     /* Chat */
     /* Container*/
     .chatHolder {
@@ -242,7 +243,8 @@ class CChat extends Component {
       .footer button {
         margin-top: 0.5em;
       }
-    ` + globalStyles}`;
+    ` + globalStyles
+  }`;
 
   template = html`
     <div class="chatHolder">
