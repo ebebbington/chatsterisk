@@ -1,21 +1,18 @@
 import { csrf } from "../middleware/csrf.ts";
-import { Drash } from "../deps.ts";
-const decoder = new TextDecoder();
+import { Drash, tengine } from "../deps.ts";
 
-export default class HomeResource extends Drash.Http.Resource {
-  static paths = ["/", "/home"];
-  public GET() {
-    this.response.body = decoder.decode(
-      Deno.readFileSync("./public/views/index.dml"),
-    );
-    this.response.body = this.response.body.replace(
-      /<% title %>/g,
-      "Chatsterisk - Home",
-    );
-    this.response.setCookie({
+export default class HomeResource extends Drash.Resource {
+  paths = ["/", "/home"];
+  public services = {
+    "GET": [tengine],
+  };
+  public GET(_request: Drash.Request, response: Drash.Response) {
+    response.setCookie({
       name: "X-CSRF-TOKEN",
       value: csrf.token,
     });
-    return this.response;
+    return response.render("index.dml", {
+      title: "Chatsterisk - Home",
+    });
   }
 }

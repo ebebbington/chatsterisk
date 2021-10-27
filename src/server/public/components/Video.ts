@@ -116,7 +116,6 @@ class CVideo extends Component {
    * @param {string}      data.myId   Your socket id
    * @param {string[]}    data.users  List of other users in the room. Empty is no other users
    * @param {string}      data.name   Name of the socket room you're in
-   *
    */
   private handleRoom(
     data: {

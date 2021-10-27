@@ -19,8 +19,10 @@ class CCall extends Component {
         <div class="col-6 text-align-c">
             <p>Select an extension to call from</p>
             <select id="extension-to-call-from" prop:value=${this.#selectedFromExtension}>
-              <option value="" selected=${this.#selectedFromExtension.value ===
-    ""}>Select...</option> 
+              <option value="" selected=${
+    this.#selectedFromExtension.value ===
+      ""
+  }>Select...</option> 
       ${
     computed(() => {
       return html`
@@ -45,8 +47,10 @@ class CCall extends Component {
           <div class="col-6 text-align-c">
             <p>Select an extension to call to</p>
             <select id="extension-to-call-to" prop:value=${this.#selectedToExtension}>
-              <option value="" selected=${this.#selectedToExtension
-    .value === ""}>Select...</option>
+              <option value="" selected=${
+    this.#selectedToExtension
+      .value === ""
+  }>Select...</option>
                     ${
     computed(() => {
       return html`

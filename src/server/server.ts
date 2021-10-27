@@ -1,67 +1,31 @@
 import { config, Drash, Paladin } from "./deps.ts";
 import HomeResource from "./resources/home_resource.ts";
-import CallResource from "./resources/call_resource.ts";
-import ChatResource from "./resources/chat_resource.ts";
-import VideoResource from "./resources/video_resource.ts";
+import PagesResource from "./resources/pages_resource.ts";
 config();
-const paladin = Paladin();
+const paladin = new Paladin();
 
-class FilesResource extends Drash.Http.Resource {
-  static paths = ["/public/:dir/:filename"];
-  public GET() {
-    const dir = this.request.getPathParam("dir");
-    const filename = this.request.getPathParam("filename");
+class FilesResource extends Drash.Resource {
+  paths = ["/public/:dir/:filename"];
+  public GET(request: Drash.Request, response: Drash.Response) {
+    const dir = request.pathParam("dir");
+    const filename = request.pathParam("filename");
     const path = `./public/${dir}/${filename}`;
-    const url = this.request.url;
-    const mimeType = url.endsWith(".css")
-      ? "text/css"
-      : "application/javascript";
-    try {
-      const body = new TextDecoder().decode(Deno.readFileSync(path));
-      this.response.body = body;
-    } catch (_e) {
-      const split = path.split(".");
-      const ext = split[split.length - 1];
-      split.pop();
-      split.push("ts");
-      split.push(ext);
-      const newPath = split.join(".");
-      const body = new TextDecoder().decode(Deno.readFileSync(newPath));
-      this.response.body = body;
-    }
-    this.response.headers.set("Content-Type", mimeType);
-    return this.response;
+    return response.file(path);
   }
 }
 
-const server = new Drash.Http.Server({
-  directory: ".",
+const server = new Drash.Server({
   resources: [
     HomeResource,
-    CallResource,
-    ChatResource,
-    VideoResource,
+    PagesResource,
     FilesResource,
   ],
-  //static_paths: ["/public"],
-  logger: new Drash.CoreLoggers.ConsoleLogger({
-    enabled: true,
-    level: "all",
-    tag_string: "{datetime} | {level} |",
-    tag_string_fns: {
-      datetime() {
-        return new Date().toISOString().replace("T", " ");
-      },
-    },
-  }),
-  middleware: {
-    after_request: [
-      paladin,
-    ],
-    // after_resource: [
-    //   tengine,
-    // ],
-  },
+  services: [
+    paladin,
+  ],
+  hostname: config().SERVER_HOSTNAME,
+  port: Number(config().SERVER_PORT),
+  protocol: "http",
 });
 
 export { server };

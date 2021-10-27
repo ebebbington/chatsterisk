@@ -62,7 +62,7 @@ export class Video {
       this.emitCallMade(
         Number(packet.from.id),
         // @ts-ignore Deno cannot find the name apprently...
-        (packet.message as { to: string; offer: RTCOfferOptions }),
+        packet.message as { to: string; offer: RTCOfferOptions },
       );
     });
 
@@ -71,7 +71,7 @@ export class Video {
       this.emitAnswerMade(
         Number(packet.from.id),
         // @ts-ignore Deno cannot find the name apprently...
-        (packet.message as { to: string; answer: RTCOfferOptions }),
+        packet.message as { to: string; answer: RTCOfferOptions },
       );
     });
 
