@@ -15,6 +15,8 @@
 
 ---
 
+> :warning: **Archived**: This project is archived because I don't need it as a learning resource anymore, but a lot of parts are still good to reference, such as: Asterisk (setup, making video calls) and WebRTC (video chat app).
+
 VoIP application ran using: Drash and Asterisk, to make and demonstrate voice
 calls using asterisk. Also acts as a training project for Drash, Sockets and
 Asterisk
